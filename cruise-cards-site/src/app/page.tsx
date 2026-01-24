@@ -56,6 +56,9 @@ export default function Home() {
         >
           Start a Booking
         </a>
+        <div style={{ marginTop: 16, fontSize: 14, color: "#334155" }}>
+          Call or text: <span style={{ fontWeight: 800 }}>(409) 632-2106</span>
+        </div>
       </div>
     </main>
   );
