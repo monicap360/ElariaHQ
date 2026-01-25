@@ -5,63 +5,148 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-type AgentTask = {
-  id: string;
-  agent_name: string;
-  task_type: string;
-  reference_id: string;
-  notes: string | null;
-  created_at?: string;
-};
+/**
+ * Explanation Quality Agent
+ *
+ * - Finds agent_tasks assigned to ExplanationQualityAgent with status = 'pending'
+ * - For each task:
+ *   - Load the related knowledge_topic
+ *   - Determine an outline (list of atomic points) based on topic scope and notes
+ *   - Insert one or more follow-up tasks into agent_tasks for downstream agents
+ *   - Update this task status to 'done' and set notes with the outline
+ *
+ * Intentionally does NOT write natural-language content. Only structured outlines.
+ */
 
-type OutlineSection = {
-  heading: string;
-  bullets: string[];
-};
-
-function normalizeBullet(value: string) {
-  return value.replace(/^Subtopic required:\s*/i, "").trim();
-}
-
-export function buildOutlineFromTasks(tasks: AgentTask[]): OutlineSection[] {
-  const bullets = tasks
-    .map((task) => task.notes || "")
-    .map(normalizeBullet)
-    .filter(Boolean);
-
-  if (bullets.length === 0) {
-    return [
-      {
-        heading: "Overview",
-        bullets: ["Add subtopics to generate a detailed outline."],
-      },
-    ];
-  }
-
-  return [
-    {
-      heading: "Planning your Galveston cruise",
-      bullets,
-    },
-  ];
-}
-
-export async function runExplanationQualityAgent() {
-  console.log("🧭 Explanation Quality Agent starting...");
-
-  const { data: tasks, error } = await supabase
+async function fetchPendingTasks(limit = 10) {
+  const { data, error } = await supabase
     .from("agent_tasks")
     .select("*")
     .eq("agent_name", "ExplanationQualityAgent")
-    .order("created_at", { ascending: true });
+    .eq("status", "pending")
+    .order("created_at", { ascending: true })
+    .limit(limit);
 
-  if (error) {
-    console.error("Error fetching agent tasks:", error);
-    return null;
+  if (error) throw error;
+
+  return data || [];
+}
+
+function simpleOutlineFromTopic(topic: { scope?: string | null }) {
+  const scope = (topic.scope || "").toLowerCase();
+
+  if (scope === "galveston") {
+    return [
+      "Full journey overview (pre-trip to embarkation)",
+      "Documents checklist (US/international)",
+      "Parking and arrival logistics",
+      "Transport options to port",
+      "Luggage and check-in timing",
+      "Accessibility and special cases",
+      "Edge cases and contingencies",
+    ];
   }
 
-  const outline = buildOutlineFromTasks((tasks || []) as AgentTask[]);
+  if (scope === "state") {
+    return [
+      "Drive vs fly decision factors",
+      "Recommended departure windows",
+      "Staging locations and hotels",
+      "State-specific rules or considerations",
+    ];
+  }
 
-  console.log("🧭 Explanation Quality Agent complete");
-  return outline;
+  if (scope === "city") {
+    return [
+      "Local transit and fastest routes",
+      "Suggested timing",
+      "Local parking or overnight options",
+    ];
+  }
+
+  if (scope === "spanish") {
+    return [
+      "Spanish-first flow and terminology",
+      "Cross-border documentation notes",
+      "FAQ translations to prioritize",
+    ];
+  }
+
+  if (scope === "operations") {
+    return ["Canonical pricing and sync steps", "Listings audit checklist"];
+  }
+
+  return ["Key points to cover", "Questions to resolve", "Related resources to collect"];
+}
+
+export async function runExplanationQualityAgent() {
+  console.log("🧩 Explanation Quality Agent starting");
+
+  const tasks = await fetchPendingTasks();
+
+  if (!tasks.length) {
+    console.log("No pending ExplanationQualityAgent tasks.");
+    return;
+  }
+
+  for (const task of tasks) {
+    try {
+      await supabase
+        .from("agent_tasks")
+        .update({ status: "in_progress" })
+        .eq("id", task.id);
+
+      let topic: { scope?: string | null } | null = null;
+
+      if (task.reference_id) {
+        const { data: fetchedTopic } = await supabase
+          .from("knowledge_topics")
+          .select("*")
+          .eq("id", task.reference_id)
+          .maybeSingle();
+        topic = fetchedTopic || null;
+      }
+
+      const outline = simpleOutlineFromTopic(topic || { scope: null });
+      const outlineText = outline.map((item, index) => `${index + 1}. ${item}`).join("\n");
+
+      for (const item of outline) {
+        await supabase.from("agent_tasks").insert({
+          agent_name: "UserIntentAgent",
+          task_type: "research_subpoint",
+          reference_id: task.reference_id,
+          status: "pending",
+          notes: `Outline item: ${item}`,
+        });
+      }
+
+      await supabase
+        .from("agent_tasks")
+        .update({
+          status: "done",
+          completed_at: new Date().toISOString(),
+          notes: `${task.notes ? `${task.notes}\n\n` : ""}Outline:\n${outlineText}`,
+        })
+        .eq("id", task.id);
+
+      console.log(`Processed task ${task.id} -> created ${outline.length} subtasks`);
+    } catch (err) {
+      console.error("Error processing task", task.id, err);
+      await supabase
+        .from("agent_tasks")
+        .update({
+          status: "blocked",
+          notes: `${task.notes || ""}\n\nError: ${String(err)}`,
+        })
+        .eq("id", task.id);
+    }
+  }
+
+  console.log("✅ Explanation Quality Agent run complete");
+}
+
+if ((import.meta as { main?: boolean }).main) {
+  runExplanationQualityAgent().catch((err) => {
+    console.error("Unhandled error in Explanation Quality Agent:", err);
+  });
 }
