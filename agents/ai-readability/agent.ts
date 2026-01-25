@@ -8,6 +8,9 @@ const supabase = createClient(
 type AgentTask = {
   id: string;
   notes: string | null;
+  target_site?: string | null;
+  source_signal?: string | null;
+  parent_asset_id?: string | null;
 };
 
 const READABILITY_SUGGESTIONS = [

@@ -18,6 +18,15 @@ const supabase = createClient(
  * Intentionally does NOT write natural-language content. Only structured outlines.
  */
 
+type AgentTask = {
+  id: string;
+  reference_id: string | null;
+  notes: string | null;
+  target_site?: string | null;
+  source_signal?: string | null;
+  parent_asset_id?: string | null;
+};
+
 async function fetchPendingTasks(limit = 10) {
   const { data, error } = await supabase
     .from("agent_tasks")
@@ -82,7 +91,7 @@ function simpleOutlineFromTopic(topic: { scope?: string | null }) {
 export async function runExplanationQualityAgent() {
   console.log("🧩 Explanation Quality Agent starting");
 
-  const tasks = await fetchPendingTasks();
+  const tasks = (await fetchPendingTasks()) as AgentTask[];
 
   if (!tasks.length) {
     console.log("No pending ExplanationQualityAgent tasks.");
@@ -116,6 +125,9 @@ export async function runExplanationQualityAgent() {
           task_type: "research_subpoint",
           reference_id: task.reference_id,
           status: "pending",
+          target_site: task.target_site ?? "cruisesfromgalveston.net",
+          source_signal: task.source_signal ?? "manual",
+          parent_asset_id: task.parent_asset_id ?? null,
           notes: `Outline item: ${item}`,
         });
       }

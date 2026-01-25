@@ -9,6 +9,9 @@ type AgentTask = {
   id: string;
   reference_id: string | null;
   notes: string | null;
+  target_site?: string | null;
+  source_signal?: string | null;
+  parent_asset_id?: string | null;
 };
 
 const INTENT_CHECKLIST = [
@@ -62,6 +65,9 @@ export async function runUserIntentAgent() {
         task_type: "ai_readability_check",
         reference_id: task.reference_id,
         status: "pending",
+        target_site: task.target_site ?? "cruisesfromgalveston.net",
+        source_signal: task.source_signal ?? "manual",
+        parent_asset_id: task.parent_asset_id ?? null,
         notes: `Follow-up from UserIntentAgent task ${task.id}`,
       });
 
