@@ -58,6 +58,15 @@ function normalizeLineKey(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+function initials(value: string) {
+  return value
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+}
+
 function calcNights(sailDate: string, returnDate: string) {
   const start = new Date(sailDate);
   const end = new Date(returnDate);
@@ -93,11 +102,24 @@ function formatScore(value: number | null) {
   return `${Math.round(value)}/100`;
 }
 
+function formatDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function formatYear(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return `${date.getFullYear()}`;
+}
+
 export default function Home() {
   const [matrixLoading, setMatrixLoading] = useState(true);
   const [matrixError, setMatrixError] = useState<string | null>(null);
   const [cruiseMatrix, setCruiseMatrix] = useState<CruiseMatrixRow[]>([]);
   const [filterLine, setFilterLine] = useState("all");
+  const [filterYear, setFilterYear] = useState("all");
   const [sortKey, setSortKey] = useState<"price" | "duration" | "date">("date");
   const [siteStatus, setSiteStatus] = useState<{
     draftsInReview: number;
@@ -222,7 +244,8 @@ export default function Home() {
 
   const filteredCruises = useMemo(() => {
     const byLine = filterLine === "all" ? cruiseMatrix : cruiseMatrix.filter((cruise) => cruise.lineKey === filterLine);
-    const sorted = [...byLine].sort((a, b) => {
+    const byYear = filterYear === "all" ? byLine : byLine.filter((cruise) => formatYear(cruise.sailDate) === filterYear);
+    const sorted = [...byYear].sort((a, b) => {
       if (sortKey === "price") {
         const aPrice = a.priceNumber ?? Number.POSITIVE_INFINITY;
         const bPrice = b.priceNumber ?? Number.POSITIVE_INFINITY;
@@ -234,7 +257,7 @@ export default function Home() {
       return a.sailDate.localeCompare(b.sailDate);
     });
     return sorted;
-  }, [cruiseMatrix, filterLine, sortKey]);
+  }, [cruiseMatrix, filterLine, filterYear, sortKey]);
 
   const availableLines = useMemo(() => {
     const unique = new Map<string, string>();
@@ -264,6 +287,24 @@ export default function Home() {
     return Array.from(unique.values());
   }, [cruiseMatrix]);
 
+  const availableYears = useMemo(() => {
+    const unique = new Map<string, string>();
+    cruiseMatrix.forEach((row) => {
+      const year = formatYear(row.sailDate);
+      if (year) unique.set(year, year);
+    });
+    return ["all", ...Array.from(unique.values()).sort()];
+  }, [cruiseMatrix]);
+
+  const stats = useMemo(() => {
+    const sailingsCount = siteStatus?.upcomingSailings ?? cruiseMatrix.length;
+    return [
+      { label: "Upcoming sailings", value: sailingsCount ? `${sailingsCount}` : "-" },
+      { label: "Active ships", value: ships.length ? `${ships.length}` : "-" },
+      { label: "Desk updates", value: deskItems.length ? `${deskItems.length}` : "-" },
+    ];
+  }, [siteStatus, cruiseMatrix.length, ships.length, deskItems.length]);
+
   function openBookingPanel(prefill?: Partial<typeof bookingForm>) {
     setBookingForm((prev) => ({ ...prev, ...prefill }));
     const target = document.getElementById("booking-panel");
@@ -274,197 +315,160 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(76,111,255,0.08),transparent_55%)] bg-background-base text-text-primary">
-      <div className="mx-auto max-w-6xl px-6 pb-20 pt-16">
+      <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(123,97,255,0.08),transparent_60%)] px-10 py-14 shadow-[0_0_40px_rgba(76,111,255,0.08)]"
+          className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-background-card px-4 py-1 text-xs uppercase tracking-[0.3em] text-text-muted">
-            CruisesFromGalveston.net
-          </div>
-          <h1 className="mt-4 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
-            Cruising From Galveston, Clearly Explained
-          </h1>
-          <p className="mt-4 max-w-2xl text-base text-text-secondary md:text-lg">
-            Independent guidance on ships, itineraries, and planning from people who actually work the port.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a href="#guidance" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
-              Start With Guidance
-            </a>
-            <a
-              href="#booking-panel"
-              onClick={() => openBookingPanel()}
-              className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
-            >
-              Book a Cruise
-            </a>
-          </div>
-          <div className="mt-8 grid gap-3 md:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm text-text-secondary">
-              Decision-first guidance, booking second.
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm text-text-secondary">
-              Independent, not affiliated with cruise lines.
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm text-text-secondary">
-              Local operations view of the port.
-            </div>
-          </div>
-        </motion.section>
-
-        <section
-          id="booking-panel"
-          className="mt-10 rounded-3xl border border-white/10 bg-background-panel px-8 py-10"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-semibold font-accent">Book With Confidence</h2>
-              <p className="mt-2 text-sm text-text-secondary">
-                Booking exists to support informed decisions, not impulse clicks.
-              </p>
-            </div>
-            <a href="/booking" className="text-sm font-semibold text-primary-blue">
-              Continue to Booking ->
-            </a>
-          </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <label className="text-sm font-semibold text-text-secondary">
-              Ship
-              <select
-                value={bookingForm.ship}
-                onChange={(event) => setBookingForm((prev) => ({ ...prev, ship: event.target.value }))}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
-              >
-                <option value="">Select ship</option>
-                {availableShips.map((ship) => (
-                  <option key={ship} value={ship}>
-                    {ship}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="text-sm font-semibold text-text-secondary">
-              Month / Year
-              <select
-                value={bookingForm.month}
-                onChange={(event) => setBookingForm((prev) => ({ ...prev, month: event.target.value }))}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
-              >
-                <option value="">Select month</option>
-                {availableMonths.map((month) => (
-                  <option key={month} value={month}>
-                    {month}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="text-sm font-semibold text-text-secondary">
-              Nights
-              <select
-                value={bookingForm.nights}
-                onChange={(event) => setBookingForm((prev) => ({ ...prev, nights: event.target.value }))}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
-              >
-                <option value="">Any length</option>
-                {[3, 4, 5, 6, 7, 8].map((night) => (
-                  <option key={night} value={night}>
-                    {night} nights
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="text-sm font-semibold text-text-secondary">
-              Cabin type
-              <select
-                value={bookingForm.cabin}
-                onChange={(event) => setBookingForm((prev) => ({ ...prev, cabin: event.target.value }))}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
-              >
-                <option value="">Any cabin</option>
-                <option value="Interior">Interior</option>
-                <option value="Ocean View">Ocean View</option>
-                <option value="Balcony">Balcony</option>
-                <option value="Suite">Suite</option>
-              </select>
-            </label>
-            <label className="text-sm font-semibold text-text-secondary">
-              Travelers
-              <select
-                value={bookingForm.travelers}
-                onChange={(event) => setBookingForm((prev) => ({ ...prev, travelers: event.target.value }))}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
-                  <option key={count} value={count}>
-                    {count}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex items-center gap-3 text-sm font-semibold text-text-secondary">
-              <input
-                type="checkbox"
-                checked={bookingForm.advisorOnly}
-                onChange={(event) => setBookingForm((prev) => ({ ...prev, advisorOnly: event.target.checked }))}
-                className="h-4 w-4 rounded border-white/10 bg-background-card text-primary-blue"
-              />
-              Show advisor-recommended sailings only
-            </label>
-          </div>
-          <p className="mt-4 text-xs text-text-muted">
-            Prices shown include port fees and taxes. Gratuities and vacation protection are optional and shown
-            separately before checkout.
-          </p>
-          <div className="mt-6 grid gap-6 md:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-background-card p-6">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-text-muted">Positioning</h3>
-              <p className="mt-3 text-sm text-text-secondary">
-                We explain first and enable booking second. Recommendations are built to reduce confusion and protect
-                decisions.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-background-card p-6">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-text-muted">Operational status</h3>
-              <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-                <div className="rounded-xl border border-white/10 bg-background-panel px-3 py-3">
-                  <div className="text-lg font-semibold text-text-primary">
-                    {siteStatus ? siteStatus.draftsInReview : "-"}
-                  </div>
-                  <div className="text-xs text-text-muted">Insights</div>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-background-panel px-3 py-3">
-                  <div className="text-lg font-semibold text-text-primary">
-                    {siteStatus ? siteStatus.openSignals : "-"}
-                  </div>
-                  <div className="text-xs text-text-muted">Signals</div>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-background-panel px-3 py-3">
-                  <div className="text-lg font-semibold text-text-primary">
-                    {siteStatus ? siteStatus.upcomingSailings : "-"}
-                  </div>
-                  <div className="text-xs text-text-muted">Sailings</div>
-                </div>
+          <div className="rounded-3xl border border-white/10 bg-background-panel/80 px-10 py-12 shadow-[0_0_40px_rgba(76,111,255,0.08)]">
+            <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
+              <span className="h-8 w-8 rounded-full bg-[linear-gradient(145deg,rgba(76,111,255,0.7),rgba(123,97,255,0.8))] text-center text-xs font-semibold leading-8 text-white">
+                CFG
+              </span>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.25em] text-text-muted">The Cruises From Galveston Desk</div>
+                <div className="text-sm font-semibold text-text-primary">Edited by Monica Pena</div>
               </div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-background-card p-6">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-text-muted">Booking clarity</h3>
-              <p className="mt-3 text-sm text-text-secondary">
-                Taxes and port fees are included in displayed prices. Gratuities and vacation protection remain
-                optional.
-              </p>
+            <h1 className="mt-6 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
+              Cruising From Galveston, clearly explained.
+            </h1>
+            <p className="mt-4 max-w-2xl text-base text-text-secondary md:text-lg">
+              Advisor-grade insight on which ships fit your situation, when sailings actually make sense, and what
+              itinerary changes mean before you book.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="#sailings" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
+                View sailings
+              </a>
+              <a
+                href="#guidance"
+                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
+              >
+                Start with guidance
+              </a>
+              <a
+                href="mailto:hello@cruisesfromgalveston.net"
+                className="rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-text-secondary hover:text-text-primary"
+              >
+                Ask the desk
+              </a>
+            </div>
+            <div className="mt-8 grid gap-4 border-t border-white/10 pt-6 sm:grid-cols-3">
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-2xl font-semibold text-primary-blue">{stat.value}</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
-        </section>
+
+          <aside
+            id="booking-panel"
+            className="rounded-3xl border border-white/10 bg-background-panel/80 px-8 py-10"
+          >
+            <h2 className="text-2xl font-semibold font-accent">Search & book with clarity</h2>
+            <p className="mt-2 text-sm text-text-secondary">
+              Filters sync to live sailings. We explain first, then help you book.
+            </p>
+            <div className="mt-6 grid gap-4">
+              <label className="text-sm font-semibold text-text-secondary">
+                Ship
+                <select
+                  value={bookingForm.ship}
+                  onChange={(event) => setBookingForm((prev) => ({ ...prev, ship: event.target.value }))}
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                >
+                  <option value="">Any ship</option>
+                  {availableShips.map((ship) => (
+                    <option key={ship} value={ship}>
+                      {ship}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="text-sm font-semibold text-text-secondary">
+                Month / Year
+                <select
+                  value={bookingForm.month}
+                  onChange={(event) => setBookingForm((prev) => ({ ...prev, month: event.target.value }))}
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                >
+                  <option value="">Any month</option>
+                  {availableMonths.map((month) => (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="text-sm font-semibold text-text-secondary">
+                Nights
+                <select
+                  value={bookingForm.nights}
+                  onChange={(event) => setBookingForm((prev) => ({ ...prev, nights: event.target.value }))}
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                >
+                  <option value="">Any length</option>
+                  {[3, 4, 5, 6, 7, 8].map((night) => (
+                    <option key={night} value={night}>
+                      {night} nights
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="text-sm font-semibold text-text-secondary">
+                Travelers
+                <select
+                  value={bookingForm.travelers}
+                  onChange={(event) => setBookingForm((prev) => ({ ...prev, travelers: event.target.value }))}
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
+                    <option key={count} value={count}>
+                      {count}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex items-center gap-3 text-sm font-semibold text-text-secondary">
+                <input
+                  type="checkbox"
+                  checked={bookingForm.advisorOnly}
+                  onChange={(event) => setBookingForm((prev) => ({ ...prev, advisorOnly: event.target.checked }))}
+                  className="h-4 w-4 rounded border-white/10 bg-background-card text-primary-blue"
+                />
+                Show advisor-recommended sailings only
+              </label>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="/booking" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
+                Continue to booking
+              </a>
+              <a
+                href="#sailings"
+                onClick={() => openBookingPanel()}
+                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary"
+              >
+                Review sailings
+              </a>
+            </div>
+            <p className="mt-4 text-xs text-text-muted">
+              Prices shown include port fees and taxes. Gratuities and vacation protection are optional and shown
+              separately before checkout.
+            </p>
+          </aside>
+        </motion.section>
 
         {deskItems.length > 0 && (
           <section className="mt-14" id="desk">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-semibold font-accent">From the Cruises From Galveston Desk</h2>
-                <p className="text-sm text-text-secondary">Edited by Monica Pena</p>
+                <p className="text-sm text-text-secondary">Live advisories and context from our editors.</p>
               </div>
               <a href="/cruises-from-galveston/desk" className="text-sm font-semibold text-primary-blue">
                 View the Desk ->
@@ -484,97 +488,30 @@ export default function Home() {
           </section>
         )}
 
-        {ships.length > 0 && (
-          <section className="mt-14" id="ships">
-            <h2 className="text-2xl font-semibold font-accent">Ships Sailing From Galveston</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              {ships.map((ship) => (
-                <div key={ship.id} className="rounded-2xl border border-white/10 bg-background-card p-6">
-                  <div className="text-lg font-semibold text-text-primary">{ship.name}</div>
-                  {ship.home_port && (
-                    <p className="mt-2 text-sm text-text-secondary">Home port: {ship.home_port}</p>
-                  )}
-                  <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
-                    <a href="/cruises-from-galveston/ships" className="text-primary-blue">
-                      Advisor overview
-                    </a>
-                    <a
-                      href="#booking-panel"
-                      onClick={() => openBookingPanel({ ship: ship.name })}
-                      className="text-text-primary hover:text-primary-blue"
-                    >
-                      View sailings
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {ports.length > 0 && (
-          <section className="mt-14" id="ports">
-            <h2 className="text-2xl font-semibold font-accent">Where Galveston Cruises Go</h2>
-            <p className="mt-2 text-sm text-text-secondary">
-              Based on live Galveston sailings and recent itineraries.
-            </p>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {ports.map((port) => (
-                <div key={port} className="rounded-2xl border border-white/10 bg-background-card p-6">
-                  <div className="text-base font-semibold text-text-primary">{port}</div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        <section className="mt-14" id="guidance">
-          <h2 className="text-2xl font-semibold font-accent">Planning Your Cruise From Galveston</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {[
-              { label: "Driving vs Flying", href: "/cruises-from-galveston/how-to-plan" },
-              { label: "Transportation options (airport to ship)", href: "https://houstoncruiseshuttle.com" },
-              { label: "Short vs long sailings", href: "/cruises-from-galveston/how-to-plan" },
-              { label: "First cruise vs repeat cruisers", href: "/cruises-from-galveston/how-to-plan" },
-            ].map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm font-semibold text-text-primary"
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-14" id="booking-confidence">
-          <h2 className="text-2xl font-semibold font-accent">Booking Through Cruises From Galveston</h2>
-          <div className="mt-6 rounded-2xl border border-white/10 bg-background-panel p-6">
-            <ul className="space-y-2 text-sm text-text-secondary">
-              <li>Real humans, local to Galveston.</li>
-              <li>Transparent pricing with taxes and port fees included.</li>
-              <li>Optional vacation protection explained clearly.</li>
-              <li>Support before, during, and after travel.</li>
-            </ul>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/booking" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
-                Continue to Booking
-              </a>
-              <a
-                href="mailto:hello@cruisesfromgalveston.net"
-                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary"
-              >
-                Ask an Advisor
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-14">
+        <section id="sailings" className="mt-16">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold font-accent">Galveston Cruise Matrix</h2>
-            <p className="text-xs text-text-muted">Live sailings snapshot (prices include taxes and fees).</p>
+            <div>
+              <h2 className="text-2xl font-semibold font-accent">Galveston Sailings Board</h2>
+              <p className="mt-2 text-sm text-text-secondary">
+                Live sailings snapshot with taxes and port fees included in displayed prices.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {availableYears.map((year) => (
+                <button
+                  key={year}
+                  type="button"
+                  onClick={() => setFilterYear(year)}
+                  className={`rounded-full border px-4 py-2 text-xs font-semibold transition ${
+                    filterYear === year
+                      ? "border-primary-blue/60 bg-primary-blue/20 text-text-primary"
+                      : "border-white/10 bg-background-card text-text-secondary hover:border-primary-blue/40"
+                  }`}
+                >
+                  {year === "all" ? "All Years" : year}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <select
@@ -601,16 +538,16 @@ export default function Home() {
               </button>
             ))}
           </div>
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-background-panel">
-            <table className="min-w-[760px] w-full text-left text-sm">
+          <div className="mt-4 overflow-x-auto rounded-3xl border border-white/10 bg-background-panel">
+            <table className="min-w-[840px] w-full text-left text-sm">
               <thead className="text-xs uppercase tracking-[0.2em] text-text-muted">
                 <tr>
-                  <th className="px-6 py-4">Cruise Line</th>
-                  <th className="px-6 py-4">Ship</th>
-                  <th className="px-6 py-4">Duration</th>
-                  <th className="px-6 py-4">Ports</th>
-                  <th className="px-6 py-4">Price from</th>
-                  <th className="px-6 py-4">Sail Score</th>
+                  <th className="px-6 py-4">Departure</th>
+                  <th className="px-6 py-4">Ship & line</th>
+                  <th className="px-6 py-4">Nights</th>
+                  <th className="px-6 py-4">Itinerary</th>
+                  <th className="px-6 py-4">Starting from</th>
+                  <th className="px-6 py-4">Sail score</th>
                   <th className="px-6 py-4">Action</th>
                 </tr>
               </thead>
@@ -639,26 +576,139 @@ export default function Home() {
                 {!matrixLoading &&
                   !matrixError &&
                   filteredCruises.map((cruise) => (
-                    <tr key={cruise.id} className="text-text-secondary">
-                      <td className="px-6 py-4 font-semibold text-text-primary">{cruise.line}</td>
-                      <td className="px-6 py-4">{cruise.ship}</td>
-                      <td className="px-6 py-4">{cruise.duration} nights</td>
+                    <tr key={cruise.id} className="text-text-secondary hover:bg-white/5">
+                      <td className="px-6 py-4 text-text-primary">{formatDate(cruise.sailDate)}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[linear-gradient(135deg,#7B61FF,#C084FC)] text-xs font-semibold text-white">
+                            {initials(cruise.line)}
+                          </div>
+                          <div>
+                            <div className="font-semibold text-text-primary">{cruise.ship}</div>
+                            <div className="text-xs text-text-muted">{cruise.line}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">{cruise.duration}</td>
                       <td className="px-6 py-4">{cruise.ports}</td>
-                      <td className="px-6 py-4">{cruise.priceDisplay}</td>
-                      <td className="px-6 py-4">{cruise.scoreDisplay}</td>
+                      <td className="px-6 py-4">
+                        <div className="text-base font-semibold text-text-primary">{cruise.priceDisplay}</div>
+                        <div className="text-xs text-text-muted">per person</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="rounded-full border border-primary-blue/40 bg-primary-blue/10 px-3 py-1 text-xs font-semibold text-primary-blue">
+                          {cruise.scoreDisplay}
+                        </span>
+                      </td>
                       <td className="px-6 py-4">
                         <a
                           href="#booking-panel"
                           onClick={() => openBookingPanel({ ship: cruise.ship })}
                           className="rounded-full border border-primary-blue/40 px-4 py-2 text-xs font-semibold text-primary-blue hover:border-primary-blue"
                         >
-                          Get Quote
+                          Request booking
                         </a>
                       </td>
                     </tr>
                   ))}
               </tbody>
             </table>
+          </div>
+        </section>
+
+        {ships.length > 0 && (
+          <section className="mt-16" id="ships">
+            <h2 className="text-2xl font-semibold font-accent">Ships sailing from Galveston</h2>
+            <p className="mt-2 text-sm text-text-secondary">Advisor notes and ship profiles from our desk.</p>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {ships.map((ship) => (
+                <div key={ship.id} className="rounded-2xl border border-white/10 bg-background-card p-6">
+                  <div className="text-lg font-semibold text-text-primary">{ship.name}</div>
+                  {ship.home_port && (
+                    <p className="mt-2 text-sm text-text-secondary">Home port: {ship.home_port}</p>
+                  )}
+                  <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
+                    <a href="/cruises-from-galveston/ships" className="text-primary-blue">
+                      Advisor overview
+                    </a>
+                    <a
+                      href="#booking-panel"
+                      onClick={() => openBookingPanel({ ship: ship.name })}
+                      className="text-text-primary hover:text-primary-blue"
+                    >
+                      View sailings
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {ports.length > 0 && (
+          <section className="mt-16" id="ports">
+            <h2 className="text-2xl font-semibold font-accent">Where Galveston cruises go</h2>
+            <p className="mt-2 text-sm text-text-secondary">Based on live Galveston sailings and recent itineraries.</p>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {ports.map((port) => (
+                <div key={port} className="rounded-2xl border border-white/10 bg-background-card p-6">
+                  <div className="text-base font-semibold text-text-primary">{port}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section className="mt-16" id="guidance">
+          <h2 className="text-2xl font-semibold font-accent">Planning your cruise from Galveston</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {[
+              { label: "Driving vs Flying", href: "/cruises-from-galveston/how-to-plan" },
+              { label: "Transportation options (airport to ship)", href: "https://houstoncruiseshuttle.com" },
+              { label: "Short vs long sailings", href: "/cruises-from-galveston/how-to-plan" },
+              { label: "First cruise vs repeat cruisers", href: "/cruises-from-galveston/how-to-plan" },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm font-semibold text-text-primary"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-16" id="authority">
+          <h2 className="text-center text-2xl font-semibold font-accent">Why trust the desk</h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
+            {[
+              {
+                title: "Port-specific expertise",
+                description:
+                  "Focused exclusively on Galveston departures, terminal logistics, and the travel realities that impact embarkation.",
+              },
+              {
+                title: "Decision-grade context",
+                description:
+                  "We explain itinerary changes, ship shifts, and seasonal patterns in clear language before you commit.",
+              },
+              {
+                title: "Independent guidance",
+                description:
+                  "We are not tied to a single cruise line, so recommendations prioritize fit and clarity over volume.",
+              },
+              {
+                title: "Support across the journey",
+                description:
+                  "From planning to return day, our team stays available for questions and operational updates.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-white/10 bg-background-panel px-6 py-8">
+                <div className="text-lg font-semibold text-text-primary">{item.title}</div>
+                <p className="mt-3 text-sm text-text-secondary">{item.description}</p>
+              </div>
+            ))}
           </div>
         </section>
       </div>
