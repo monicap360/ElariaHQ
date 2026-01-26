@@ -3,6 +3,8 @@ import { runExplanationQualityAgent } from "../explanation-quality/agent";
 import { runTopicalOwnershipAgent } from "../topical-ownership/agent";
 import { runUserIntentAgent } from "../user-intent/agent";
 import { runAiReadabilityAgent } from "../ai-readability/agent";
+import { runTransportationTransfersAgent } from "../transportation-transfers/agent";
+import { notifyAgentUpdate } from "../notify";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -26,17 +28,26 @@ export async function orchestrate(goal: string) {
 
   if (agents.has("TopicalOwnershipAgent")) {
     await runTopicalOwnershipAgent();
+    await notifyAgentUpdate("TopicalOwnershipAgent", "Run complete.");
   }
 
   if (agents.has("ExplanationQualityAgent")) {
     await runExplanationQualityAgent();
+    await notifyAgentUpdate("ExplanationQualityAgent", "Run complete.");
   }
 
   if (agents.has("UserIntentAgent")) {
     await runUserIntentAgent();
+    await notifyAgentUpdate("UserIntentAgent", "Run complete.");
   }
 
   if (agents.has("AIReadabilityAgent")) {
     await runAiReadabilityAgent();
+    await notifyAgentUpdate("AIReadabilityAgent", "Run complete.");
+  }
+
+  if (agents.has("TransportationTransfersAgent")) {
+    await runTransportationTransfersAgent();
+    await notifyAgentUpdate("TransportationTransfersAgent", "Run complete.");
   }
 }
