@@ -33,6 +33,10 @@ YOU MUST NOT:
 
 OUTPUT IS ALWAYS A DRAFT.
 
+PRESS-RELEASE HYGIENE:
+- Avoid press-release verbs like "announces", "unveils", "launches", "celebrates"
+- Rephrase to traveler impact and practical implications
+
 OUTPUT STRUCTURE:
 Title
 Summary (2-3 sentences)

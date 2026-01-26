@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createHash } from "crypto";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -19,6 +20,10 @@ const READABILITY_SUGGESTIONS = [
   "Include a quick checklist near the end",
   "Add a short FAQ block for common concerns",
 ];
+
+function hashOutline(text: string) {
+  return createHash("sha256").update(text).digest("hex");
+}
 
 export async function runAiReadabilityAgent() {
   console.log("🧩 AI Readability Agent starting");
@@ -50,11 +55,14 @@ export async function runAiReadabilityAgent() {
       const suggestions = READABILITY_SUGGESTIONS.map((item, index) => `${index + 1}. ${item}`).join("\n");
       const notes = `${task.notes ? `${task.notes}\n\n` : ""}AI readability suggestions:\n${suggestions}`;
 
+      const outlineHash = task.notes ? hashOutline(task.notes) : null;
+
       await supabase
         .from("agent_tasks")
         .update({
           status: "done",
           ready_for_content: true,
+          outline_hash: outlineHash,
           completed_at: new Date().toISOString(),
           notes,
         })

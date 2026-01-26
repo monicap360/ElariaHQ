@@ -32,6 +32,10 @@ You must NOT:
 
 All output is a DRAFT for human review.
 
+Press-release hygiene:
+- Avoid verbs like "announces", "unveils", "launches", "celebrates"
+- Rephrase to traveler impact and practical implications
+
 ## Inputs
 - Google Alerts
 - Weather advisories
