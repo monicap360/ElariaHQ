@@ -24,6 +24,8 @@ type TransferRequest = {
   passengers: number | null;
   luggage_count: number | null;
   vehicle_type: string | null;
+  route_type: string | null;
+  ship_name: string | null;
   status: string | null;
   notes: string | null;
 };
@@ -201,6 +203,32 @@ export async function runTransportationTransfersAgent() {
         continue;
       }
 
+      if (!transfer.route_type) {
+        const note = "Missing route_type (airport_to_ship, hotel_to_ship, ship_to_airport, ship_to_hotel)";
+        await supabase
+          .from("transfer_requests")
+          .update({ notes: appendNote(transfer.notes, note) })
+          .eq("id", transfer.id);
+        await supabase
+          .from("agent_tasks")
+          .update({ status: "blocked", notes: note })
+          .eq("id", task.id);
+        continue;
+      }
+
+      if (!transfer.ship_name) {
+        const note = "Missing ship_name for route labeling";
+        await supabase
+          .from("transfer_requests")
+          .update({ notes: appendNote(transfer.notes, note) })
+          .eq("id", transfer.id);
+        await supabase
+          .from("agent_tasks")
+          .update({ status: "blocked", notes: note })
+          .eq("id", task.id);
+        continue;
+      }
+
       if (!pickupLoc.active || !dropoffLoc.active) {
         const note = "Pickup or dropoff location is inactive";
         await supabase
@@ -216,6 +244,31 @@ export async function runTransportationTransfersAgent() {
 
       if (!ALLOWED_AREAS.has(pickupLoc.area || "") || !ALLOWED_AREAS.has(dropoffLoc.area || "")) {
         const note = `Location outside allowed zones: ${pickupLoc.area} -> ${dropoffLoc.area}`;
+        await supabase
+          .from("transfer_requests")
+          .update({ notes: appendNote(transfer.notes, note) })
+          .eq("id", transfer.id);
+        await supabase
+          .from("agent_tasks")
+          .update({ status: "blocked", notes: note })
+          .eq("id", task.id);
+        continue;
+      }
+
+      const pickupArea = pickupLoc.area || "";
+      const dropoffArea = dropoffLoc.area || "";
+      const isAirportPickup = pickupArea === "airport";
+      const isAirportDropoff = dropoffArea === "airport";
+
+      const routeType = transfer.route_type;
+      const invalidRoute =
+        (routeType === "airport_to_ship" && !isAirportPickup) ||
+        (routeType === "hotel_to_ship" && isAirportPickup) ||
+        (routeType === "ship_to_airport" && !isAirportDropoff) ||
+        (routeType === "ship_to_hotel" && isAirportDropoff);
+
+      if (invalidRoute) {
+        const note = `Route type mismatch: ${routeType} for ${pickupArea} -> ${dropoffArea}`;
         await supabase
           .from("transfer_requests")
           .update({ notes: appendNote(transfer.notes, note) })
