@@ -222,7 +222,7 @@ export default function BookingPage() {
     <div style={{ maxWidth: 980, margin: "0 auto", padding: 24, fontFamily: "system-ui" }}>
       <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6 }}>Galveston Multi-Room Booking</h1>
       <p style={{ opacity: 0.8, marginBottom: 18 }}>
-        Real Supabase data - Cruise line -> Ship (Galveston) -> Sailing -> Rooms
+        Real Supabase data - Cruise line {"->"} Ship (Galveston) {"->"} Sailing {"->"} Rooms
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
@@ -305,7 +305,7 @@ export default function BookingPage() {
               <option value="">{sailings.length ? "Select..." : "Select ship first"}</option>
               {sailings.map((sa) => (
                 <option key={sa.id} value={sa.id}>
-                  {sa.sail_date} -> {sa.return_date}
+                  {sa.sail_date} {"->"} {sa.return_date}
                 </option>
               ))}
             </select>
