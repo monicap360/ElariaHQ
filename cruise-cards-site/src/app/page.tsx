@@ -144,6 +144,10 @@ export default function Home() {
     travelers: "2",
     advisorOnly: false,
   });
+  const [roomsCount, setRoomsCount] = useState(1);
+  const [roomGuests, setRoomGuests] = useState<number[]>([2]);
+  const [deckPreference, setDeckPreference] = useState("");
+  const [roomTypePreference, setRoomTypePreference] = useState("");
   const [deskItems, setDeskItems] = useState<DeskItem[]>([]);
   const [ships, setShips] = useState<ShipRow[]>([]);
   const [ports, setPorts] = useState<string[]>([]);
@@ -176,6 +180,18 @@ export default function Home() {
       isActive = false;
     };
   }, []);
+
+  useEffect(() => {
+    setRoomGuests((prev) => {
+      const next = [...prev];
+      if (roomsCount > next.length) {
+        while (next.length < roomsCount) next.push(2);
+      } else if (roomsCount < next.length) {
+        next.length = roomsCount;
+      }
+      return next;
+    });
+  }, [roomsCount]);
 
   useEffect(() => {
     let isActive = true;
@@ -436,6 +452,67 @@ export default function Home() {
                       {count}
                     </option>
                   ))}
+                </select>
+              </label>
+              <label className="text-sm font-semibold text-text-secondary">
+                Rooms needed
+                <select
+                  value={roomsCount}
+                  onChange={(event) => setRoomsCount(Number(event.target.value))}
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                >
+                  {[1, 2, 3, 4, 5, 6].map((count) => (
+                    <option key={count} value={count}>
+                      {count} room{count > 1 ? "s" : ""}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {roomGuests.map((guests, index) => (
+                <label key={`room-${index + 1}`} className="text-sm font-semibold text-text-secondary">
+                  Room {index + 1} guests
+                  <select
+                    value={guests}
+                    onChange={(event) => {
+                      const value = Number(event.target.value);
+                      setRoomGuests((prev) => prev.map((item, idx) => (idx === index ? value : item)));
+                    }}
+                    className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                  >
+                    {[1, 2, 3, 4].map((count) => (
+                      <option key={count} value={count}>
+                        {count} guest{count > 1 ? "s" : ""}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+              <label className="text-sm font-semibold text-text-secondary">
+                Deck preference
+                <select
+                  value={deckPreference}
+                  onChange={(event) => setDeckPreference(event.target.value)}
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                >
+                  <option value="">No preference</option>
+                  <option value="Lower decks">Lower decks</option>
+                  <option value="Mid decks">Mid decks</option>
+                  <option value="Upper decks">Upper decks</option>
+                  <option value="Spa/quiet">Spa / quiet decks</option>
+                </select>
+              </label>
+              <label className="text-sm font-semibold text-text-secondary">
+                Room type preference
+                <select
+                  value={roomTypePreference}
+                  onChange={(event) => setRoomTypePreference(event.target.value)}
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                >
+                  <option value="">No preference</option>
+                  <option value="Interior">Interior</option>
+                  <option value="Ocean View">Ocean view</option>
+                  <option value="Balcony">Balcony</option>
+                  <option value="Suite">Suite</option>
                 </select>
               </label>
               <label className="flex items-center gap-3 text-sm font-semibold text-text-secondary">
