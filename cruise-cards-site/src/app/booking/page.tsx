@@ -19,7 +19,7 @@ type Agent = { id: string; name: string; status: string; tier: string | null };
 type Room = {
   cabin_type: string;
   guest_count: number;
-  dining_time: "early" | "late" | "any";
+  dining_time: "5:30pm" | "7:00pm" | "8:30pm" | "any";
   insurance: boolean;
   gratuities: boolean;
   price: number;
@@ -394,8 +394,9 @@ export default function BookingPage() {
                   style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
                 >
                   <option value="any">Any</option>
-                  <option value="early">Early</option>
-                  <option value="late">Late</option>
+                  <option value="5:30pm">5:30pm</option>
+                  <option value="7:00pm">7:00pm</option>
+                  <option value="8:30pm">8:30pm</option>
                 </select>
               </div>
 
