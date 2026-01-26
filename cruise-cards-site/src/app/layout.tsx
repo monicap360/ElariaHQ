@@ -17,9 +17,9 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.cruisesfromgalveston.net"),
-  title: "Cruises from Galveston 2026-2028 | Deals, Parking & Terminal Tips",
+  title: "Cruising From Galveston, Clearly Explained",
   description:
-    "Compare 2026-2028 cruises from Galveston, TX (Carnival, Royal Caribbean, Norwegian & more). Get terminal tips, parking options, and group cruise help.",
+    "Independent guidance on ships, itineraries, and planning from people who actually work the port.",
   authors: [{ name: "Cruises From Galveston" }],
   alternates: {
     canonical: "/",
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Cruises From Galveston",
-    title: "Cruises from Galveston 2026-2028 | Deals, Parking & Terminal Tips",
+    title: "Cruising From Galveston, Clearly Explained",
     description:
-      "Compare 2026-2028 cruises from Galveston, TX. Terminal tips, parking options, and group cruise help.",
+      "Independent guidance on ships, itineraries, and planning from people who actually work the port.",
     url: "https://www.cruisesfromgalveston.net/",
     images: [
       {
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cruises from Galveston 2026-2028 | Deals, Parking & Terminal Tips",
+    title: "Cruising From Galveston, Clearly Explained",
     description:
-      "Compare 2026-2028 cruises from Galveston, TX. Terminal tips, parking options, and group cruise help.",
+      "Independent guidance on ships, itineraries, and planning from people who actually work the port.",
     images: ["https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80"],
   },
   icons: {
