@@ -38,6 +38,22 @@ type SailingRow = {
   } | null;
 };
 
+type DeskItem = {
+  id: string;
+  title: string;
+  summary: string | null;
+  created_at: string | null;
+  source?: string | null;
+  kind: "draft" | "signal";
+};
+
+type ShipRow = {
+  id: string;
+  name: string;
+  home_port?: string | null;
+  is_active?: boolean | null;
+};
+
 function normalizeLineKey(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
@@ -96,6 +112,9 @@ export default function Home() {
     travelers: "2",
     advisorOnly: false,
   });
+  const [deskItems, setDeskItems] = useState<DeskItem[]>([]);
+  const [ships, setShips] = useState<ShipRow[]>([]);
+  const [ports, setPorts] = useState<string[]>([]);
 
   useEffect(() => {
     let isActive = true;
@@ -115,7 +134,26 @@ export default function Home() {
       }
     }
 
+    async function loadHomepageData() {
+      try {
+        const res = await fetch("/api/homepage-data");
+        if (!res.ok) return;
+        const data = (await res.json()) as {
+          deskItems: DeskItem[];
+          ships: ShipRow[];
+          ports: string[];
+        };
+        if (!isActive) return;
+        setDeskItems(data.deskItems || []);
+        setShips(data.ships || []);
+        setPorts(data.ports || []);
+      } catch {
+        // ignore homepage data errors on public page
+      }
+    }
+
     loadStatus();
+    loadHomepageData();
 
     return () => {
       isActive = false;
@@ -150,7 +188,7 @@ export default function Home() {
         const lineName = row.ship?.cruise_line?.name ?? "Unknown cruise line";
         const lineKey = normalizeLineKey(lineName);
         const duration = calcNights(row.sail_date, row.return_date);
-        const ports = formatPorts(row.ports) ?? formatPorts(row.itinerary) ?? "TBA";
+        const portsValue = formatPorts(row.ports) ?? formatPorts(row.itinerary) ?? "TBA";
         const priceCandidate =
           parsePrice(row.price_from) ??
           parsePrice(row.base_price) ??
@@ -163,7 +201,7 @@ export default function Home() {
           lineKey,
           ship: row.ship?.name ?? "Unknown ship",
           duration,
-          ports,
+          ports: portsValue,
           priceDisplay: formatPrice(priceCandidate),
           priceNumber: priceCandidate,
           scoreDisplay: formatScore(scoreCandidate),
@@ -289,7 +327,7 @@ export default function Home() {
               </p>
             </div>
             <a href="/booking" className="text-sm font-semibold text-primary-blue">
-              Continue to Booking →
+              Continue to Booking ->
             </a>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -421,122 +459,74 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-14" id="desk">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-semibold font-accent">From The Cruises From Galveston Desk</h2>
-              <p className="text-sm text-text-secondary">Edited by Monica Pena</p>
+        {deskItems.length > 0 && (
+          <section className="mt-14" id="desk">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-semibold font-accent">From the Cruises From Galveston Desk</h2>
+                <p className="text-sm text-text-secondary">Edited by Monica Pena</p>
+              </div>
+              <a href="/cruises-from-galveston/desk" className="text-sm font-semibold text-primary-blue">
+                View the Desk ->
+              </a>
             </div>
-            <a href="/cruises-from-galveston/desk" className="text-sm font-semibold text-primary-blue">
-              View the Desk →
-            </a>
-          </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {[
-              {
-                title: "Port operations outlook",
-                summary: "How terminal flow and staffing affect embarkation timing this season.",
-              },
-              {
-                title: "Deployment updates",
-                summary: "Ship rotations that change Galveston sailing patterns in 2026-2028.",
-              },
-              {
-                title: "Weather watch",
-                summary: "What Gulf weather shifts actually mean for Galveston departures.",
-              },
-            ].map((card) => (
-              <div key={card.title} className="rounded-2xl border border-white/10 bg-background-card p-6">
-                <div className="text-base font-semibold text-text-primary">{card.title}</div>
-                <p className="mt-3 text-sm text-text-secondary">{card.summary}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-14" id="ships">
-          <h2 className="text-2xl font-semibold font-accent">Ships Sailing From Galveston</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {[
-              {
-                name: "Carnival Breeze",
-                bestFor: "Families and first-time cruisers",
-                note: "Smooth Galveston embarkation flow.",
-              },
-              {
-                name: "Carnival Dream",
-                bestFor: "Short trips with flexible dining",
-                note: "Reliable weekend sailings.",
-              },
-              {
-                name: "Disney Magic",
-                bestFor: "Family groups with younger kids",
-                note: "Character programming works well from Galveston.",
-              },
-              {
-                name: "Mariner of the Seas",
-                bestFor: "Active travelers who want variety",
-                note: "Balanced entertainment and quiet spaces.",
-              },
-            ].map((ship) => (
-              <div key={ship.name} className="rounded-2xl border border-white/10 bg-background-card p-6">
-                <div className="text-lg font-semibold text-text-primary">{ship.name}</div>
-                <p className="mt-3 text-sm text-text-secondary">
-                  <span className="text-text-primary">Best for:</span> {ship.bestFor}
-                </p>
-                <p className="mt-2 text-sm text-text-secondary">{ship.note}</p>
-                <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
-                  <a
-                    href={`/cruises-from-galveston/ships/${ship.name.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="text-primary-blue"
-                  >
-                    Read Advisor Overview
-                  </a>
-                  <a
-                    href="#booking-panel"
-                    onClick={() => openBookingPanel({ ship: ship.name })}
-                    className="text-text-primary hover:text-primary-blue"
-                  >
-                    View Sailings
-                  </a>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {deskItems.map((card) => (
+                <div key={card.id} className="rounded-2xl border border-white/10 bg-background-card p-6">
+                  <div className="text-base font-semibold text-text-primary">{card.title}</div>
+                  {card.summary && <p className="mt-3 text-sm text-text-secondary">{card.summary}</p>}
+                  {card.kind === "signal" && card.source && (
+                    <div className="mt-3 text-xs text-text-muted">Source: {card.source}</div>
+                  )}
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
 
-        <section className="mt-14" id="ports">
-          <h2 className="text-2xl font-semibold font-accent">Where Galveston Cruises Go - And Why</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {[
-              {
-                name: "Cozumel",
-                detail: "A consistent stop because it pairs well with 4-7 night itineraries and easy port flow.",
-              },
-              {
-                name: "Costa Maya",
-                detail: "Popular for shorter sailings with calmer port logistics and beach access.",
-              },
-              {
-                name: "Roatan",
-                detail: "Favored by travelers who want a strong excursion day and reef access.",
-              },
-              {
-                name: "Belize",
-                detail: "Great for adventure-focused cruisers who plan for tender timing.",
-              },
-              {
-                name: "Grand Cayman",
-                detail: "A premium stop when longer itineraries are on the calendar.",
-              },
-            ].map((port) => (
-              <div key={port.name} className="rounded-2xl border border-white/10 bg-background-card p-6">
-                <div className="text-base font-semibold text-text-primary">{port.name}</div>
-                <p className="mt-3 text-sm text-text-secondary">{port.detail}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        {ships.length > 0 && (
+          <section className="mt-14" id="ships">
+            <h2 className="text-2xl font-semibold font-accent">Ships Sailing From Galveston</h2>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {ships.map((ship) => (
+                <div key={ship.id} className="rounded-2xl border border-white/10 bg-background-card p-6">
+                  <div className="text-lg font-semibold text-text-primary">{ship.name}</div>
+                  {ship.home_port && (
+                    <p className="mt-2 text-sm text-text-secondary">Home port: {ship.home_port}</p>
+                  )}
+                  <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
+                    <a href="/cruises-from-galveston/ships" className="text-primary-blue">
+                      Advisor overview
+                    </a>
+                    <a
+                      href="#booking-panel"
+                      onClick={() => openBookingPanel({ ship: ship.name })}
+                      className="text-text-primary hover:text-primary-blue"
+                    >
+                      View sailings
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {ports.length > 0 && (
+          <section className="mt-14" id="ports">
+            <h2 className="text-2xl font-semibold font-accent">Where Galveston Cruises Go</h2>
+            <p className="mt-2 text-sm text-text-secondary">
+              Based on live Galveston sailings and recent itineraries.
+            </p>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {ports.map((port) => (
+                <div key={port} className="rounded-2xl border border-white/10 bg-background-card p-6">
+                  <div className="text-base font-semibold text-text-primary">{port}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mt-14" id="guidance">
           <h2 className="text-2xl font-semibold font-accent">Planning Your Cruise From Galveston</h2>
