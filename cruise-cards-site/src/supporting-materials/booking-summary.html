@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Booking Summary</title>
+    <style>
+      :root {
+        --brand-primary: #0f172a;
+        --brand-secondary: #1e293b;
+        --brand-accent: #3b82f6;
+        --brand-text: #0f172a;
+        --muted: #64748b;
+        --border: #e2e8f0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        color: var(--brand-text);
+        margin: 0;
+        padding: 32px;
+        background: #ffffff;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 16px;
+        margin-bottom: 24px;
+      }
+
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--brand-accent);
+      }
+
+      h1 {
+        font-size: 24px;
+        margin: 0 0 8px;
+      }
+
+      .meta {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .summary {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 24px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      h2 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: var(--brand-secondary);
+      }
+
+      ul {
+        padding-left: 18px;
+        margin: 0;
+      }
+
+      li {
+        margin-bottom: 6px;
+        line-height: 1.4;
+      }
+
+      footer {
+        margin-top: 32px;
+        font-size: 12px;
+        color: var(--muted);
+        border-top: 1px solid var(--border);
+        padding-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div style="font-weight: 700; font-size: 14px">Cruises From Galveston</div>
+          <div class="meta">Booking Summary</div>
+        </div>
+      </div>
+      <div class="meta">Booking ID: {{booking_id}}</div>
+    </header>
+
+    <section>
+      <h1>Booking Summary</h1>
+      <p class="meta">Prepared for {{guest_name}}</p>
+    </section>
+
+    <section class="summary">
+      <strong>{{ship_name}}</strong>
+      <div class="meta">{{sail_date}} • {{nights}} nights • {{itinerary}}</div>
+      <div style="margin-top: 10px; font-size: 14px">
+        Total: {{total_price}} (taxes and port fees included)
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Rooms</h2>
+        <ul>
+          <li>{{room_1}}</li>
+          <li>{{room_2}}</li>
+          <li>{{room_3}}</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Guest Details</h2>
+        <ul>
+          <li>Primary guest: {{guest_name}}</li>
+          <li>Dining: {{dining_preference}}</li>
+          <li>Special notes: {{special_notes}}</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Payments</h2>
+        <ul>
+          <li>Deposit: {{deposit_amount}}</li>
+          <li>Final payment due: {{final_payment_date}}</li>
+          <li>Balance: {{balance_due}}</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Transportation</h2>
+        <ul>
+          <li>Route: {{route_label}}</li>
+          <li>Pickup time: {{pickup_time}}</li>
+          <li>Vehicle: Sedan (4 pax)</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      Gratuities and vacation protection are not included. This summary is advisory and subject to cruise line
+      confirmation.
+    </footer>
+  </body>
+</html>

@@ -5,6 +5,84 @@
   --foreground: #171717;
 }
 
+.dashboard-theme {
+  --dash-bg: #0e1220;
+  --dash-panel: #11172a;
+  --dash-border: #1b2234;
+  --dash-text: #e6e8ef;
+  --dash-muted: #9aa3b2;
+  --dash-tertiary: #6f7a8a;
+  --dash-accent-blue: #4a78ff;
+  --dash-accent-purple: #7b6cff;
+  --dash-accent-pink: #e3a6ff;
+  background: var(--dash-bg);
+  color: var(--dash-text);
+  min-height: 100vh;
+}
+
+.dashboard-panel {
+  background: var(--dash-panel);
+  border: 1px solid var(--dash-border);
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(74, 120, 255, 0.08);
+}
+
+.dashboard-muted {
+  color: var(--dash-muted);
+}
+
+.dashboard-tertiary {
+  color: var(--dash-tertiary);
+}
+
+.dashboard-accent {
+  color: var(--dash-accent-blue);
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dashboard-table thead th {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 11px;
+  color: var(--dash-accent-blue);
+  padding: 12px 16px;
+}
+
+.dashboard-table tbody td {
+  padding: 12px 16px;
+  border-top: 1px solid var(--dash-border);
+}
+
+.dashboard-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dashboard-chip {
+  border: 1px solid var(--dash-border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--dash-muted);
+}
+
+.dashboard-button {
+  border: 1px solid var(--dash-border);
+  background: transparent;
+  color: var(--dash-text);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.dashboard-button-primary {
+  border-color: rgba(74, 120, 255, 0.5);
+  color: var(--dash-accent-blue);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

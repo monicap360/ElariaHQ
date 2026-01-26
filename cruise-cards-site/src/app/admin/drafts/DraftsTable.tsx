@@ -51,61 +51,61 @@ export default function DraftsTable({ drafts }: Props) {
       <header className="space-y-3">
         <div>
           <h1 className="text-3xl font-semibold">Drafts Awaiting Approval</h1>
-          <p className="text-gray-600">
+          <p className="dashboard-muted">
             Drafts are created by agents and held here until approved. No content publishes without review.
           </p>
         </div>
         <div className="flex flex-wrap gap-3 text-sm">
-          <span className="rounded-full border border-slate-300 px-3 py-1">Total drafts: {counts.total}</span>
-          <span className="rounded-full border border-slate-300 px-3 py-1">
+          <span className="dashboard-chip">Total drafts: {counts.total}</span>
+          <span className="dashboard-chip">
             texascruiseport.com: {counts["texascruiseport.com"]}
           </span>
-          <span className="rounded-full border border-slate-300 px-3 py-1">
+          <span className="dashboard-chip">
             houstoncruisetips.com: {counts["houstoncruisetips.com"]}
           </span>
-          <span className="rounded-full border border-slate-300 px-3 py-1">
+          <span className="dashboard-chip">
             houstoncruiseshuttle.com: {counts["houstoncruiseshuttle.com"]}
           </span>
-          <span className="rounded-full border border-slate-300 px-3 py-1">
+          <span className="dashboard-chip">
             pier10parking.com: {counts["pier10parking.com"]}
           </span>
-          <span className="rounded-full border border-slate-300 px-3 py-1">
+          <span className="dashboard-chip">
             pier25parking.com: {counts["pier25parking.com"]}
           </span>
-          <span className="rounded-full border border-slate-300 px-3 py-1">
+          <span className="dashboard-chip">
             cruisesfromgalveston.net: {counts["cruisesfromgalveston.net"]}
           </span>
         </div>
       </header>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <div className="rounded-xl border border-slate-200 bg-white">
+        <div className="dashboard-panel">
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-sm">
+            <table className="dashboard-table text-sm">
               <thead>
-                <tr className="border-b bg-slate-50 text-left">
-                  <th className="py-3 px-4">Topic</th>
-                  <th className="py-3 px-4">Scope</th>
-                  <th className="py-3 px-4">Target Site</th>
-                  <th className="py-3 px-4">Trigger</th>
-                  <th className="py-3 px-4">Priority</th>
-                  <th className="py-3 px-4">Created</th>
-                  <th className="py-3 px-4">Action</th>
+                <tr className="text-left">
+                  <th>Topic</th>
+                  <th>Scope</th>
+                  <th>Target Site</th>
+                  <th>Trigger</th>
+                  <th>Priority</th>
+                  <th>Created</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {drafts.map((draft) => (
-                  <tr key={draft.id} className="border-b last:border-b-0">
-                    <td className="px-4 py-3 font-medium">{draft.topic}</td>
-                    <td className="px-4 py-3">{draft.scope}</td>
-                    <td className="px-4 py-3">{draft.targetSite}</td>
-                    <td className="px-4 py-3">{draft.sourceSignal}</td>
-                    <td className="px-4 py-3">{draft.priority ?? "—"}</td>
-                    <td className="px-4 py-3">{draft.createdAt}</td>
-                    <td className="px-4 py-3">
+                  <tr key={draft.id}>
+                    <td className="font-medium">{draft.topic}</td>
+                    <td>{draft.scope}</td>
+                    <td>{draft.targetSite}</td>
+                    <td>{draft.sourceSignal}</td>
+                    <td>{draft.priority ?? "—"}</td>
+                    <td>{draft.createdAt}</td>
+                    <td>
                       <button
                         type="button"
-                        className="rounded border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700"
+                        className="dashboard-button"
                         onClick={() => setSelectedId(draft.id)}
                       >
                         View
@@ -115,7 +115,7 @@ export default function DraftsTable({ drafts }: Props) {
                 ))}
                 {!drafts.length && (
                   <tr>
-                    <td className="px-4 py-6 text-center text-gray-500" colSpan={7}>
+                    <td className="px-4 py-6 text-center dashboard-tertiary" colSpan={7}>
                       No drafts are ready for approval yet.
                     </td>
                   </tr>
@@ -125,14 +125,14 @@ export default function DraftsTable({ drafts }: Props) {
           </div>
         </div>
 
-        <aside className="rounded-xl border border-slate-200 bg-white p-5">
-          {!selected && <p className="text-sm text-gray-500">Select a draft to see details.</p>}
+        <aside className="dashboard-panel p-5">
+          {!selected && <p className="text-sm dashboard-tertiary">Select a draft to see details.</p>}
 
           {selected && (
             <div className="space-y-6">
               <section>
                 <h2 className="text-lg font-semibold">Metadata</h2>
-                <dl className="mt-3 space-y-2 text-sm text-slate-700">
+                <dl className="mt-3 space-y-2 text-sm">
                   <div>
                     <dt className="font-semibold">Topic</dt>
                     <dd>{selected.topic}</dd>
@@ -162,14 +162,14 @@ export default function DraftsTable({ drafts }: Props) {
 
               <section>
                 <h2 className="text-lg font-semibold">Approved Outline</h2>
-                <pre className="mt-3 whitespace-pre-wrap rounded-lg bg-slate-50 p-3 text-xs text-slate-700">
+                <pre className="mt-3 whitespace-pre-wrap rounded-lg border border-slate-800 bg-slate-950/60 p-3 text-xs text-slate-200">
 {selected.notes || "Outline not available yet."}
                 </pre>
               </section>
 
               <section>
                 <h2 className="text-lg font-semibold">Draft Content</h2>
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm dashboard-muted">
                   Publisher output will appear here once generated and approved.
                 </p>
               </section>
@@ -178,7 +178,7 @@ export default function DraftsTable({ drafts }: Props) {
                 <h2 className="text-lg font-semibold">Actions</h2>
                 <div className="flex flex-wrap gap-2">
                   <button
-                    className="rounded bg-emerald-600 px-3 py-2 text-xs font-semibold text-white"
+                    className="dashboard-button dashboard-button-primary"
                     onClick={async () => {
                       await fetch("/api/admin/drafts/action", {
                         method: "POST",
@@ -191,7 +191,7 @@ export default function DraftsTable({ drafts }: Props) {
                     Approve
                   </button>
                   <button
-                    className="rounded border border-slate-300 px-3 py-2 text-xs font-semibold"
+                    className="dashboard-button"
                     onClick={async () => {
                       const note = window.prompt("Revision request notes") || "";
                       await fetch("/api/admin/drafts/action", {
@@ -205,7 +205,7 @@ export default function DraftsTable({ drafts }: Props) {
                     Request Revision
                   </button>
                   <button
-                    className="rounded border border-slate-300 px-3 py-2 text-xs font-semibold"
+                    className="dashboard-button"
                     onClick={async () => {
                       const note = window.prompt("Hold notes") || "";
                       await fetch("/api/admin/drafts/action", {
@@ -219,7 +219,7 @@ export default function DraftsTable({ drafts }: Props) {
                     Hold
                   </button>
                   <button
-                    className="rounded border border-red-300 px-3 py-2 text-xs font-semibold text-red-600"
+                    className="dashboard-button"
                     onClick={async () => {
                       const note = window.prompt("Rejection reason") || "";
                       await fetch("/api/admin/drafts/action", {
@@ -233,7 +233,7 @@ export default function DraftsTable({ drafts }: Props) {
                     Reject
                   </button>
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs dashboard-tertiary">
                   Actions will be wired to publishing workflows once approvals are finalized.
                 </p>
               </section>

@@ -63,8 +63,10 @@ export default async function DraftsPage() {
   });
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-10">
-      <DraftsTable drafts={drafts} />
+    <main className="dashboard-theme">
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <DraftsTable drafts={drafts} />
+      </div>
     </main>
   );
 }
