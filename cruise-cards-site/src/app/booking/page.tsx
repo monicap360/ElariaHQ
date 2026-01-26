@@ -460,8 +460,8 @@ export default function BookingPage() {
       </div>
 
       <div style={{ marginTop: 14, fontSize: 12, opacity: 0.8 }}>
-        If Cruise Lines / Ships don't load, it's usually **RLS on cruise_lines/ships/sailings**. If you want, I'll
-        give you the exact RLS policies for "public read of Galveston fleet only".
+        If Cruise Lines / Ships don&apos;t load, it&apos;s usually **RLS on cruise_lines/ships/sailings**. If you
+        want, I&apos;ll give you the exact RLS policies for &quot;public read of Galveston fleet only&quot;.
       </div>
     </div>
   );

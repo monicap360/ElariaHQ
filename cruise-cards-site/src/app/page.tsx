@@ -185,7 +185,7 @@ export default function Home() {
           Galveston Cruise Cards
         </p>
         <h1 style={{ fontSize: 34, fontWeight: 900, marginBottom: 10 }}>
-          Texas' only Galveston-only cruise experts
+          Texas&apos; only Galveston-only cruise experts
         </h1>
         <p style={{ fontSize: 16, opacity: 0.85, marginBottom: 20 }}>
           A client-facing booking experience built for families, groups, and verified inventory.

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -173,22 +174,22 @@ export default function RootLayout({
         <div className="min-h-screen bg-slate-50 text-slate-900">
           <header className="border-b border-slate-200 bg-white">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-              <a href="/" className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-700">
+              <Link href="/" className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-700">
                 Cruises From Galveston
-              </a>
+              </Link>
               <nav className="flex flex-wrap gap-4 text-sm text-slate-600">
-                <a href="/cruises-from-galveston/how-to-plan" className="hover:text-slate-900">
+                <Link href="/cruises-from-galveston/how-to-plan" className="hover:text-slate-900">
                   Planning Guide
-                </a>
-                <a href="/cruises-from-galveston/board" className="hover:text-slate-900">
+                </Link>
+                <Link href="/cruises-from-galveston/board" className="hover:text-slate-900">
                   Cruise Board
-                </a>
-                <a href="/cruises-from-galveston/search" className="hover:text-slate-900">
+                </Link>
+                <Link href="/cruises-from-galveston/search" className="hover:text-slate-900">
                   Search
-                </a>
-                <a href="/booking" className="hover:text-slate-900">
+                </Link>
+                <Link href="/booking" className="hover:text-slate-900">
                   Book
-                </a>
+                </Link>
               </nav>
             </div>
           </header>
