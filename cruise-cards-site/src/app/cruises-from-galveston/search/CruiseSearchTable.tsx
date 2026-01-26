@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 type Sailing = {
   ship: string | null;
+  line?: string | null;
   departure_date: string | null;
   nights: number | null;
   itinerary: string | null;
@@ -42,6 +43,27 @@ function monthLabel(value: string | null) {
   return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
+const LONG_SAIL_LINES = ["carnival", "royal-caribbean", "royal-caribbean-international"];
+const STANDARD_NIGHTS = [4, 5, 6, 7];
+const EXTENDED_NIGHTS = [4, 5, 6, 7, 8, 10, 14];
+
+function normalizeLineKey(value: string | null | undefined) {
+  if (!value) return "";
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function allowedNightsForLine(lineName?: string | null) {
+  if (!lineName) return EXTENDED_NIGHTS;
+  const key = normalizeLineKey(lineName);
+  if (LONG_SAIL_LINES.includes(key)) return EXTENDED_NIGHTS;
+  return STANDARD_NIGHTS;
+}
+
+function isAllowedDuration(lineName: string | null | undefined, nights: number | null) {
+  if (!nights) return false;
+  return allowedNightsForLine(lineName).includes(nights);
+}
+
 export default function CruiseSearchTable({ sailings }: Props) {
   const [shipFilter, setShipFilter] = useState("all");
   const [monthFilter, setMonthFilter] = useState("all");
@@ -67,18 +89,24 @@ export default function CruiseSearchTable({ sailings }: Props) {
   }, [sailings]);
 
   const nightsOptions = useMemo(() => {
+    const selectedLine =
+      shipFilter === "all"
+        ? null
+        : sailings.find((sailing) => sailing.ship?.toLowerCase() === shipFilter)?.line ?? null;
+    const allowed = new Set(allowedNightsForLine(selectedLine));
     const unique = new Set<number>();
     sailings.forEach((sailing) => {
-      if (typeof sailing.nights === "number") unique.add(sailing.nights);
+      if (typeof sailing.nights === "number" && allowed.has(sailing.nights)) unique.add(sailing.nights);
     });
     return Array.from(unique.values()).sort((a, b) => a - b);
-  }, [sailings]);
+  }, [sailings, shipFilter]);
 
   const filtered = useMemo(() => {
     return sailings.filter((sailing) => {
       if (shipFilter !== "all" && sailing.ship?.toLowerCase() !== shipFilter) return false;
       if (monthFilter !== "all" && monthKey(sailing.departure_date) !== monthFilter) return false;
       if (nightsFilter !== "all" && String(sailing.nights) !== nightsFilter) return false;
+      if (!isAllowedDuration(sailing.line, sailing.nights)) return false;
       return true;
     });
   }, [sailings, shipFilter, monthFilter, nightsFilter]);

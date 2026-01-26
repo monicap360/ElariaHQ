@@ -12,10 +12,42 @@ export const metadata = {
 export default async function CruiseSearchPage() {
   const supabase = createClient();
 
-  const { data: sailings } = await supabase
-    .from("upcoming_sailings")
-    .select("*")
-    .order("departure_date", { ascending: true });
+  const { data } = await supabase
+    .from("sailings")
+    .select("id,sail_date,return_date,ports,itinerary,price_from,base_price,starting_price,min_price,ship:ships(name,cruise_line:cruise_lines(name))")
+    .eq("is_active", true)
+    .order("sail_date", { ascending: true });
+
+  const sailings =
+    data?.map((row) => {
+      const sailDate = row.sail_date;
+      const returnDate = row.return_date;
+      const nights =
+        sailDate && returnDate
+          ? Math.max(
+              0,
+              Math.round((new Date(returnDate).getTime() - new Date(sailDate).getTime()) / (1000 * 60 * 60 * 24))
+            )
+          : null;
+      const itinerary =
+        (Array.isArray(row.ports) ? row.ports.filter(Boolean).join(", ") : row.ports?.toString()) ||
+        row.itinerary ||
+        null;
+      const priceCandidates = [row.price_from, row.base_price, row.starting_price, row.min_price];
+      const numeric = priceCandidates.find((value) => {
+        if (value === null || value === undefined) return false;
+        const num = typeof value === "number" ? value : Number(value);
+        return Number.isFinite(num);
+      });
+      return {
+        ship: row.ship?.name ?? null,
+        line: row.ship?.cruise_line?.name ?? null,
+        departure_date: sailDate ?? null,
+        nights,
+        itinerary,
+        starting_price: numeric ?? null,
+      };
+    }) || [];
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">

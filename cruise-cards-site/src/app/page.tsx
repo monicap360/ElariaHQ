@@ -58,6 +58,21 @@ function normalizeLineKey(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
+const LONG_SAIL_LINES = ["carnival", "royal-caribbean", "royal-caribbean-international"];
+const STANDARD_NIGHTS = [4, 5, 6, 7];
+const EXTENDED_NIGHTS = [4, 5, 6, 7, 8, 10, 14];
+
+function allowedNightsForLine(lineName?: string | null) {
+  if (!lineName) return EXTENDED_NIGHTS;
+  const key = normalizeLineKey(lineName);
+  if (LONG_SAIL_LINES.includes(key)) return EXTENDED_NIGHTS;
+  return STANDARD_NIGHTS;
+}
+
+function isAllowedDuration(lineName: string, nights: number) {
+  return allowedNightsForLine(lineName).includes(nights);
+}
+
 function initials(value: string) {
   return value
     .split(" ")
@@ -211,7 +226,7 @@ export default function Home() {
         };
       });
 
-      setCruiseMatrix(rows);
+      setCruiseMatrix(rows.filter((row) => isAllowedDuration(row.line, row.duration)));
       setMatrixLoading(false);
     }
 
@@ -254,6 +269,16 @@ export default function Home() {
     });
     return Array.from(unique.values()).sort();
   }, [cruiseMatrix]);
+
+  const selectedShipLine = useMemo(() => {
+    if (!bookingForm.ship) return null;
+    const found = cruiseMatrix.find((row) => row.ship === bookingForm.ship);
+    return found?.line ?? null;
+  }, [bookingForm.ship, cruiseMatrix]);
+
+  const bookingNightsOptions = useMemo(() => {
+    return allowedNightsForLine(selectedShipLine);
+  }, [selectedShipLine]);
 
   const availableMonths = useMemo(() => {
     const unique = new Map<string, string>();
@@ -392,7 +417,7 @@ export default function Home() {
                   className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
                 >
                   <option value="">Any length</option>
-                  {[3, 4, 5, 6, 7, 8].map((night) => (
+                  {bookingNightsOptions.map((night) => (
                     <option key={night} value={night}>
                       {night} nights
                     </option>
