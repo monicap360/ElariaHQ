@@ -32,9 +32,10 @@ export async function GET() {
 
   const draftsRes = await supabase
     .from("content_drafts")
-    .select("id,draft_title,draft_body,created_at,site_target,status")
+    .select("id,draft_title,draft_body,created_at,site_target,status,authority_role")
     .eq("site_target", "cruisesfromgalveston")
-    .eq("status", "drafted")
+    .eq("status", "approved")
+    .in("authority_role", ["explainer", "guide", "context", "comparison", "pr"])
     .order("created_at", { ascending: false })
     .limit(3);
 
@@ -48,25 +49,6 @@ export async function GET() {
         kind: "draft",
       });
     });
-  } else {
-    const signalsRes = await supabase
-      .from("news_signals")
-      .select("id,headline,summary,source,detected_at")
-      .order("detected_at", { ascending: false })
-      .limit(3);
-
-    if (signalsRes.data) {
-      signalsRes.data.forEach((row) => {
-        deskItems.push({
-          id: row.id,
-          title: row.headline,
-          summary: makeExcerpt(row.summary),
-          created_at: row.detected_at,
-          source: row.source,
-          kind: "signal",
-        });
-      });
-    }
   }
 
   const shipsRes = await supabase

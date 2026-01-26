@@ -121,11 +121,6 @@ export default function Home() {
   const [filterLine, setFilterLine] = useState("all");
   const [filterYear, setFilterYear] = useState("all");
   const [sortKey, setSortKey] = useState<"price" | "duration" | "date">("date");
-  const [siteStatus, setSiteStatus] = useState<{
-    draftsInReview: number;
-    openSignals: number;
-    upcomingSailings: number;
-  } | null>(null);
   const [bookingForm, setBookingForm] = useState({
     ship: "",
     month: "",
@@ -141,20 +136,6 @@ export default function Home() {
   useEffect(() => {
     let isActive = true;
 
-    async function loadStatus() {
-      try {
-        const res = await fetch("/api/site-status");
-        if (!res.ok) return;
-        const data = (await res.json()) as {
-          draftsInReview: number;
-          openSignals: number;
-          upcomingSailings: number;
-        };
-        if (isActive) setSiteStatus(data);
-      } catch {
-        // ignore status widget errors on public page
-      }
-    }
 
     async function loadHomepageData() {
       try {
@@ -174,7 +155,6 @@ export default function Home() {
       }
     }
 
-    loadStatus();
     loadHomepageData();
 
     return () => {
@@ -297,13 +277,12 @@ export default function Home() {
   }, [cruiseMatrix]);
 
   const stats = useMemo(() => {
-    const sailingsCount = siteStatus?.upcomingSailings ?? cruiseMatrix.length;
     return [
-      { label: "Upcoming sailings", value: sailingsCount ? `${sailingsCount}` : "-" },
+      { label: "Upcoming sailings", value: cruiseMatrix.length ? `${cruiseMatrix.length}` : "-" },
       { label: "Active ships", value: ships.length ? `${ships.length}` : "-" },
       { label: "Desk updates", value: deskItems.length ? `${deskItems.length}` : "-" },
     ];
-  }, [siteStatus, cruiseMatrix.length, ships.length, deskItems.length]);
+  }, [cruiseMatrix.length, ships.length, deskItems.length]);
 
   function openBookingPanel(prefill?: Partial<typeof bookingForm>) {
     setBookingForm((prev) => ({ ...prev, ...prefill }));
