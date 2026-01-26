@@ -235,15 +235,17 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-background-base text-text-primary">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(76,111,255,0.08),transparent_55%)] bg-background-base text-text-primary">
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-16">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(123,97,255,0.08),transparent_60%)] px-10 py-14"
+          className="relative overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(123,97,255,0.08),transparent_60%)] px-10 py-14 shadow-[0_0_40px_rgba(76,111,255,0.08)]"
         >
-          <p className="text-xs uppercase tracking-[0.35em] text-text-muted">CruisesFromGalveston.net</p>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-background-card px-4 py-1 text-xs uppercase tracking-[0.3em] text-text-muted">
+            CruisesFromGalveston.net
+          </div>
           <h1 className="mt-4 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
             Cruising From Galveston, Clearly Explained
           </h1>
@@ -254,13 +256,24 @@ export default function Home() {
             <a href="#guidance" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
               Start With Guidance
             </a>
-            <button
-              type="button"
+            <a
+              href="#booking-panel"
               onClick={() => openBookingPanel()}
               className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
             >
               Book a Cruise
-            </button>
+            </a>
+          </div>
+          <div className="mt-8 grid gap-3 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm text-text-secondary">
+              Decision-first guidance, booking second.
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm text-text-secondary">
+              Independent, not affiliated with cruise lines.
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm text-text-secondary">
+              Local operations view of the port.
+            </div>
           </div>
         </motion.section>
 
@@ -276,7 +289,7 @@ export default function Home() {
               </p>
             </div>
             <a href="/booking" className="text-sm font-semibold text-primary-blue">
-              Continue to Booking ->
+              Continue to Booking →
             </a>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -415,7 +428,7 @@ export default function Home() {
               <p className="text-sm text-text-secondary">Edited by Monica Pena</p>
             </div>
             <a href="/cruises-from-galveston/desk" className="text-sm font-semibold text-primary-blue">
-              View the Desk ->
+              View the Desk →
             </a>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -479,13 +492,13 @@ export default function Home() {
                   >
                     Read Advisor Overview
                   </a>
-                  <button
-                    type="button"
+                  <a
+                    href="#booking-panel"
                     onClick={() => openBookingPanel({ ship: ship.name })}
                     className="text-text-primary hover:text-primary-blue"
                   >
                     View Sailings
-                  </button>
+                  </a>
                 </div>
               </div>
             ))}
@@ -644,13 +657,13 @@ export default function Home() {
                       <td className="px-6 py-4">{cruise.priceDisplay}</td>
                       <td className="px-6 py-4">{cruise.scoreDisplay}</td>
                       <td className="px-6 py-4">
-                        <button
-                          type="button"
+                        <a
+                          href="#booking-panel"
                           onClick={() => openBookingPanel({ ship: cruise.ship })}
                           className="rounded-full border border-primary-blue/40 px-4 py-2 text-xs font-semibold text-primary-blue hover:border-primary-blue"
                         >
                           Get Quote
-                        </button>
+                        </a>
                       </td>
                     </tr>
                   ))}
