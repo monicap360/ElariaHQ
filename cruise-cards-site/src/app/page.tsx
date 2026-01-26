@@ -450,7 +450,7 @@ export default function Home() {
                 <p className="text-sm text-text-secondary">Live advisories and context from our editors.</p>
               </div>
               <a href="/cruises-from-galveston/desk" className="text-sm font-semibold text-primary-blue">
-                View the Desk ->
+                View the Desk {"->"}
               </a>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
