@@ -34,6 +34,8 @@ export default function DraftsTable({ drafts }: Props) {
       "texascruiseport.com": 0,
       "houstoncruisetips.com": 0,
       "houstoncruiseshuttle.com": 0,
+      "pier10parking.com": 0,
+      "pier25parking.com": 0,
       "cruisesfromgalveston.net": 0,
     };
     drafts.forEach((draft) => {
@@ -63,6 +65,12 @@ export default function DraftsTable({ drafts }: Props) {
           </span>
           <span className="rounded-full border border-slate-300 px-3 py-1">
             houstoncruiseshuttle.com: {counts["houstoncruiseshuttle.com"]}
+          </span>
+          <span className="rounded-full border border-slate-300 px-3 py-1">
+            pier10parking.com: {counts["pier10parking.com"]}
+          </span>
+          <span className="rounded-full border border-slate-300 px-3 py-1">
+            pier25parking.com: {counts["pier25parking.com"]}
           </span>
           <span className="rounded-full border border-slate-300 px-3 py-1">
             cruisesfromgalveston.net: {counts["cruisesfromgalveston.net"]}

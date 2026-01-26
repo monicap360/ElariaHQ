@@ -2,7 +2,37 @@
 insert into public.brand_entities (name, domain, entity_type, is_yours)
 select 'Cruises From Galveston', 'cruisesfromgalveston.net', 'business', true
 where not exists (
-  select 1 from public.brand_entities where is_yours = true
+  select 1 from public.brand_entities where domain = 'cruisesfromgalveston.net'
+);
+
+insert into public.brand_entities (name, domain, entity_type, is_yours)
+select 'Texas Cruise Port', 'texascruiseport.com', 'business', true
+where not exists (
+  select 1 from public.brand_entities where domain = 'texascruiseport.com'
+);
+
+insert into public.brand_entities (name, domain, entity_type, is_yours)
+select 'Houston Cruise Tips', 'houstoncruisetips.com', 'business', true
+where not exists (
+  select 1 from public.brand_entities where domain = 'houstoncruisetips.com'
+);
+
+insert into public.brand_entities (name, domain, entity_type, is_yours)
+select 'Houston Cruise Shuttle', 'houstoncruiseshuttle.com', 'business', true
+where not exists (
+  select 1 from public.brand_entities where domain = 'houstoncruiseshuttle.com'
+);
+
+insert into public.brand_entities (name, domain, entity_type, is_yours)
+select 'Pier 10 Parking', 'pier10parking.com', 'business', true
+where not exists (
+  select 1 from public.brand_entities where domain = 'pier10parking.com'
+);
+
+insert into public.brand_entities (name, domain, entity_type, is_yours)
+select 'Pier 25 Parking', 'pier25parking.com', 'business', true
+where not exists (
+  select 1 from public.brand_entities where domain = 'pier25parking.com'
 );
 
 -- Seed core authority topics.
