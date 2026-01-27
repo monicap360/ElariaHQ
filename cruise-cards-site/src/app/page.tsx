@@ -92,12 +92,27 @@ function calcNights(sailDate: string, returnDate: string) {
 
 function formatPorts(value: SailingRow["ports"] | SailingRow["itinerary"]) {
   if (Array.isArray(value)) {
-    return value.filter(Boolean).join(", ");
+    return value
+      .filter(Boolean)
+      .map((port) => normalizePortName(String(port)))
+      .join(", ");
   }
   if (typeof value === "string" && value.trim().length) {
-    return value.trim();
+    return value
+      .split(",")
+      .map((port) => normalizePortName(port.trim()))
+      .join(", ");
   }
   return null;
+}
+
+function normalizePortName(port: string) {
+  const key = port.toLowerCase();
+  if (key === "cozumel") return "Cozumel, Mexico";
+  if (key === "costa maya") return "Costa Maya, Mexico";
+  if (key === "falmouth") return "Falmouth, Jamaica";
+  if (key === "nassau") return "Nassau, Bahamas";
+  return port;
 }
 
 function parsePrice(value: SailingRow[keyof SailingRow]) {
@@ -584,7 +599,7 @@ export default function Home() {
             <div>
               <h2 className="text-2xl font-semibold font-accent">Galveston Sailings Board</h2>
               <p className="mt-2 text-sm text-text-secondary">
-                Live sailings snapshot with taxes and port fees included in displayed prices.
+                Live sailings snapshot with taxes and port fees included. Prices shown are per person.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -721,9 +736,23 @@ export default function Home() {
                       <div className="text-lg font-semibold text-text-primary">{board.ship}</div>
                       <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{board.line}</div>
                     </div>
-                    <a href="#booking-panel" className="text-xs font-semibold text-primary-blue">
-                      Request booking
-                    </a>
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                      <a href="#booking-panel" className="rounded-full border border-primary-blue/40 px-3 py-1 text-primary-blue">
+                        Request booking
+                      </a>
+                      <a href="#booking-panel" className="rounded-full border border-white/10 px-3 py-1 text-text-secondary">
+                        24 hour hold
+                      </a>
+                      <a href="#booking-panel" className="rounded-full border border-white/10 px-3 py-1 text-text-secondary">
+                        48 hour hold
+                      </a>
+                      <a href="#booking-panel" className="rounded-full border border-white/10 px-3 py-1 text-text-secondary">
+                        72 hour hold
+                      </a>
+                    </div>
+                  </div>
+                  <div className="px-6 pt-3 text-xs text-text-muted">
+                    Prices shown are per person and include taxes and port fees.
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-[520px] w-full text-left text-sm">
@@ -746,6 +775,10 @@ export default function Home() {
                         ))}
                       </tbody>
                     </table>
+                  </div>
+                  <div className="px-6 py-4 text-xs text-text-muted">
+                    Common ports for Galveston itineraries include Cozumel, Costa Maya, Falmouth, and Nassau when
+                    applicable.
                   </div>
                 </div>
               ))}
