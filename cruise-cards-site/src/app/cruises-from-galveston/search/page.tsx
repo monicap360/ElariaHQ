@@ -1,6 +1,8 @@
 import CruiseSearchTable from "./CruiseSearchTable";
 import { createClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Cruises from Galveston - Search Sail Dates",
   robots: {

@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Carnival Breeze | Cruises from Galveston",
   robots: {

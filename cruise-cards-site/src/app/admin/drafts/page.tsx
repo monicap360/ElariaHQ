@@ -1,6 +1,8 @@
 import DraftsTable from "./DraftsTable";
 import { createClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 type AgentTask = {
   id: string;
   reference_id: string | null;
