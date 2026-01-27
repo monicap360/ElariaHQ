@@ -356,6 +356,65 @@ export default function Home() {
     });
   }, [cruiseMatrix]);
 
+  const photoGallery = [
+    {
+      title: "Modern ship exterior",
+      description: "Open-deck views and outdoor spaces on Galveston sailings.",
+      src: "/assets/50d77fbd1a700d20a05a.webp",
+    },
+    {
+      title: "Royal Caribbean-class exterior",
+      description: "High-capacity ships with multiple neighborhoods.",
+      src: "/assets/symphony-of-the-seas.webp",
+    },
+    {
+      title: "Carnival Dream exterior",
+      description: "Mid-size ship scale with wraparound promenade decks.",
+      src: "/assets/OIP (7).jpg",
+    },
+    {
+      title: "Balcony stateroom",
+      description: "Private outdoor space for longer sailings.",
+      src: "/assets/breezebalc.jpg",
+    },
+    {
+      title: "Twin interior stateroom",
+      description: "Efficient layout for families traveling together.",
+      src: "/assets/IMG_4317.jpg",
+    },
+    {
+      title: "Oceanview stateroom",
+      description: "Natural light with flexible seating space.",
+      src: "/assets/6mxl.jpg",
+    },
+    {
+      title: "Twin-bed stateroom",
+      description: "Ideal when friends share a room.",
+      src: "/assets/affordable-way-to-sail.5fed36671945b8.38390523.webp",
+    },
+    {
+      title: "Onboard waterpark",
+      description: "Family-friendly deck activities on sea days.",
+      src: "/assets/60ed9b0ab092993339d2.webp",
+    },
+    {
+      title: "Cozumel shoreline",
+      description: "One of the most common Galveston port stops.",
+      src: "/assets/Cozumel-Beach-Resort-Aerial-NBS.jpg",
+    },
+    {
+      title: "Long-route transits",
+      description: "Occasional longer itineraries and repositioning routes.",
+      src: "/assets/7710151000_2684b53384_b.jpg",
+    },
+  ];
+
+  const portImageFor = (port: string) => {
+    const key = port.toLowerCase();
+    if (key.includes("cozumel")) return "/assets/Cozumel-Beach-Resort-Aerial-NBS.jpg";
+    return null;
+  };
+
   function openBookingPanel(prefill?: Partial<typeof bookingForm>) {
     setBookingForm((prev) => ({ ...prev, ...prefill }));
     const target = document.getElementById("booking-panel");
@@ -373,41 +432,50 @@ export default function Home() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
         >
-          <div className="rounded-3xl border border-white/10 bg-background-panel/80 px-10 py-12 shadow-[0_0_40px_rgba(76,111,255,0.08)]">
-            <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
-              <span className="logo-holo h-8 w-8" aria-hidden="true">
-                <img src="/brand/cfg-logo.png" alt="" loading="lazy" />
-              </span>
-              <div>
-                <div className="text-[11px] uppercase tracking-[0.25em] text-text-muted">The Cruises From Galveston Desk</div>
-                <div className="text-sm font-semibold text-text-primary">Edited by Monica Pena</div>
-              </div>
-            </div>
-            <h1 className="mt-6 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
-              Cruising From Galveston, clearly explained.
-            </h1>
-            <p className="mt-4 max-w-2xl text-base text-text-secondary md:text-lg">
-              Advisor-grade insight on which ships fit your situation, when sailings actually make sense, and what
-              itinerary changes mean before you book.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#sailings" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
-                View sailings
-              </a>
-              <a
-                href="#guidance"
-                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
-              >
-                Start with guidance
-              </a>
-            </div>
-            <div className="mt-8 grid gap-4 border-t border-white/10 pt-6 sm:grid-cols-3">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-2xl font-semibold text-primary-blue">{stat.value}</div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{stat.label}</div>
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-background-panel/80 px-10 py-12 shadow-[0_0_40px_rgba(76,111,255,0.08)]">
+            <img
+              src="/assets/symphony-of-the-seas.webp"
+              alt="Cruise ship at sea"
+              className="absolute inset-0 h-full w-full object-cover opacity-25"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(11,14,20,0.92),rgba(11,14,20,0.55))]" />
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
+                <span className="logo-holo h-8 w-8" aria-hidden="true">
+                  <img src="/brand/cfg-logo.webp" alt="" loading="lazy" />
+                </span>
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.25em] text-text-muted">The Cruises From Galveston Desk</div>
+                  <div className="text-sm font-semibold text-text-primary">Edited by Monica Pena</div>
                 </div>
-              ))}
+              </div>
+              <h1 className="mt-6 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
+                Cruising From Galveston, clearly explained.
+              </h1>
+              <p className="mt-4 max-w-2xl text-base text-text-secondary md:text-lg">
+                Advisor-grade insight on which ships fit your situation, when sailings actually make sense, and what
+                itinerary changes mean before you book.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a href="#sailings" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
+                  View sailings
+                </a>
+                <a
+                  href="#guidance"
+                  className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
+                >
+                  Start with guidance
+                </a>
+              </div>
+              <div className="mt-8 grid gap-4 border-t border-white/10 pt-6 sm:grid-cols-3">
+                {stats.map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <div className="text-2xl font-semibold text-primary-blue">{stat.value}</div>
+                    <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -786,6 +854,28 @@ export default function Home() {
           </section>
         )}
 
+        <section className="mt-16" id="gallery">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-semibold font-accent">Onboard & itinerary photo guide</h2>
+              <p className="mt-2 text-sm text-text-secondary">
+                Real visuals from Galveston sailings, stateroom styles, and port expectations.
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {photoGallery.map((item) => (
+              <div key={item.src} className="overflow-hidden rounded-2xl border border-white/10 bg-background-card">
+                <img src={item.src} alt={item.title} className="h-44 w-full object-cover" loading="lazy" />
+                <div className="px-5 py-4">
+                  <div className="text-sm font-semibold text-text-primary">{item.title}</div>
+                  <p className="mt-2 text-xs text-text-secondary">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {ships.length > 0 && (
           <section className="mt-16" id="ships">
             <h2 className="text-2xl font-semibold font-accent">Ships sailing from Galveston</h2>
@@ -820,11 +910,22 @@ export default function Home() {
             <h2 className="text-2xl font-semibold font-accent">Where Galveston cruises go</h2>
             <p className="mt-2 text-sm text-text-secondary">Based on live Galveston sailings and recent itineraries.</p>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {ports.map((port) => (
-                <div key={port} className="rounded-2xl border border-white/10 bg-background-card p-6">
-                  <div className="text-base font-semibold text-text-primary">{port}</div>
-                </div>
-              ))}
+              {ports.map((port) => {
+                const portImage = portImageFor(port);
+                return (
+                  <div key={port} className="overflow-hidden rounded-2xl border border-white/10 bg-background-card">
+                    {portImage && (
+                      <img src={portImage} alt={port} className="h-36 w-full object-cover" loading="lazy" />
+                    )}
+                    <div className="p-6">
+                      <div className="text-base font-semibold text-text-primary">{port}</div>
+                      <div className="mt-2 text-xs text-text-muted">
+                        Common Galveston itinerary stop with day-visit timing and curated excursions.
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}
@@ -884,6 +985,17 @@ export default function Home() {
 
         <section className="mt-16" id="authority">
           <h2 className="text-center text-2xl font-semibold font-accent">Why trust the desk</h2>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-text-muted">
+            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-background-panel px-4 py-2">
+              <img
+                src="/assets/BBB_ABSeal_H_7469_US-301x107-e7ea6d8 (1).png"
+                alt="BBB Accredited Business"
+                className="h-6 w-auto"
+                loading="lazy"
+              />
+              <span>Accredited business practices</span>
+            </div>
+          </div>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {[
               {

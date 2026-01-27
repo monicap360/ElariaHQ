@@ -178,7 +178,7 @@ export default function RootLayout({
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-3 leading-tight">
                 <span className="logo-holo" aria-hidden="true">
-                  <img src="/brand/cfg-logo.png" alt="" loading="lazy" />
+                  <img src="/brand/cfg-logo.webp" alt="" loading="lazy" />
                 </span>
                 <span className="flex flex-col">
                   <span className="text-sm font-semibold uppercase tracking-[0.3em] text-text-muted">
