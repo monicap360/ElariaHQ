@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function GET() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json({
+      draftsInReview: 0,
+      openSignals: 0,
+      upcomingSailings: 0,
+      hasSupabase: false,
+    });
+  }
+
   const supabase = createAdminClient();
 
   const status = {

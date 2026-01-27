@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { formatDurationLabel } from "@/lib/formatDuration";
 
 type Sailing = {
   ship: string | null;
@@ -147,7 +148,7 @@ export default function CruiseSearchTable({ sailings }: Props) {
         </label>
 
         <label className="text-sm text-slate-600">
-          Nights
+          Length
           <select
             className="ml-2 rounded border border-slate-300 px-2 py-1 text-sm"
             value={nightsFilter}
@@ -182,7 +183,7 @@ export default function CruiseSearchTable({ sailings }: Props) {
               <tr key={key} className="border-b">
                 <td className="py-3 pr-4 font-medium">{sailing.ship || "TBD"}</td>
                 <td className="py-3 pr-4">{formatDate(sailing.departure_date)}</td>
-                <td className="py-3 pr-4">{sailing.nights ?? "TBD"}</td>
+                <td className="py-3 pr-4">{formatDurationLabel(sailing.line, sailing.nights)}</td>
                 <td className="py-3 pr-4">{sailing.itinerary || "TBA"}</td>
                 <td className="py-3 pr-4">{formatPrice(sailing.starting_price)}</td>
                 <td className="py-3">

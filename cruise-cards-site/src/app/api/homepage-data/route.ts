@@ -26,6 +26,10 @@ function splitPorts(value: string | null | undefined) {
 }
 
 export async function GET() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json({ deskItems: [], ships: [], ports: [] });
+  }
+
   const supabase = createAdminClient();
 
   const deskItems: DeskItem[] = [];

@@ -6,6 +6,7 @@ import WhyThisCruise from "@/components/cruise/WhyThisCruise";
 import { runCruiseDecisionEngine } from "@/lib/cruiseDecisionEngine/engine";
 import { providerFromSupabase } from "@/lib/cruiseDecisionEngine/provider.supabase";
 import type { CruiseDecisionInput } from "@/lib/cruiseDecisionEngine/types";
+import { formatDurationLabel } from "@/lib/formatDuration";
 
 export const dynamic = "force-dynamic";
 
@@ -58,7 +59,9 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
   const fromPrice = price;
   const componentFactors = mapComponentsToFactors(result?.components);
 
-  const dates = `${baseDate} • ${sailing.nights}-Night ${titleCase(sailing.itineraryTags?.[0] ?? "Cruise")}`;
+  const dates = `${baseDate} • ${formatDurationLabel(sailing.cruiseLine, sailing.nights)} ${titleCase(
+    sailing.itineraryTags?.[0] ?? "Cruise"
+  )}`;
 
   const highlights = [
     ...reasons.slice(0, 2),

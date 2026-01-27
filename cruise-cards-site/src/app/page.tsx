@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { formatDurationLabel } from "@/lib/formatDuration";
 import { useEffect, useMemo, useState } from "react";
 
 type CruiseMatrixRow = {
@@ -810,7 +811,7 @@ export default function Home() {
                     <div className="cruise-info">
                       <h3>{cruise.ship}</h3>
                       <p className="meta">
-                        {cruise.duration}-Night {cruise.ports} • {formatDate(cruise.sailDate)}
+                        {formatDurationLabel(cruise.line, cruise.duration)} {cruise.ports} • {formatDate(cruise.sailDate)}
                       </p>
                       <ul className="reasons">
                         {(cruise.reasons || []).slice(0, 3).map((reason) => {
@@ -874,7 +875,7 @@ export default function Home() {
                         <tr>
                           <th className="px-6 py-3">Departure</th>
                           <th className="px-6 py-3">Day</th>
-                          <th className="px-6 py-3">Nights</th>
+                          <th className="px-6 py-3">Length</th>
                           <th className="px-6 py-3">Itinerary</th>
                           <th className="px-6 py-3">Tier</th>
                           <th className="px-6 py-3">From</th>
@@ -885,7 +886,7 @@ export default function Home() {
                           <tr key={`${board.ship}-${row.sailDate}`} className="text-text-secondary">
                             <td className="px-6 py-3 text-text-primary">{formatDate(row.sailDate)}</td>
                             <td className="px-6 py-3">{row.departureDay}</td>
-                            <td className="px-6 py-3">{row.duration}</td>
+                            <td className="px-6 py-3">{formatDurationLabel(row.line, row.duration)}</td>
                             <td className="px-6 py-3">{row.ports}</td>
                             <td className="px-6 py-3 capitalize">{row.demandTier}</td>
                             <td className="px-6 py-3">{row.priceDisplay}</td>

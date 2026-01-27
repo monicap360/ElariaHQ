@@ -37,6 +37,10 @@ export async function POST(request: Request) {
   const from = params.get("From") || "";
   const body = params.get("Body") || "";
 
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+
   const supabase = createAdminClient();
 
   const topicInstruction = parseTopicInstruction(body);

@@ -13,6 +13,15 @@ export const metadata = {
 
 export default async function CruiseSearchPage() {
   const supabase = createClient();
+  if (!supabase) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-10">
+        <h1 className="mb-6 text-3xl font-semibold">Search Cruises from Galveston</h1>
+        <p className="mb-8 text-gray-600">Cruise data is unavailable right now. Please check back shortly.</p>
+        <CruiseSearchTable sailings={[]} />
+      </main>
+    );
+  }
 
   const { data } = await supabase
     .from("sailings")

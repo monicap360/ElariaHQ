@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { formatDurationLabel } from "@/lib/formatDuration";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,17 @@ function formatPrice(value: Sailing["starting_price"]) {
 
 export default async function CarnivalDreamPage() {
   const supabase = createClient();
+  if (!supabase) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-10">
+        <section>
+          <p className="text-sm uppercase tracking-wide text-slate-500">Cruises from Galveston</p>
+          <h1 className="mt-2 text-3xl font-semibold">Carnival Dream</h1>
+          <p className="mt-4 text-gray-600">Cruise data is unavailable right now. Please check back shortly.</p>
+        </section>
+      </main>
+    );
+  }
 
   const { data: sailings } = await supabase
     .from("cruise_sailings")
@@ -63,7 +75,7 @@ export default async function CarnivalDreamPage() {
               <thead>
                 <tr className="border-b text-left">
                   <th className="py-3 pr-4">Departure</th>
-                  <th className="py-3 pr-4">Nights</th>
+                  <th className="py-3 pr-4">Length</th>
                   <th className="py-3 pr-4">Itinerary</th>
                   <th className="py-3 pr-4">Starting Price</th>
                   <th className="py-3">Action</th>
@@ -79,7 +91,7 @@ export default async function CarnivalDreamPage() {
                         year: "numeric",
                       })}
                     </td>
-                    <td className="py-3 pr-4">{sailing.nights ?? "TBD"}</td>
+                    <td className="py-3 pr-4">{formatDurationLabel("Carnival", sailing.nights)}</td>
                     <td className="py-3 pr-4">{sailing.itinerary || "TBA"}</td>
                     <td className="py-3 pr-4">{formatPrice(sailing.starting_price)}</td>
                     <td className="py-3">

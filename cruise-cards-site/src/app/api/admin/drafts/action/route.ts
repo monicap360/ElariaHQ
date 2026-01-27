@@ -14,6 +14,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing id or action" }, { status: 400 });
   }
 
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json({ error: "Supabase is not configured" }, { status: 500 });
+  }
+
   const supabase = createAdminClient();
 
   const updates: Record<string, unknown> = {

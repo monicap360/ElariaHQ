@@ -22,6 +22,15 @@ type KnowledgeTopic = {
 
 export default async function DraftsPage() {
   const supabase = createClient();
+  if (!supabase) {
+    return (
+      <main className="dashboard-theme">
+        <div className="mx-auto max-w-6xl px-6 py-10">
+          <DraftsTable drafts={[]} />
+        </div>
+      </main>
+    );
+  }
 
   const { data: tasks } = await supabase
     .from("agent_tasks")
