@@ -375,8 +375,8 @@ export default function Home() {
         >
           <div className="rounded-3xl border border-white/10 bg-background-panel/80 px-10 py-12 shadow-[0_0_40px_rgba(76,111,255,0.08)]">
             <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
-              <span className="h-8 w-8 rounded-full bg-[linear-gradient(145deg,rgba(76,111,255,0.7),rgba(123,97,255,0.8))] text-center text-xs font-semibold leading-8 text-white">
-                CFG
+              <span className="logo-holo h-8 w-8" aria-hidden="true">
+                <img src="/brand/cfg-logo.png" alt="" loading="lazy" />
               </span>
               <div>
                 <div className="text-[11px] uppercase tracking-[0.25em] text-text-muted">The Cruises From Galveston Desk</div>

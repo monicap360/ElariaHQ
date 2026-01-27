@@ -176,11 +176,16 @@ export default function RootLayout({
         <div className="min-h-screen bg-background-base text-text-primary">
           <header className="border-b border-white/10 bg-background-panel/80 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-              <Link href="/" className="flex flex-col leading-tight">
-                <span className="text-sm font-semibold uppercase tracking-[0.3em] text-text-muted">
-                  CruisesFromGalveston.net
+              <Link href="/" className="flex items-center gap-3 leading-tight">
+                <span className="logo-holo" aria-hidden="true">
+                  <img src="/brand/cfg-logo.png" alt="" loading="lazy" />
                 </span>
-                <span className="text-lg font-semibold text-text-primary">Cruises From Galveston</span>
+                <span className="flex flex-col">
+                  <span className="text-sm font-semibold uppercase tracking-[0.3em] text-text-muted">
+                    CruisesFromGalveston.net
+                  </span>
+                  <span className="text-lg font-semibold text-text-primary">Cruises From Galveston</span>
+                </span>
               </Link>
               <nav className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
                 <Link href="/cruises-from-galveston/how-to-plan" className="hover:text-text-primary">
