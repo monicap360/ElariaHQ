@@ -16,6 +16,8 @@ type CruiseMatrixRow = {
   engineScore: number;
   confidence: number;
   reasons: string[];
+  departureDay: string;
+  demandTier: "short" | "standard" | "long";
   sailDate: string;
 };
 
@@ -289,6 +291,10 @@ export default function Home() {
           parsePrice(row.base_price) ??
           parsePrice(row.starting_price) ??
           parsePrice(row.min_price);
+        const departureDay = row.sail_date
+          ? new Date(row.sail_date).toLocaleDateString("en-US", { weekday: "long" })
+          : "TBD";
+        const demandTier = duration >= 8 ? "long" : duration >= 6 ? "standard" : "short";
         return {
           id: row.id,
           line: lineName,
@@ -302,6 +308,8 @@ export default function Home() {
           engineScore: result.score,
           confidence: result.confidence,
           reasons: result.reasons || [],
+          departureDay,
+          demandTier,
           sailDate: row.sail_date,
         };
       });
@@ -393,18 +401,33 @@ export default function Home() {
   }, [cruiseMatrix.length, ships.length]);
 
   const shipBoards = useMemo(() => {
+    const coreShips = [
+      "Carnival Breeze",
+      "Carnival Dream",
+      "Carnival Jubilee",
+      "Harmony of the Seas",
+      "Disney Magic",
+    ];
     const grouped = new Map<string, CruiseMatrixRow[]>();
     cruiseMatrix.forEach((row) => {
       if (!grouped.has(row.ship)) grouped.set(row.ship, []);
       grouped.get(row.ship)?.push(row);
     });
-    return Array.from(grouped.entries()).map(([ship, rows]) => {
+    const boards = Array.from(grouped.entries()).map(([ship, rows]) => {
       const sorted = [...rows].sort((a, b) => a.sailDate.localeCompare(b.sailDate));
       return {
         ship,
         line: sorted[0]?.line ?? "Cruise line",
         rows: sorted.slice(0, 5),
       };
+    });
+    return boards.sort((a, b) => {
+      const aIndex = coreShips.indexOf(a.ship);
+      const bIndex = coreShips.indexOf(b.ship);
+      if (aIndex === -1 && bIndex === -1) return a.ship.localeCompare(b.ship);
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      return aIndex - bIndex;
     });
   }, [cruiseMatrix]);
 
@@ -815,9 +838,9 @@ export default function Home() {
 
         {shipBoards.length > 0 && (
           <section className="mt-16" id="ship-boards">
-            <h2 className="text-2xl font-semibold font-accent">Ship-by-Ship Cruise Boards</h2>
+            <h2 className="text-2xl font-semibold font-accent">Choose your ship</h2>
             <p className="mt-2 text-sm text-text-secondary">
-              A focused board for each ship so travelers can compare dates, nights, and itineraries quickly.
+              Pick a ship first, then browse the upcoming sail dates by week.
             </p>
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               {shipBoards.map((board) => (
@@ -850,8 +873,10 @@ export default function Home() {
                       <thead className="text-xs uppercase tracking-[0.18em] text-text-muted">
                         <tr>
                           <th className="px-6 py-3">Departure</th>
+                          <th className="px-6 py-3">Day</th>
                           <th className="px-6 py-3">Nights</th>
                           <th className="px-6 py-3">Itinerary</th>
+                          <th className="px-6 py-3">Tier</th>
                           <th className="px-6 py-3">From</th>
                         </tr>
                       </thead>
@@ -859,8 +884,10 @@ export default function Home() {
                         {board.rows.map((row) => (
                           <tr key={`${board.ship}-${row.sailDate}`} className="text-text-secondary">
                             <td className="px-6 py-3 text-text-primary">{formatDate(row.sailDate)}</td>
+                            <td className="px-6 py-3">{row.departureDay}</td>
                             <td className="px-6 py-3">{row.duration}</td>
                             <td className="px-6 py-3">{row.ports}</td>
+                            <td className="px-6 py-3 capitalize">{row.demandTier}</td>
                             <td className="px-6 py-3">{row.priceDisplay}</td>
                           </tr>
                         ))}

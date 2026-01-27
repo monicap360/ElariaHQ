@@ -32,6 +32,15 @@ export type CruiseDecisionResult = {
   confidence: number;
   reasons: string[];
   flags?: string[];
+  components?: DecisionComponents;
+};
+
+export type DecisionComponents = {
+  price: number;
+  cabin: number;
+  preference: number;
+  demand: number;
+  risk: number;
 };
 
 export type Sailing = {

@@ -32,15 +32,13 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
   const shipMap = await provider.getShipsByIds([sailing.shipId]);
   const ship = shipMap[sailing.shipId];
 
-  const [pricingMap, availabilityMap, riskMap] = await Promise.all([
+  const [pricingMap, availabilityMap] = await Promise.all([
     provider.getLatestPricingBySailingIds([sailing.id]),
     provider.getLatestAvailabilityBySailingIds([sailing.id]),
-    provider.getLatestRiskBySailingIds([sailing.id]),
   ]);
 
   const pricing = pricingMap[sailing.id];
   const availability = availabilityMap[sailing.id];
-  const risk = riskMap[sailing.id];
 
   const baseDate = sailing.departDate || new Date().toISOString().slice(0, 10);
   const input: CruiseDecisionInput = {
@@ -58,14 +56,7 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
 
   const price = pricing?.minPerPerson ? formatPrice(Number(pricing.minPerPerson)) : "Call for pricing";
   const fromPrice = price;
-
-  const factors = mapDecisionToFactors({
-    valueScore: scoreFromPrice(pricing?.minPerPerson, pricing?.marketMedianPerPerson),
-    cabinScore: cabinScoreFromAvailability(availability?.availableCabinTypes ?? []),
-    flexibilityScore: risk?.riskScore != null ? 1 - risk.riskScore : 0.8,
-    demandScore: availability?.demandPressure ?? 0.6,
-    confidence,
-  });
+  const componentFactors = mapComponentsToFactors(result?.components);
 
   const dates = `${baseDate} • ${sailing.nights}-Night ${titleCase(sailing.itineraryTags?.[0] ?? "Cruise")}`;
 
@@ -95,7 +86,10 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
         reserveHref="/booking"
       />
       <WhyThisCruise
-        factors={factors}
+        factors={[
+          { label: "Overall fit", value: Math.round((result?.confidence ?? 0.6) * 100) },
+          ...componentFactors,
+        ]}
       />
       <SailingDetails details={details} />
       <CabinPreview cabins={cabins} />
@@ -108,56 +102,30 @@ function formatPrice(value: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 }
 
-function scoreFromPrice(minPerPerson?: number | null, median?: number | null) {
-  if (!minPerPerson || !median) return 0.75;
-  const ratio = minPerPerson / median;
-  return Math.max(0.4, Math.min(0.95, 1.1 - ratio));
-}
-
-function cabinScoreFromAvailability(cabins: string[]) {
-  if (!cabins.length) return 0.6;
-  const normalized = cabins.map((cabin) => cabin.toLowerCase());
-  if (normalized.includes("suite")) return 0.95;
-  if (normalized.includes("balcony")) return 0.9;
-  if (normalized.includes("oceanview") || normalized.includes("ocean view")) return 0.75;
-  return 0.6;
-}
-
-function buildReasons({
-  minPerPerson,
-  marketMedian,
-  cabins,
-  demand,
-}: {
-  minPerPerson: number | null;
-  marketMedian: number | null;
-  cabins: string[];
-  demand: number | null;
+function mapComponentsToFactors(c?: {
+  price: number;
+  cabin: number;
+  preference: number;
+  demand: number;
+  risk: number;
 }) {
-  const reasons: string[] = [];
-function mapDecisionToFactors({
-  valueScore,
-  cabinScore,
-  flexibilityScore,
-  demandScore,
-  confidence,
-}: {
-  valueScore: number;
-  cabinScore: number;
-  flexibilityScore: number;
-  demandScore: number;
-  confidence: number;
-}) {
+  if (!c) return [];
+  const pct = (x: number) => Math.round(x * 100);
   return [
-    { label: "Overall fit", value: Math.round(confidence * 100) },
-    { label: "Overall value", value: Math.round(valueScore * 100) },
-    { label: "Cabin availability", value: Math.round(cabinScore * 100) },
-    { label: "Booking flexibility", value: Math.round(flexibilityScore * 100) },
+    { label: "Overall value", value: pct(c.price) },
+    { label: "Cabin availability", value: pct(c.cabin) },
+    { label: "Preference match", value: pct(c.preference) },
     {
       label: "Demand",
-      value: Math.round(demandScore * 100),
-      warning: demandScore >= 0.7,
-      note: demandScore >= 0.7 ? "Limited" : undefined,
+      value: pct(1 - c.demand),
+      warning: c.demand > 0.7,
+      note: c.demand > 0.7 ? "Limited" : undefined,
+    },
+    {
+      label: "Booking stability",
+      value: pct(1 - c.risk),
+      warning: c.risk > 0.7,
+      note: c.risk > 0.7 ? "Tight" : undefined,
     },
   ];
 }

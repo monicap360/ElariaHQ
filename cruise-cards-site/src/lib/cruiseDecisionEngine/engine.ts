@@ -92,6 +92,11 @@ export function rankCruiseSailings(
       completeness,
       reasons,
       flags,
+      priceScore,
+      cabinScore,
+      preferenceScore,
+      demandScore,
+      riskScore,
     };
   });
 
@@ -108,6 +113,13 @@ export function rankCruiseSailings(
       confidence: round3(clamp01(meta.dataCompleteness * meta.scoreSpread * ruleStability(input, item.sailing))),
       reasons: item.reasons,
       flags: item.flags?.length ? item.flags : undefined,
+      components: {
+        price: round3(item.priceScore),
+        cabin: round3(item.cabinScore),
+        preference: round3(item.preferenceScore),
+        demand: round3(item.demandScore),
+        risk: round3(item.riskScore),
+      },
     }));
 }
 
