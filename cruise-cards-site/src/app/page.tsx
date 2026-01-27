@@ -334,11 +334,11 @@ export default function Home() {
 
   const stats = useMemo(() => {
     return [
-      { label: "Upcoming sailings", value: cruiseMatrix.length ? `${cruiseMatrix.length}` : "-" },
+      { label: "Sailings tracked", value: cruiseMatrix.length ? `${cruiseMatrix.length}` : "-" },
       { label: "Active ships", value: ships.length ? `${ships.length}` : "-" },
-      { label: "Desk updates", value: deskItems.length ? `${deskItems.length}` : "-" },
+      { label: "AI booking support", value: "Available" },
     ];
-  }, [cruiseMatrix.length, ships.length, deskItems.length]);
+  }, [cruiseMatrix.length, ships.length]);
 
   const shipBoards = useMemo(() => {
     const grouped = new Map<string, CruiseMatrixRow[]>();
@@ -845,6 +845,39 @@ export default function Home() {
               >
                 {item.label}
               </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-16" id="info-center">
+          <h2 className="text-2xl font-semibold font-accent">Galveston Cruise Information Center</h2>
+          <p className="mt-2 text-sm text-text-secondary">
+            Think of this as a local visitor bureau for cruise departures: parking guidance, drive-in timing, terminal
+            logistics, and itinerary context in one place.
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {[
+              {
+                title: "Driving from Dallas or North Texas",
+                description: "Recommended arrival timing, overnight options, and where to park once you reach the port.",
+              },
+              {
+                title: "Galveston parking and drop-off strategy",
+                description: "Terminal 10 vs Terminal 25 arrival flow, luggage drop timing, and parking lot decisions.",
+              },
+              {
+                title: "Airport to ship transportation",
+                description: "Hobby vs Bush timing, pickup windows, and how to coordinate with embarkation schedules.",
+              },
+              {
+                title: "Itinerary clarity",
+                description: "What a Cozumel, Costa Maya, Falmouth, or Nassau stop actually means for time ashore.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-2xl border border-white/10 bg-background-panel px-6 py-6">
+                <div className="text-base font-semibold text-text-primary">{item.title}</div>
+                <p className="mt-2 text-sm text-text-secondary">{item.description}</p>
+              </div>
             ))}
           </div>
         </section>
