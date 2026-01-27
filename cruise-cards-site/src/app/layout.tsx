@@ -182,7 +182,7 @@ export default function RootLayout({
                 </span>
                 <span className="text-lg font-semibold text-text-primary">Cruises From Galveston</span>
               </Link>
-              <nav className="flex flex-wrap gap-4 text-sm text-text-secondary">
+              <nav className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
                 <Link href="/cruises-from-galveston/how-to-plan" className="hover:text-text-primary">
                   Planning Guide
                 </Link>
@@ -195,6 +195,12 @@ export default function RootLayout({
                 <Link href="/booking" className="hover:text-text-primary">
                   Book
                 </Link>
+                <a
+                  href="tel:14096322106"
+                  className="rounded-full border border-white/10 bg-background-card px-4 py-2 text-xs font-semibold text-text-primary"
+                >
+                  (409) 632-2106
+                </a>
               </nav>
             </div>
           </header>

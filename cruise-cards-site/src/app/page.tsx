@@ -325,6 +325,22 @@ export default function Home() {
     ];
   }, [cruiseMatrix.length, ships.length, deskItems.length]);
 
+  const shipBoards = useMemo(() => {
+    const grouped = new Map<string, CruiseMatrixRow[]>();
+    cruiseMatrix.forEach((row) => {
+      if (!grouped.has(row.ship)) grouped.set(row.ship, []);
+      grouped.get(row.ship)?.push(row);
+    });
+    return Array.from(grouped.entries()).map(([ship, rows]) => {
+      const sorted = [...rows].sort((a, b) => a.sailDate.localeCompare(b.sailDate));
+      return {
+        ship,
+        line: sorted[0]?.line ?? "Cruise line",
+        rows: sorted.slice(0, 5),
+      };
+    });
+  }, [cruiseMatrix]);
+
   function openBookingPanel(prefill?: Partial<typeof bookingForm>) {
     setBookingForm((prev) => ({ ...prev, ...prefill }));
     const target = document.getElementById("booking-panel");
@@ -368,12 +384,6 @@ export default function Home() {
                 className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
               >
                 Start with guidance
-              </a>
-              <a
-                href="mailto:hello@cruisesfromgalveston.net"
-                className="rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-text-secondary hover:text-text-primary"
-              >
-                Ask the desk
               </a>
             </div>
             <div className="mt-8 grid gap-4 border-t border-white/10 pt-6 sm:grid-cols-3">
@@ -697,6 +707,52 @@ export default function Home() {
           </div>
         </section>
 
+        {shipBoards.length > 0 && (
+          <section className="mt-16" id="ship-boards">
+            <h2 className="text-2xl font-semibold font-accent">Ship-by-Ship Cruise Boards</h2>
+            <p className="mt-2 text-sm text-text-secondary">
+              A focused board for each ship so travelers can compare dates, nights, and itineraries quickly.
+            </p>
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              {shipBoards.map((board) => (
+                <div key={board.ship} className="rounded-3xl border border-white/10 bg-background-panel">
+                  <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+                    <div>
+                      <div className="text-lg font-semibold text-text-primary">{board.ship}</div>
+                      <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{board.line}</div>
+                    </div>
+                    <a href="#booking-panel" className="text-xs font-semibold text-primary-blue">
+                      Request booking
+                    </a>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-[520px] w-full text-left text-sm">
+                      <thead className="text-xs uppercase tracking-[0.18em] text-text-muted">
+                        <tr>
+                          <th className="px-6 py-3">Departure</th>
+                          <th className="px-6 py-3">Nights</th>
+                          <th className="px-6 py-3">Itinerary</th>
+                          <th className="px-6 py-3">From</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/10">
+                        {board.rows.map((row) => (
+                          <tr key={`${board.ship}-${row.sailDate}`} className="text-text-secondary">
+                            <td className="px-6 py-3 text-text-primary">{formatDate(row.sailDate)}</td>
+                            <td className="px-6 py-3">{row.duration}</td>
+                            <td className="px-6 py-3">{row.ports}</td>
+                            <td className="px-6 py-3">{row.priceDisplay}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {ships.length > 0 && (
           <section className="mt-16" id="ships">
             <h2 className="text-2xl font-semibold font-accent">Ships sailing from Galveston</h2>
@@ -790,6 +846,29 @@ export default function Home() {
                 <p className="mt-3 text-sm text-text-secondary">{item.description}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="mt-16" id="contact">
+          <div className="rounded-3xl border border-white/10 bg-background-panel px-8 py-10 text-center">
+            <h2 className="text-2xl font-semibold font-accent">Need personal guidance?</h2>
+            <p className="mt-3 text-sm text-text-secondary">
+              The Cruises From Galveston Desk answers complex questions and confirms the best fit before you book.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <a
+                href="mailto:hello@cruisesfromgalveston.net"
+                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary"
+              >
+                Email the desk
+              </a>
+              <a
+                href="tel:14096322106"
+                className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white"
+              >
+                Call (409) 632-2106
+              </a>
+            </div>
           </div>
         </section>
       </div>
