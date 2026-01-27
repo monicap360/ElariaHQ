@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type CruiseLine = { id: string; name: string };
 type Ship = {
@@ -62,6 +62,11 @@ export default function BookingPage() {
   useEffect(() => {
     (async () => {
       setLoading(true);
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
 
       // Agents: approved only (your "best of the best" list lives here)
       const agentsRes = await supabase
@@ -106,6 +111,15 @@ export default function BookingPage() {
     }
 
     (async () => {
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        setShips([]);
+        setShipId("");
+        setSailings([]);
+        setSailingId("");
+        return;
+      }
+
       const res = await supabase
         .from("ships")
         .select("id,name,cruise_line_id,home_port,is_active")
@@ -131,6 +145,13 @@ export default function BookingPage() {
     }
 
     (async () => {
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        setSailings([]);
+        setSailingId("");
+        return;
+      }
+
       const res = await supabase
         .from("sailings")
         .select("id,ship_id,sail_date,return_date,is_active")
@@ -169,6 +190,11 @@ export default function BookingPage() {
     }
 
     setSubmitting(true);
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      setSubmitting(false);
+      return alert("Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+    }
 
     // Customer id: default to logged-in user
     const { data: authData } = await supabase.auth.getUser();

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type CruiseMatrixRow = {
   id: string;
@@ -214,6 +214,15 @@ export default function Home() {
     async function loadMatrix() {
       setMatrixLoading(true);
       setMatrixError(null);
+
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        if (!isActive) return;
+        setMatrixError("Cruise data is unavailable right now.");
+        setCruiseMatrix([]);
+        setMatrixLoading(false);
+        return;
+      }
 
       const { data, error } = await supabase
         .from("sailings")

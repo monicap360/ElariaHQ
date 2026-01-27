@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type Sailing = {
   id: string;
@@ -34,6 +34,14 @@ export default function CruiseBoardPage() {
     let active = true;
     (async () => {
       setLoading(true);
+      const supabase = getSupabaseClient();
+      if (!supabase) {
+        if (!active) return;
+        setSailings([]);
+        setLoading(false);
+        return;
+      }
+
       const { data } = await supabase
         .from("upcoming_sailings")
         .select("*")
