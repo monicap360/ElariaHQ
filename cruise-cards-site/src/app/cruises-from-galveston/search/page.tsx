@@ -39,9 +39,10 @@ export default async function CruiseSearchPage() {
         const num = typeof value === "number" ? value : Number(value);
         return Number.isFinite(num);
       });
+      const shipRow = Array.isArray(row.ship) ? row.ship[0] : row.ship;
       return {
-        ship: row.ship?.name ?? null,
-        line: row.ship?.cruise_line?.name ?? null,
+        ship: shipRow?.name ?? null,
+        line: shipRow?.cruise_line?.name ?? null,
         departure_date: sailDate ?? null,
         nights,
         itinerary,
