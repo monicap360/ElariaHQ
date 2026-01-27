@@ -176,8 +176,8 @@ export default function RootLayout({
         <div className="min-h-screen bg-background-base text-text-primary">
           <header className="border-b border-white/10 bg-background-panel/80 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-              <Link href="/" className="flex items-center gap-3 leading-tight">
-                <span className="logo-holo" aria-hidden="true">
+              <Link href="/" className="flex items-center gap-4 leading-tight">
+                <span className="logo-holo h-16 w-16 sm:h-20 sm:w-20" aria-hidden="true">
                   <img src="/brand/cfg-logo.webp" alt="" loading="lazy" />
                 </span>
                 <span className="flex flex-col">

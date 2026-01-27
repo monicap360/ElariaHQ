@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type CruiseMatrixRow = {
   id: string;
@@ -14,6 +13,9 @@ type CruiseMatrixRow = {
   priceDisplay: string;
   priceNumber: number | null;
   scoreDisplay: string;
+  engineScore: number;
+  confidence: number;
+  reasons: string[];
   sailDate: string;
 };
 
@@ -29,6 +31,7 @@ type SailingRow = {
   min_price?: number | string | null;
   sail_score?: number | string | null;
   score?: number | string | null;
+  cruise_line?: string | null;
   ship: {
     id: string;
     name: string;
@@ -36,6 +39,33 @@ type SailingRow = {
       name: string;
     } | null;
   } | null;
+};
+
+type DecisionResult = {
+  sailingId: string;
+  score: number;
+  confidence: number;
+  reasons: string[];
+  flags?: string[];
+  sailing: {
+    id: string;
+    sail_date: string;
+    return_date: string;
+    ports?: string[] | string | null;
+    itinerary?: string | null;
+    cruise_line?: string | null;
+    price_from?: number | string | null;
+    base_price?: number | string | null;
+    starting_price?: number | string | null;
+    min_price?: number | string | null;
+    ship: {
+      id: string;
+      name: string;
+      cruise_line: {
+        name: string;
+      } | null;
+    } | null;
+  };
 };
 
 type DeskItem = {
@@ -150,7 +180,7 @@ export default function Home() {
   const [cruiseMatrix, setCruiseMatrix] = useState<CruiseMatrixRow[]>([]);
   const [filterLine, setFilterLine] = useState("all");
   const [filterYear, setFilterYear] = useState("all");
-  const [sortKey, setSortKey] = useState<"price" | "duration" | "date">("date");
+  const [sortKey, setSortKey] = useState<"score" | "price" | "duration" | "date">("score");
   const [bookingForm, setBookingForm] = useState({
     ship: "",
     month: "",
@@ -215,34 +245,42 @@ export default function Home() {
       setMatrixLoading(true);
       setMatrixError(null);
 
-      const supabase = getSupabaseClient();
-      if (!supabase) {
-        if (!isActive) return;
-        setMatrixError("Cruise data is unavailable right now.");
-        setCruiseMatrix([]);
-        setMatrixLoading(false);
-        return;
-      }
+      let results: DecisionResult[] = [];
+      try {
+        const today = new Date();
+        const start = today.toISOString().slice(0, 10);
+        const endDate = new Date(today);
+        endDate.setMonth(endDate.getMonth() + 18);
+        const end = endDate.toISOString().slice(0, 10);
 
-      const { data, error } = await supabase
-        .from("sailings")
-        .select("*, ship:ships(id,name,cruise_line:cruise_lines(name))")
-        .eq("is_active", true)
-        .order("sail_date", { ascending: true })
-        .limit(20);
+        const input = {
+          departurePort: "Galveston",
+          dateRange: { start, end },
+          passengers: { adults: Number(bookingForm.travelers || 2) },
+        };
 
-      if (!isActive) return;
-
-      if (error) {
+        const res = await fetch("/api/cruise/decision", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(input),
+        });
+        if (!res.ok) throw new Error("Failed to load cruise matrix");
+        const payload = (await res.json()) as { results: DecisionResult[] };
+        results = payload.results || [];
+      } catch (error) {
         console.error("Matrix load error", error);
+        if (!isActive) return;
         setMatrixError("Unable to load sailings right now.");
         setCruiseMatrix([]);
         setMatrixLoading(false);
         return;
       }
 
-      const rows = (data || []).map((row: SailingRow) => {
-        const lineName = row.ship?.cruise_line?.name ?? "Unknown cruise line";
+      if (!isActive) return;
+
+      const rows = (results || []).map((result) => {
+        const row = result.sailing;
+        const lineName = row.cruise_line ?? row.ship?.cruise_line?.name ?? "Unknown cruise line";
         const lineKey = normalizeLineKey(lineName);
         const duration = calcNights(row.sail_date, row.return_date);
         const portsValue = formatPorts(row.ports) ?? formatPorts(row.itinerary) ?? "TBA";
@@ -251,7 +289,6 @@ export default function Home() {
           parsePrice(row.base_price) ??
           parsePrice(row.starting_price) ??
           parsePrice(row.min_price);
-        const scoreCandidate = parsePrice(row.sail_score) ?? parsePrice(row.score);
         return {
           id: row.id,
           line: lineName,
@@ -261,7 +298,10 @@ export default function Home() {
           ports: portsValue,
           priceDisplay: formatPrice(priceCandidate),
           priceNumber: priceCandidate,
-          scoreDisplay: formatScore(scoreCandidate),
+          scoreDisplay: `${Math.round(result.score * 100)}/100`,
+          engineScore: result.score,
+          confidence: result.confidence,
+          reasons: result.reasons || [],
           sailDate: row.sail_date,
         };
       });
@@ -281,6 +321,9 @@ export default function Home() {
     const byLine = filterLine === "all" ? cruiseMatrix : cruiseMatrix.filter((cruise) => cruise.lineKey === filterLine);
     const byYear = filterYear === "all" ? byLine : byLine.filter((cruise) => formatYear(cruise.sailDate) === filterYear);
     const sorted = [...byYear].sort((a, b) => {
+      if (sortKey === "score") {
+        return b.engineScore - a.engineScore;
+      }
       if (sortKey === "price") {
         const aPrice = a.priceNumber ?? Number.POSITIVE_INFINITY;
         const bPrice = b.priceNumber ?? Number.POSITIVE_INFINITY;
@@ -430,6 +473,15 @@ export default function Home() {
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+  }
+
+  function shipImageFor(shipName: string) {
+    const key = shipName.toLowerCase();
+    if (key.includes("breeze")) return "/assets/breezebalc.jpg";
+    if (key.includes("dream")) return "/assets/OIP (7).jpg";
+    if (key.includes("mariner")) return "/assets/symphony-of-the-seas.webp";
+    if (key.includes("disney")) return "/assets/60ed9b0ab092993339d2.webp";
+    return "/assets/50d77fbd1a700d20a05a.webp";
   }
 
   return (
@@ -710,92 +762,54 @@ export default function Home() {
                 </option>
               ))}
             </select>
-            {["price", "duration", "date"].map((key) => (
+            {["score", "price", "duration", "date"].map((key) => (
               <button
                 key={key}
                 type="button"
-                onClick={() => setSortKey(key as "price" | "duration" | "date")}
+                onClick={() => setSortKey(key as "price" | "duration" | "date" | "score")}
                 className="rounded-full border border-white/10 bg-background-card px-4 py-2 text-xs font-semibold text-text-primary hover:border-primary-blue/50"
               >
                 Sort by {key.charAt(0).toUpperCase() + key.slice(1)}
               </button>
             ))}
           </div>
-          <div className="mt-4 overflow-x-auto rounded-3xl border border-white/10 bg-background-panel">
-            <table className="min-w-[840px] w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-[0.2em] text-text-muted">
-                <tr>
-                  <th className="px-6 py-4">Departure</th>
-                  <th className="px-6 py-4">Ship & line</th>
-                  <th className="px-6 py-4">Nights</th>
-                  <th className="px-6 py-4">Itinerary</th>
-                  <th className="px-6 py-4">Starting from</th>
-                  <th className="px-6 py-4">Sail score</th>
-                  <th className="px-6 py-4">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/10">
-                {matrixLoading && (
-                  <tr>
-                    <td colSpan={7} className="px-6 py-5 text-text-secondary">
-                      Loading sailings...
-                    </td>
-                  </tr>
-                )}
-                {!matrixLoading && matrixError && (
-                  <tr>
-                    <td colSpan={7} className="px-6 py-5 text-red-300">
-                      {matrixError}
-                    </td>
-                  </tr>
-                )}
-                {!matrixLoading && !matrixError && filteredCruises.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="px-6 py-5 text-text-secondary">
-                      No sailings available yet.
-                    </td>
-                  </tr>
-                )}
-                {!matrixLoading &&
-                  !matrixError &&
-                  filteredCruises.map((cruise) => (
-                    <tr key={cruise.id} className="text-text-secondary hover:bg-white/5">
-                      <td className="px-6 py-4 text-text-primary">{formatDate(cruise.sailDate)}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[linear-gradient(135deg,#7B61FF,#C084FC)] text-xs font-semibold text-white">
-                            {initials(cruise.line)}
-                          </div>
-                          <div>
-                            <div className="font-semibold text-text-primary">{cruise.ship}</div>
-                            <div className="text-xs text-text-muted">{cruise.line}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">{cruise.duration}</td>
-                      <td className="px-6 py-4">{cruise.ports}</td>
-                      <td className="px-6 py-4">
-                        <div className="text-base font-semibold text-text-primary">{cruise.priceDisplay}</div>
-                        <div className="text-xs text-text-muted">per person</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="rounded-full border border-primary-blue/40 bg-primary-blue/10 px-3 py-1 text-xs font-semibold text-primary-blue">
-                          {cruise.scoreDisplay}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <a
-                          href="#booking-panel"
-                          onClick={() => openBookingPanel({ ship: cruise.ship })}
-                          className="rounded-full border border-primary-blue/40 px-4 py-2 text-xs font-semibold text-primary-blue hover:border-primary-blue"
-                        >
-                          Request booking
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+          <div className="mt-4">
+            {matrixLoading && <p className="text-text-secondary">Loading sailings...</p>}
+            {!matrixLoading && matrixError && <p className="text-red-500">{matrixError}</p>}
+            {!matrixLoading && !matrixError && filteredCruises.length === 0 && (
+              <p className="text-text-secondary">No sailings available yet.</p>
+            )}
+            {!matrixLoading && !matrixError && filteredCruises.length > 0 && (
+              <section className="results">
+                {filteredCruises.map((cruise) => (
+                  <article key={cruise.id} className="cruise-card">
+                    <img src={shipImageFor(cruise.ship)} alt={cruise.ship} loading="lazy" />
+                    <div className="cruise-info">
+                      <h3>{cruise.ship}</h3>
+                      <p className="meta">
+                        {cruise.duration}-Night {cruise.ports} • {formatDate(cruise.sailDate)}
+                      </p>
+                      <ul className="reasons">
+                        {(cruise.reasons || []).slice(0, 3).map((reason) => {
+                          const isWarn = reason.toLowerCase().includes("limited");
+                          return (
+                            <li key={reason} className={isWarn ? "warn" : "good"}>
+                              {reason}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                    <div className="cruise-action">
+                      <span className="price">{cruise.priceDisplay}</span>
+                      <a href={`/cruise/${cruise.id}?adults=2&children=0&max=900&flex=1&seapay=0`}>
+                        View Details
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </section>
+            )}
           </div>
         </section>
 
