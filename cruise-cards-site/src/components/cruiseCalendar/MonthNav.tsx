@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMonthSwipe } from "./useMonthSwipe";
 
@@ -14,16 +14,28 @@ function clampMonth(y: number, m: number) {
   return { y, m };
 }
 
-export default function MonthNav({ year, month }: { year: number; month: number }) {
+export default function MonthNav({
+  year,
+  month,
+  bestMonth,
+}: {
+  year: number;
+  month: number;
+  bestMonth?: { y: number; m: number } | null;
+}) {
   const router = useRouter();
   const sp = useSearchParams();
 
-  function go(y: number, m: number) {
-    const p = new URLSearchParams(sp.toString());
-    p.set("y", String(y));
-    p.set("m", String(m));
-    router.push(`/cruises-from-galveston/calendar?${p.toString()}`);
-  }
+  const paramsString = sp.toString();
+  const go = useCallback(
+    (y: number, m: number) => {
+      const p = new URLSearchParams(paramsString);
+      p.set("y", String(y));
+      p.set("m", String(m));
+      router.push(`/cruises-from-galveston/calendar?${p.toString()}`);
+    },
+    [paramsString, router]
+  );
 
   const prev = clampMonth(year, month - 1);
   const next = clampMonth(year, month + 1);
@@ -50,26 +62,39 @@ export default function MonthNav({ year, month }: { year: number; month: number 
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [prev.y, prev.m, next.y, next.m, sp]);
+  }, [go, prev.y, prev.m, next.y, next.m]);
 
   return (
     <div className="mb-4 flex items-center justify-between gap-3">
-      <button
-        onClick={() => go(prev.y, prev.m)}
-        className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-navy hover:bg-sand/50"
-        aria-label="Previous month"
-        type="button"
-      >
-        ← Prev
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => go(prev.y, prev.m)}
+          className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-navy hover:bg-sand/50"
+          aria-label="Previous month"
+          type="button"
+        >
+          ← Prev
+        </button>
 
-      <button
-        onClick={() => go(CURRENT_YEAR, CURRENT_MONTH)}
-        className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-navy hover:bg-sand/50"
-        type="button"
-      >
-        Today
-      </button>
+        <button
+          onClick={() => go(CURRENT_YEAR, CURRENT_MONTH)}
+          className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-navy hover:bg-sand/50"
+          type="button"
+        >
+          Today
+        </button>
+
+        {bestMonth && (
+          <button
+            onClick={() => go(bestMonth.y, bestMonth.m)}
+            className="rounded-lg border border-teal/40 bg-teal/5 px-3 py-2 text-sm text-teal hover:bg-teal/10"
+            aria-label="Jump to best month"
+            type="button"
+          >
+            Best Month
+          </button>
+        )}
+      </div>
 
       <div className="flex items-center gap-2">
         <select

@@ -53,7 +53,6 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
 
   const reasons = result?.reasons ?? [];
   const flags = result?.flags ?? [];
-  const confidence = result?.confidence ?? 0.7;
 
   const price = pricing?.minPerPerson ? formatPrice(Number(pricing.minPerPerson)) : "Call for pricing";
   const fromPrice = price;

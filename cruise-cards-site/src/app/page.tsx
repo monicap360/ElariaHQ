@@ -106,15 +106,6 @@ function isAllowedDuration(lineName: string, nights: number) {
   return allowedNightsForLine(lineName).includes(nights);
 }
 
-function initials(value: string) {
-  return value
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
-
 function calcNights(sailDate: string, returnDate: string) {
   const start = new Date(sailDate);
   const end = new Date(returnDate);
@@ -158,11 +149,6 @@ function parsePrice(value: SailingRow[keyof SailingRow]) {
 function formatPrice(value: number | null) {
   if (value === null) return "Call for pricing";
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
-}
-
-function formatScore(value: number | null) {
-  if (value === null) return "TBD";
-  return `${Math.round(value)}/100`;
 }
 
 function formatDate(value: string) {
@@ -227,7 +213,7 @@ export default function Home() {
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [bookingForm.travelers]);
 
   useEffect(() => {
     setRoomGuests((prev) => {

@@ -21,7 +21,7 @@ export type CruiseDecisionContext = {
 };
 
 export type CruiseDataProvider = {
-  getSailings: (params: { departurePort: string; start: string; end: string }) => Promise<Sailing[]>;
+  getSailings: (params: { departurePort: string; start: string; end: string; shipId?: string }) => Promise<Sailing[]>;
   getShipsByIds: (shipIds: string[]) => Promise<Record<string, Ship>>;
   getLatestPricingBySailingIds: (sailingIds: string[]) => Promise<Record<string, PricingSnapshot | undefined>>;
   getLatestAvailabilityBySailingIds: (
@@ -29,6 +29,7 @@ export type CruiseDataProvider = {
   ) => Promise<Record<string, AvailabilitySnapshot | undefined>>;
   getLatestRiskBySailingIds: (sailingIds: string[]) => Promise<Record<string, RiskSnapshot | undefined>>;
   getSailingById?: (sailingId: string) => Promise<Sailing>;
+  getAllShips?: () => Promise<Ship[]>;
 };
 
 export const DEFAULT_WEIGHTS: DecisionWeights = {

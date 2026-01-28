@@ -39,6 +39,27 @@ type SailingRow = {
   } | null;
 };
 
+type PricingSnapshotRow = {
+  sailing_id: string;
+  as_of: string;
+  currency: string | null;
+  min_per_person: number | null;
+  market_median_per_person?: number | null;
+};
+
+type AvailabilitySnapshotRow = {
+  sailing_id: string;
+  as_of: string;
+  demand_pressure?: number | null;
+  available_cabin_types?: string[] | null;
+};
+
+type RiskSnapshotRow = {
+  sailing_id: string;
+  as_of: string;
+  risk_score?: number | null;
+};
+
 type DecisionResultWithSailing = CruiseDecisionResult & {
   sailing: SailingRow & {
     cruise_line: string | null;
@@ -147,7 +168,7 @@ async function loadPricing(supabase: ReturnType<typeof createAdminClient>): Prom
     .order("as_of", { ascending: false });
   if (error || !data) return [];
   const seen = new Set<string>();
-  return (data as any[])
+  return (data as PricingSnapshotRow[])
     .filter((row) => {
       if (seen.has(row.sailing_id)) return false;
       seen.add(row.sailing_id);
@@ -169,7 +190,7 @@ async function loadAvailability(supabase: ReturnType<typeof createAdminClient>):
     .order("as_of", { ascending: false });
   if (error || !data) return [];
   const seen = new Set<string>();
-  return (data as any[])
+  return (data as AvailabilitySnapshotRow[])
     .filter((row) => {
       if (seen.has(row.sailing_id)) return false;
       seen.add(row.sailing_id);
@@ -190,7 +211,7 @@ async function loadRisk(supabase: ReturnType<typeof createAdminClient>): Promise
     .order("as_of", { ascending: false });
   if (error || !data) return [];
   const seen = new Set<string>();
-  return (data as any[])
+  return (data as RiskSnapshotRow[])
     .filter((row) => {
       if (seen.has(row.sailing_id)) return false;
       seen.add(row.sailing_id);

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import MobileActionBar from "./MobileActionBar";
 
 type Demand = "low" | "medium" | "high";
 
@@ -73,6 +74,7 @@ export default function MonthCalendar({
 }) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showRecommended, setShowRecommended] = useState(true);
+  const [selectedSailing, setSelectedSailing] = useState<CalendarEntry | null>(null);
 
   const entriesByDate = useMemo(() => {
     const map = new Map<string, CalendarEntry[]>();
@@ -205,11 +207,13 @@ export default function MonthCalendar({
               const href = `/cruise/${entry.sailingId}?${sp.toString()}`;
 
               return (
-                <div
+                <button
                   key={entry.sailingId}
-                  className={`rounded-xl border p-4 ring-1 ${
+                  onClick={() => setSelectedSailing(entry)}
+                  className={`w-full rounded-xl border p-4 text-left ring-1 ${
                     entry.recommended ? "border-teal/40 bg-teal/5" : "border-gray-200"
                   } ${ring}`}
+                  type="button"
                 >
                   {entry.recommended && (
                     <div className="mb-2 text-xs font-medium text-teal">★ Recommended date</div>
@@ -256,14 +260,17 @@ export default function MonthCalendar({
                       View Details
                     </Link>
                     <button
-                      onClick={() => navigator.clipboard.writeText(window.location.origin + href)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        navigator.clipboard.writeText(window.location.origin + href);
+                      }}
                       className="rounded-lg border border-gray-200 px-4 py-2 text-sm text-navy hover:bg-sand/50"
                       type="button"
                     >
                       Copy Link
                     </button>
                   </div>
-                </div>
+                </button>
               );
             })
           )}
@@ -274,6 +281,21 @@ export default function MonthCalendar({
           most other lines use <span className="font-medium text-navy">nights</span>.
         </div>
       </aside>
+
+      <MobileActionBar
+        sailing={
+          selectedSailing
+            ? {
+                sailingId: selectedSailing.sailingId,
+                shipName: selectedSailing.shipName,
+                durationLabel: selectedSailing.durationLabel,
+                priceFrom: selectedSailing.priceFrom,
+                seaPayEligible: selectedSailing.seaPayEligible,
+              }
+            : undefined
+        }
+        queryString={sp.toString()}
+      />
     </section>
   );
 }

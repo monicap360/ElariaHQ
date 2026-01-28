@@ -3,6 +3,11 @@ import { runCruiseDecisionEngine } from "@/lib/cruiseDecisionEngine/engine";
 import { CruiseDecisionInput } from "@/lib/cruiseDecisionEngine/types";
 import { providerFromSupabase } from "@/lib/cruiseDecisionEngine/provider.supabase";
 
+function errorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return "Unknown error";
+}
+
 export async function POST(req: NextRequest) {
   try {
     const input = (await req.json()) as CruiseDecisionInput;
@@ -21,7 +26,7 @@ export async function POST(req: NextRequest) {
     const response = await runCruiseDecisionEngine({ input, provider, limit: 12 });
 
     return NextResponse.json(response);
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message ?? "Unknown error" }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: errorMessage(error) }, { status: 500 });
   }
 }

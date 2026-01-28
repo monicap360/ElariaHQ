@@ -12,6 +12,7 @@ type CalendarGroup = {
 };
 
 type CalendarEntry = {
+  shipId: string;
   sailingId: string;
   cruiseLine: string;
   shipName: string;
@@ -34,18 +35,21 @@ export const metadata = {
   description: "Engine-ranked sail dates from Galveston by month and ship.",
 };
 
+type CalendarSearchParams = {
+  y?: string;
+  m?: string;
+  adults?: string;
+  children?: string;
+  max?: string;
+  flex?: string;
+  line?: string;
+  shipId?: string;
+};
+
 export default async function CalendarPage({
   searchParams,
 }: {
-  searchParams?: {
-    y?: string;
-    m?: string;
-    adults?: string;
-    children?: string;
-    max?: string;
-    flex?: string;
-    line?: string;
-  };
+  searchParams?: CalendarSearchParams;
 }) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
@@ -59,12 +63,17 @@ export default async function CalendarPage({
   const today = new Date();
   const CURRENT_YEAR = today.getUTCFullYear();
   const CURRENT_MONTH = today.getUTCMonth() + 1;
-  const y = Number(searchParams?.y || CURRENT_YEAR);
+  const shipId = sParam(searchParams, "shipId");
+  const hasExplicitMonth = sParam(searchParams, "y") !== undefined || sParam(searchParams, "m") !== undefined;
+  let y = Number(searchParams?.y || CURRENT_YEAR);
   const mInput = Number(searchParams?.m || CURRENT_MONTH);
-  const m = Number.isFinite(mInput) && mInput >= 1 && mInput <= 12 ? mInput : CURRENT_MONTH;
-  const isCurrentMonth = y === CURRENT_YEAR && m === CURRENT_MONTH;
-  const start = new Date(Date.UTC(y, m - 1, 1)).toISOString().slice(0, 10);
-  const endExclusive = new Date(Date.UTC(y, m, 1)).toISOString().slice(0, 10);
+  let m = Number.isFinite(mInput) && mInput >= 1 && mInput <= 12 ? mInput : CURRENT_MONTH;
+  let start = new Date(Date.UTC(y, m - 1, 1)).toISOString().slice(0, 10);
+  let endExclusive = new Date(Date.UTC(y, m, 1)).toISOString().slice(0, 10);
+  if (shipId && !hasExplicitMonth) {
+    start = new Date(Date.UTC(CURRENT_YEAR, CURRENT_MONTH - 1, 1)).toISOString().slice(0, 10);
+    endExclusive = new Date(Date.UTC(CURRENT_YEAR + 1, CURRENT_MONTH - 1, 1)).toISOString().slice(0, 10);
+  }
   const adults = Number(searchParams?.adults || 2);
   const children = Number(searchParams?.children || 0);
   const max = searchParams?.max ? Number(searchParams.max) : undefined;
@@ -90,6 +99,7 @@ export default async function CalendarPage({
     departurePort: input.departurePort,
     start,
     end: endExclusive,
+    ...(shipId ? { shipId } : {}),
   });
 
   const shipIds = Array.from(new Set(sailings.map((sailing) => sailing.shipId)));
@@ -98,6 +108,14 @@ export default async function CalendarPage({
   const sailingMap = new Map(sailings.map((sailing) => [sailing.id, sailing]));
 
   const decision = await runCruiseDecisionEngine({ input, provider, limit: sailings.length || 1 });
+  const bestMonth = bestMonthFromResults(
+    decision.results.map((result) => ({
+      sailingId: result.sailingId,
+      score: result.score,
+      confidence: result.confidence,
+    })),
+    sailingMap
+  );
 
   const entries = decision.results
     .map((result) => {
@@ -108,6 +126,7 @@ export default async function CalendarPage({
       const price = pricingById[sailing.id]?.minPerPerson ?? null;
 
       return {
+        shipId: sailing.shipId,
         sailingId: sailing.id,
         departDate: sailing.departDate,
         returnDate: sailing.returnDate,
@@ -128,8 +147,22 @@ export default async function CalendarPage({
     .filter(Boolean)
     .filter((entry) => entry!.departDate >= start && entry!.departDate < endExclusive) as CalendarEntry[];
 
-  const shipGroups = groupByShip(entries);
-  const recommended = [...entries]
+  const shipEntries = shipId ? entries.filter((entry) => entry.shipId === shipId) : entries;
+  const shipName = shipId ? shipEntries[0]?.shipName : undefined;
+  const bestShipMonth = shipId ? computeBestMonth(shipEntries) : null;
+  if (shipId && bestShipMonth && !hasExplicitMonth) {
+    y = bestShipMonth.y;
+    m = bestShipMonth.m;
+  }
+  const isCurrentMonth = y === CURRENT_YEAR && m === CURRENT_MONTH;
+  const displayStart = new Date(Date.UTC(y, m - 1, 1)).toISOString().slice(0, 10);
+  const displayEndExclusive = new Date(Date.UTC(y, m, 1)).toISOString().slice(0, 10);
+  const displayEntries = shipEntries.filter(
+    (entry) => entry.departDate >= displayStart && entry.departDate < displayEndExclusive
+  );
+
+  const shipGroups = groupByShip(displayEntries);
+  const recommended = [...displayEntries]
     .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
     .slice(0, 6);
 
@@ -138,19 +171,24 @@ export default async function CalendarPage({
       <header className="flex items-center justify-between gap-4 pb-4 pt-8">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-semibold text-navy">
-            Cruises from Galveston — {fmtMonthTitle(y, m - 1)}
+            {shipId && shipName ? `${shipName} — Sail Dates` : `Cruises from Galveston — ${fmtMonthTitle(y, m - 1)}`}
             {isCurrentMonth && (
               <span className="rounded-full bg-teal/10 px-2 py-0.5 text-xs text-teal">Current month</span>
             )}
+            {shipId && bestShipMonth && !hasExplicitMonth && (
+              <span className="rounded-full bg-teal/10 px-2 py-0.5 text-xs text-teal">Best month selected</span>
+            )}
           </h1>
           <p className="mt-1 text-sm text-slate">
-            Pick a sail date. We highlight strong options based on value, availability, and fit.
+            {shipId
+              ? "View available sail dates for this ship. Dates are ranked by value and availability."
+              : "Pick a sail date. We highlight strong options based on value, availability, and fit."}
           </p>
           <p className="mt-1 text-xs text-slate md:hidden">Swipe left or right to change months</p>
         </div>
       </header>
 
-      <MonthNav year={y} month={m} />
+      <MonthNav year={y} month={m} bestMonth={bestMonth} />
 
       <section className="mt-10">
         <h2 className="text-2xl font-semibold">Recommended dates</h2>
@@ -194,9 +232,9 @@ export default async function CalendarPage({
           <MonthCalendar
             year={y}
             month={m}
-            monthStartISO={start}
-            monthEndExclusiveISO={endExclusive}
-            entries={entries}
+            monthStartISO={displayStart}
+            monthEndExclusiveISO={displayEndExclusive}
+            entries={displayEntries}
             traveler={{
               adults: Number.isFinite(adults) && adults > 0 ? adults : 2,
               children: Number.isFinite(children) ? children : 0,
@@ -329,4 +367,63 @@ function buildTravelerHref(
   if (traveler.flex) params.set("flex", "1");
   if (traveler.line) params.set("line", traveler.line);
   return `/cruise/${sailingId}?${params.toString()}`;
+}
+
+function sParam(params: CalendarSearchParams | undefined, key: string) {
+  if (!params) return undefined;
+  const value = params[key as keyof CalendarSearchParams];
+  return value ?? undefined;
+}
+
+function computeBestMonth(entries: CalendarEntry[]) {
+  const map = new Map<string, { y: number; m: number; total: number; count: number }>();
+  entries.forEach((entry) => {
+    const date = new Date(entry.departDate);
+    if (Number.isNaN(date.getTime())) return;
+    const y = date.getUTCFullYear();
+    const m = date.getUTCMonth() + 1;
+    const key = `${y}-${m}`;
+    const score = (entry.score ?? 0) * (entry.confidence ?? 0);
+    const item = map.get(key) ?? { y, m, total: 0, count: 0 };
+    item.total += score;
+    item.count += 1;
+    map.set(key, item);
+  });
+  let best: { y: number; m: number; avg: number } | null = null;
+  for (const item of map.values()) {
+    const avg = item.count ? item.total / item.count : 0;
+    if (!best || avg > best.avg) {
+      best = { y: item.y, m: item.m, avg };
+    }
+  }
+  return best ? { y: best.y, m: best.m } : null;
+}
+
+function bestMonthFromResults(
+  results: { sailingId: string; score: number; confidence: number }[],
+  sailingMap: Map<string, { departDate: string }>
+) {
+  const buckets = new Map<string, { sum: number; count: number }>();
+
+  for (const result of results) {
+    const sailing = sailingMap.get(result.sailingId);
+    if (!sailing) continue;
+    const ym = sailing.departDate.slice(0, 7);
+    const weight = result.score * (0.6 + 0.4 * result.confidence);
+    const bucket = buckets.get(ym) ?? { sum: 0, count: 0 };
+    bucket.sum += weight;
+    bucket.count += 1;
+    buckets.set(ym, bucket);
+  }
+
+  let best: { ym: string; avg: number } | null = null;
+  for (const [ym, bucket] of buckets.entries()) {
+    if (bucket.count < 2) continue;
+    const avg = bucket.sum / bucket.count;
+    if (!best || avg > best.avg) best = { ym, avg };
+  }
+
+  if (!best) return null;
+  const [y, m] = best.ym.split("-").map(Number);
+  return { y, m };
 }
