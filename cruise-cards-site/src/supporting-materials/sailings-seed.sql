@@ -102,7 +102,7 @@ with sailings_data as (
       ('Carnival Miracle', '2027-03-15'::date, 9, 'Eastern Caribbean', 'Eastern Caribbean ports', 994),
       ('Carnival Breeze', '2027-03-19'::date, 3, 'Mexico', 'Cozumel & Progreso', 549),
       ('Carnival Dream', '2027-03-20'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 794),
-      ('Carnival Jubilee', '2027-03-20'::date, 7, 'The Bahamas', 'Nassau & Freeport', 964),
+      ('Carnival Jubilee', '2027-03-20'::date, 8, 'The Bahamas', 'Nassau, Half Moon Cay & Celebration Key', 964),
       ('Carnival Breeze', '2027-03-23'::date, 3, 'Mexico', 'Cozumel & Progreso', 569),
       ('Carnival Miracle', '2027-03-25'::date, 3, 'Mexico', 'Cozumel & Progreso', 589),
       ('Carnival Breeze', '2027-03-27'::date, 4, 'Mexico', 'Cozumel & Progreso', 539),
@@ -160,6 +160,18 @@ where not exists (
   where p.sailing_id = s.id
     and p.as_of = v.depart_date
 );
+
+-- Correction: Carnival Jubilee Bahamas sailing (Mar 20, 2027)
+update public.sailings s
+set
+  nights = 8,
+  return_date = (s.depart_date + interval '8 days')::date,
+  itinerary_label = 'The Bahamas',
+  ports_summary = 'Nassau, Half Moon Cay & Celebration Key'
+from public.ships sh
+where sh.id = s.ship_id
+  and sh.name = 'Carnival Jubilee'
+  and s.depart_date = '2027-03-20'::date;
 
 -- Seed: Late Feb / early Mar 2027 Carnival sailings from Galveston (additive)
 with sailings_data as (
