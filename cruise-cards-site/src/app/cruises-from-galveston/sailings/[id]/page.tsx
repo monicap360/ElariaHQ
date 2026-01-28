@@ -5,7 +5,7 @@ import "../../visitor-info/visitor-info.css";
 
 type Props = { params: { id: string } };
 
-export function generateMetadata({ params }: Props): Metadata {
+export function generateMetadata(): Metadata {
   return {
     title: "Sailing Details | Cruising from Galveston",
     description:

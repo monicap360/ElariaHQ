@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type SailingRow = {
@@ -44,7 +44,6 @@ function fmtMoney(value?: number | null, currency = "USD") {
 }
 
 export default function SailingDetailsClient({ sailingId }: Props) {
-  const supabase = useMemo(() => getSupabaseClient(), []);
   const [sailing, setSailing] = useState<SailingRow | null>(null);
   const [prices, setPrices] = useState<PriceRow[]>([]);
   const [status, setStatus] = useState("Loading…");
