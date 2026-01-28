@@ -190,7 +190,7 @@ export default function RootLayout({
           <header className="border-b border-slate-200 bg-background-panel/80 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-4 leading-tight">
-                <span className="logo-holo h-16 w-16 sm:h-20 sm:w-20" aria-hidden="true">
+                <span className="logo-shine h-20 w-20 sm:h-28 sm:w-28" aria-hidden="true">
                   <Image src="/brand/cfg-logo.webp" alt="" fill sizes="80px" className="object-cover" priority />
                 </span>
                 <span className="flex flex-col">
