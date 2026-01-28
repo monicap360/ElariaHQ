@@ -112,6 +112,12 @@ export default function RootLayout({
                 { "@type": "AdministrativeArea", name: "Texas" },
                 { "@type": "Country", name: "United States" },
               ],
+              sameAs: [
+                "https://www.facebook.com/cruisesfromgalveston",
+                "https://www.instagram.com/cruisesfromgalveston",
+                "https://x.com/TexasCruisePort",
+                "https://www.linkedin.com/company/cruisesfromgalveston",
+              ],
               contactPoint: [
                 {
                   "@type": "ContactPoint",
@@ -169,6 +175,12 @@ export default function RootLayout({
               url: "https://www.cruisesfromgalveston.net/",
               email: "hello@cruisesfromgalveston.net",
               telephone: "+14096322106",
+              sameAs: [
+                "https://www.facebook.com/cruisesfromgalveston",
+                "https://www.instagram.com/cruisesfromgalveston",
+                "https://x.com/TexasCruisePort",
+                "https://www.linkedin.com/company/cruisesfromgalveston",
+              ],
             }),
           }}
         />
@@ -212,9 +224,45 @@ export default function RootLayout({
           </header>
           {children}
           <footer className="border-t border-slate-200 bg-background-panel/80">
-            <div className="mx-auto max-w-6xl px-6 py-6 text-xs text-text-muted">
-              Cruises From Galveston provides planning guidance and operational support. Pricing and official terms
-              remain with cruise lines.
+            <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-text-muted md:flex-row md:items-center md:justify-between">
+              <span>
+                Cruises From Galveston provides planning guidance and operational support. Pricing and official terms
+                remain with cruise lines.
+              </span>
+              <div className="flex flex-wrap items-center gap-3 text-text-secondary">
+                <a
+                  href="https://www.facebook.com/cruisesfromgalveston"
+                  className="font-semibold text-primary-blue hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Facebook
+                </a>
+                <a
+                  href="https://www.instagram.com/cruisesfromgalveston"
+                  className="font-semibold text-primary-blue hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Instagram
+                </a>
+                <a
+                  href="https://x.com/TexasCruisePort"
+                  className="font-semibold text-primary-blue hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  X
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/cruisesfromgalveston"
+                  className="font-semibold text-primary-blue hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  LinkedIn
+                </a>
+              </div>
             </div>
           </footer>
         </div>
