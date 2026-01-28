@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { formatDurationLabel } from "@/lib/formatDuration";
 import { useEffect, useMemo, useState } from "react";
@@ -504,17 +505,19 @@ export default function Home() {
           className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
         >
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-background-panel/80 px-10 py-12 shadow-[0_0_40px_rgba(76,111,255,0.08)]">
-            <img
+            <Image
               src="/assets/symphony-of-the-seas.webp"
               alt="Cruise ship at sea"
-              className="absolute inset-0 h-full w-full object-cover opacity-25"
-              loading="lazy"
+              fill
+              sizes="(min-width: 1024px) 60vw, 100vw"
+              className="object-cover opacity-25"
+              priority
             />
             <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(11,14,20,0.92),rgba(11,14,20,0.55))]" />
             <div className="relative z-10">
               <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
                 <span className="logo-holo h-8 w-8" aria-hidden="true">
-                  <img src="/brand/cfg-logo.webp" alt="" loading="lazy" />
+                  <Image src="/brand/cfg-logo.webp" alt="" fill sizes="32px" className="object-cover" />
                 </span>
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.25em] text-text-muted">The Cruises From Galveston Desk</div>
@@ -793,7 +796,14 @@ export default function Home() {
               <section className="results">
                 {filteredCruises.map((cruise) => (
                   <article key={cruise.id} className="cruise-card">
-                    <img src={shipImageFor(cruise.ship)} alt={cruise.ship} loading="lazy" />
+                    <Image
+                      src={shipImageFor(cruise.ship)}
+                      alt={cruise.ship}
+                      width={360}
+                      height={260}
+                      className="h-full w-full object-cover"
+                      sizes="180px"
+                    />
                     <div className="cruise-info">
                       <h3>{cruise.ship}</h3>
                       <p className="meta">
@@ -903,7 +913,14 @@ export default function Home() {
           <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {photoGallery.map((item) => (
               <div key={item.src} className="overflow-hidden rounded-2xl border border-white/10 bg-background-card">
-                <img src={item.src} alt={item.title} className="h-44 w-full object-cover" loading="lazy" />
+                <Image
+                  src={item.src}
+                  alt={item.title}
+                  width={640}
+                  height={352}
+                  className="h-44 w-full object-cover"
+                  sizes="(min-width: 1024px) 320px, (min-width: 768px) 50vw, 100vw"
+                />
                 <div className="px-5 py-4">
                   <div className="text-sm font-semibold text-text-primary">{item.title}</div>
                   <p className="mt-2 text-xs text-text-secondary">{item.description}</p>
@@ -952,7 +969,14 @@ export default function Home() {
                 return (
                   <div key={port} className="overflow-hidden rounded-2xl border border-white/10 bg-background-card">
                     {portImage && (
-                      <img src={portImage} alt={port} className="h-36 w-full object-cover" loading="lazy" />
+                      <Image
+                        src={portImage}
+                        alt={port}
+                        width={640}
+                        height={288}
+                        className="h-36 w-full object-cover"
+                        sizes="(min-width: 1024px) 320px, 100vw"
+                      />
                     )}
                     <div className="p-6">
                       <div className="text-base font-semibold text-text-primary">{port}</div>
@@ -1024,11 +1048,12 @@ export default function Home() {
           <h2 className="text-center text-2xl font-semibold font-accent">Why trust the desk</h2>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-text-muted">
             <div className="flex items-center gap-3 rounded-full border border-white/10 bg-background-panel px-4 py-2">
-              <img
+              <Image
                 src="/assets/BBB_ABSeal_H_7469_US-301x107-e7ea6d8 (1).png"
                 alt="BBB Accredited Business"
+                width={120}
+                height={32}
                 className="h-6 w-auto"
-                loading="lazy"
               />
               <span>Accredited business practices</span>
             </div>

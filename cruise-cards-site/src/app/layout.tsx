@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
@@ -178,7 +179,7 @@ export default function RootLayout({
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-4 leading-tight">
                 <span className="logo-holo h-16 w-16 sm:h-20 sm:w-20" aria-hidden="true">
-                  <img src="/brand/cfg-logo.webp" alt="" loading="lazy" />
+                  <Image src="/brand/cfg-logo.webp" alt="" fill sizes="80px" className="object-cover" priority />
                 </span>
                 <span className="flex flex-col">
                   <span className="text-sm font-semibold uppercase tracking-[0.3em] text-text-muted">

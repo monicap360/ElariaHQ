@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type CruiseHeroProps = {
   ship: {
     name: string;
@@ -20,7 +22,9 @@ export default function CruiseHero({
 }: CruiseHeroProps) {
   return (
     <section className="bg-cloud overflow-hidden rounded-2xl shadow-lg">
-      <img src={ship.image} alt={ship.name} className="h-64 w-full object-cover" />
+      <div className="relative h-64 w-full">
+        <Image src={ship.image} alt={ship.name} fill sizes="100vw" className="object-cover" />
+      </div>
       <div className="p-6">
         <h1 className="text-2xl font-semibold text-navy">{ship.name}</h1>
         <p className="mb-3 text-sm text-slate">{dates}</p>
