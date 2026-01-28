@@ -93,6 +93,139 @@ where not exists (
     and p.as_of = v.depart_date
 );
 
+-- Seed: Royal Caribbean April 2026 additional sailings (additive)
+with sailings_data as (
+  select *
+  from (
+    values
+      ('Mariner Of The Seas', '2026-04-13'::date, 5, 'Western Caribbean', 'Western Caribbean ports', 607.09),
+      ('Mariner Of The Seas', '2026-04-18'::date, 5, 'Western Caribbean', 'Western Caribbean ports', 528.84),
+      ('Allure Of The Seas', '2026-04-19'::date, 7, 'Western Caribbean', 'Western Caribbean ports', 849.46),
+      ('Mariner Of The Seas', '2026-04-23'::date, 4, 'Western Caribbean', 'Western Caribbean ports', 583.37),
+      ('Mariner Of The Seas', '2026-04-27'::date, 5, 'Western Caribbean', 'Western Caribbean ports', 581.54)
+  ) as v(ship_name, depart_date, nights, itinerary_label, ports_summary, min_price)
+)
+insert into public.sailings (
+  id,
+  ship_id,
+  departure_port,
+  depart_date,
+  return_date,
+  nights,
+  is_active,
+  itinerary_label,
+  ports_summary
+)
+select
+  gen_random_uuid(),
+  sh.id,
+  'Galveston',
+  v.depart_date,
+  (v.depart_date + (v.nights || ' days')::interval)::date,
+  v.nights,
+  true,
+  v.itinerary_label,
+  v.ports_summary
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+where not exists (
+  select 1
+  from public.sailings s
+  where s.ship_id = sh.id
+    and s.depart_date = v.depart_date
+);
+
+insert into public.pricing_snapshots (
+  sailing_id,
+  as_of,
+  currency,
+  min_per_person
+)
+select
+  s.id,
+  v.depart_date,
+  'USD',
+  v.min_price
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+join public.sailings s on s.ship_id = sh.id and s.depart_date = v.depart_date
+where v.min_price is not null
+  and not exists (
+    select 1
+    from public.pricing_snapshots p
+    where p.sailing_id = s.id
+      and p.as_of = v.depart_date
+  );
+
+-- Seed: Royal Caribbean Mar-Apr 2026 sailings (additive)
+with sailings_data as (
+  select *
+  from (
+    values
+      ('Allure Of The Seas', '2026-03-17'::date, 5, 'Western Caribbean', 'Western Caribbean ports', 1097.92),
+      ('Mariner Of The Seas', '2026-03-17'::date, 4, 'Western Caribbean', 'Western Caribbean ports', 678.94),
+      ('Mariner Of The Seas', '2026-03-21'::date, 5, 'Western Caribbean', 'Western Caribbean ports', 481.42),
+      ('Allure Of The Seas', '2026-03-22'::date, 7, 'Western Caribbean', 'Western Caribbean ports', 668.00),
+      ('Mariner Of The Seas', '2026-03-26'::date, 4, 'Western Caribbean', 'Western Caribbean ports', 512.20),
+      ('Allure Of The Seas', '2026-03-29'::date, 7, 'Western Caribbean', 'Western Caribbean ports', 889.55),
+      ('Mariner Of The Seas', '2026-03-30'::date, 10, 'Western Caribbean', 'Western Caribbean ports', 1998.81),
+      ('Allure Of The Seas', '2026-04-05'::date, 7, 'Western Caribbean', 'Western Caribbean ports', 807.11),
+      ('Mariner Of The Seas', '2026-04-09'::date, 4, 'Western Caribbean', 'Western Caribbean ports', 479.37),
+      ('Allure Of The Seas', '2026-04-12'::date, 7, 'Western Caribbean', 'Western Caribbean ports', 863.46)
+  ) as v(ship_name, depart_date, nights, itinerary_label, ports_summary, min_price)
+)
+insert into public.sailings (
+  id,
+  ship_id,
+  departure_port,
+  depart_date,
+  return_date,
+  nights,
+  is_active,
+  itinerary_label,
+  ports_summary
+)
+select
+  gen_random_uuid(),
+  sh.id,
+  'Galveston',
+  v.depart_date,
+  (v.depart_date + (v.nights || ' days')::interval)::date,
+  v.nights,
+  true,
+  v.itinerary_label,
+  v.ports_summary
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+where not exists (
+  select 1
+  from public.sailings s
+  where s.ship_id = sh.id
+    and s.depart_date = v.depart_date
+);
+
+insert into public.pricing_snapshots (
+  sailing_id,
+  as_of,
+  currency,
+  min_per_person
+)
+select
+  s.id,
+  v.depart_date,
+  'USD',
+  v.min_price
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+join public.sailings s on s.ship_id = sh.id and s.depart_date = v.depart_date
+where v.min_price is not null
+  and not exists (
+    select 1
+    from public.pricing_snapshots p
+    where p.sailing_id = s.id
+      and p.as_of = v.depart_date
+  );
+
 -- Seed: Royal Caribbean 2026 Galveston sailings (additive)
 with sailings_data as (
   select *
