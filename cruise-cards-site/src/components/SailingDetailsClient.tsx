@@ -58,9 +58,10 @@ export default function SailingDetailsClient({ sailingId }: Props) {
     let cancelled = false;
 
     async function load() {
+      const client = supabase;
       setStatus("Loading…");
       try {
-        const { data: sailingData, error: sailingError } = await supabase
+        const { data: sailingData, error: sailingError } = await client
           .from("searchable_cruises")
           .select("*")
           .eq("id", sailingId)
@@ -69,7 +70,7 @@ export default function SailingDetailsClient({ sailingId }: Props) {
         if (sailingError) throw sailingError;
         if (!cancelled) setSailing((sailingData as SailingRow) ?? null);
 
-        const { data: priceData, error: priceError } = await supabase
+        const { data: priceData, error: priceError } = await client
           .from("public_sailing_prices")
           .select("sailing_id,cabin_type,price,currency")
           .eq("sailing_id", sailingId);
