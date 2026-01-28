@@ -3,9 +3,9 @@ import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
 import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
-  title: "Driving to Galveston from Palmview | Cruise Planning Guide",
+  title: "Driving to Galveston from Palmview, TX | Cruise Planning Guide",
   description:
-    "A visitor guide for driving to Galveston from Palmview, TX, including drive time, route details, and bilingual planning reassurance.",
+    "A visitor guide for driving to Galveston from Palmview, Texas (Rio Grande Valley), including drive time, route planning, and embarkation tips.",
 };
 
 export default function FromPalmviewPage() {
@@ -14,9 +14,10 @@ export default function FromPalmviewPage() {
       <section className="hero">
         <div className="wrap">
           <div className="kicker">Drive-To Cruise Guide</div>
-          <h1 className="heroTitle">Driving to Galveston from Palmview</h1>
+          <h1 className="heroTitle">Driving to Galveston from Palmview, Texas</h1>
           <p className="sectionDesc">
-            Palmview travelers often plan a relaxed overnight stop near Galveston to make embarkation day easier.
+            Palmview and nearby Rio Grande Valley communities often travel to Galveston by car to simplify cruise
+            logistics and maintain schedule control.
           </p>
         </div>
       </section>
@@ -25,8 +26,8 @@ export default function FromPalmviewPage() {
         <div className="wrap">
           <h2 className="sectionTitle">Estimated drive time</h2>
           <p>
-            The drive from Palmview to Galveston typically takes approximately <strong>6.5 to 7.5 hours</strong>,
-            depending on traffic and departure time.
+            The drive from Palmview to Galveston typically takes <strong>about 6.5 to 7.5 hours</strong>, depending on
+            traffic, departure time, and stops.
           </p>
           <p>
             <strong>Primary route:</strong> I-2 East -> US-77 North -> I-69E North -> I-45 South.
@@ -38,14 +39,17 @@ export default function FromPalmviewPage() {
         <div className="wrap">
           <h2 className="sectionTitle">Recommended arrival strategy</h2>
           <ul className="linkList">
-            <li>Plan an overnight stay near the port the night before sailing.</li>
-            <li>Allow extra time for Houston-area traffic on the final leg.</li>
-            <li>Pre-book parking and keep cruise documents ready.</li>
+            <li>Arrive the night before sailing whenever possible.</li>
+            <li>Build extra time for Houston-area congestion.</li>
+            <li>Confirm parking or transfer arrangements in advance.</li>
           </ul>
           <div className="card" style={{ marginTop: 16 }}>
             <div className="cardBody">
-              <strong>Asistencia en espanol disponible.</strong>
-              <p>Apoyo en espanol para viajeros del Valle del Rio Grande.</p>
+              <strong>Asistencia en espanol disponible</strong>
+              <p>
+                Ofrecemos apoyo en espanol para la planificacion de cruceros, hoteles y transporte hacia el Puerto de
+                Galveston.
+              </p>
             </div>
           </div>
         </div>
@@ -55,8 +59,8 @@ export default function FromPalmviewPage() {
         <div className="wrap">
           <h2 className="sectionTitle">Why Galveston works for Palmview travelers</h2>
           <p>
-            With consistent cruise departures and multiple parking options, Galveston remains a reliable drive-to
-            cruise choice for Rio Grande Valley residents.
+            Galveston offers a Gulf Coast cruise departure that is accessible by highway and well-suited for
+            multi-family or group travel from South Texas.
           </p>
         </div>
       </section>

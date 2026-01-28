@@ -58,7 +58,45 @@ export default function DrivingToGalvestonPage() {
               <a href="/plan-your-cruise/driving-to-galveston/from-palmview">Driving from Palmview, TX</a>
             </li>
             <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-houston">Driving from Houston</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth">
+                Driving from Dallas-Fort Worth
+              </a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-austin">Driving from Austin</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-san-antonio">Driving from San Antonio</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-oklahoma-city">Driving from Oklahoma City</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-tulsa">Driving from Tulsa</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-baton-rouge">Driving from Baton Rouge</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-lafayette">Driving from Lafayette</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-lake-charles">Driving from Lake Charles</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-shreveport">Driving from Shreveport</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-little-rock">Driving from Little Rock</a>
+            </li>
+            <li>
               <a href="/plan-your-cruise/driving-to-galveston/from-missouri">Driving from Missouri</a>
+            </li>
+            <li>
+              <a href="/plan-your-cruise/driving-to-galveston/from-colorado">Driving from Colorado</a>
             </li>
           </ul>
         </div>
