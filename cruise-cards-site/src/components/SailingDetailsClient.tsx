@@ -50,15 +50,14 @@ export default function SailingDetailsClient({ sailingId }: Props) {
   const [status, setStatus] = useState("Loading…");
 
   useEffect(() => {
-    if (!supabase) {
-      setStatus("Missing Supabase env");
-      return;
-    }
-
     let cancelled = false;
 
     async function load() {
-      const client = supabase;
+      const client = getSupabaseClient();
+      if (!client) {
+        setStatus("Missing Supabase env");
+        return;
+      }
       setStatus("Loading…");
       try {
         const { data: sailingData, error: sailingError } = await client
@@ -97,7 +96,7 @@ export default function SailingDetailsClient({ sailingId }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [supabase, sailingId]);
+  }, [sailingId]);
 
   if (status === "Error") {
     return (
