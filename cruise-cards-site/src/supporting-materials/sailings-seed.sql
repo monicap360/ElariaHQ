@@ -93,6 +93,175 @@ where not exists (
     and p.as_of = v.depart_date
 );
 
+-- Seed: Sep-Nov 2026 Carnival sailings from Galveston (additive)
+with sailings_data as (
+  select *
+  from (
+    values
+      ('Carnival Breeze', '2026-09-03'::date, 3, 'Mexico', 'Cozumel & Progreso', 434),
+      ('Carnival Dream', '2026-09-05'::date, 7, 'The Bahamas', 'Nassau & Freeport', 799),
+      ('Carnival Jubilee', '2026-09-05'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 629),
+      ('Carnival Breeze', '2026-09-07'::date, 4, 'Mexico', 'Cozumel & Progreso', 359),
+      ('Carnival Breeze', '2026-09-12'::date, 4, 'Mexico', 'Cozumel & Progreso', 334),
+      ('Carnival Jubilee', '2026-09-12'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 629),
+      ('Carnival Dream', '2026-09-13'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 464),
+      ('Carnival Breeze', '2026-09-17'::date, 3, 'Mexico', 'Cozumel & Progreso', 359),
+      ('Carnival Jubilee', '2026-09-19'::date, 7, 'The Bahamas', 'Nassau & Freeport', 834),
+      ('Carnival Dream', '2026-09-19'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 554),
+      ('Carnival Breeze', '2026-09-21'::date, 4, 'Mexico', 'Cozumel & Progreso', 334),
+      ('Carnival Breeze', '2026-09-26'::date, 4, 'Mexico', 'Cozumel & Progreso', 344),
+      ('Carnival Dream', '2026-09-26'::date, 6, 'The Bahamas', 'Nassau & Freeport', 664),
+      ('Carnival Jubilee', '2026-09-27'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 589),
+      ('Carnival Breeze', '2026-10-01'::date, 3, 'Mexico', 'Cozumel & Progreso', 369),
+      ('Carnival Jubilee', '2026-10-03'::date, 7, 'The Bahamas', 'Nassau & Freeport', 814),
+      ('Carnival Dream', '2026-10-03'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 714),
+      ('Carnival Breeze', '2026-10-05'::date, 4, 'Mexico', 'Cozumel & Progreso', 374),
+      ('Carnival Breeze', '2026-10-10'::date, 4, 'Mexico', 'Cozumel & Progreso', 454),
+      ('Carnival Dream', '2026-10-10'::date, 6, 'The Bahamas', 'Nassau & Freeport', 734),
+      ('Carnival Jubilee', '2026-10-11'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 629),
+      ('Carnival Miracle', '2026-10-12'::date, 9, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 789),
+      ('Carnival Breeze', '2026-10-15'::date, 3, 'Mexico', 'Cozumel & Progreso', 379),
+      ('Carnival Jubilee', '2026-10-17'::date, 7, 'The Bahamas', 'Nassau & Freeport', 814),
+      ('Carnival Dream', '2026-10-17'::date, 13, 'Eastern Caribbean', 'Eastern Caribbean ports', 1399),
+      ('Carnival Breeze', '2026-10-19'::date, 4, 'Mexico', 'Cozumel & Progreso', 344),
+      ('Carnival Miracle', '2026-10-22'::date, 3, 'Mexico', 'Cozumel & Progreso', 449),
+      ('Carnival Breeze', '2026-10-24'::date, 4, 'Mexico', 'Cozumel & Progreso', 344),
+      ('Carnival Jubilee', '2026-10-25'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 564),
+      ('Carnival Miracle', '2026-10-26'::date, 9, 'Caribbean & Panama', 'Cozumel, Limón, Colón (Panama Canal) & Mahogany Bay', 929),
+      ('Carnival Breeze', '2026-10-29'::date, 3, 'Mexico', 'Cozumel & Progreso', 399),
+      ('Carnival Dream', '2026-10-31'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 564),
+      ('Carnival Jubilee', '2026-10-31'::date, 7, 'The Bahamas', 'Nassau & Freeport', 814),
+      ('Carnival Breeze', '2026-11-02'::date, 4, 'Mexico', 'Cozumel & Progreso', 334),
+      ('Carnival Miracle', '2026-11-05'::date, 3, 'Mexico', 'Cozumel & Progreso', 429),
+      ('Carnival Breeze', '2026-11-07'::date, 4, 'Mexico', 'Cozumel & Progreso', 344),
+      ('Carnival Dream', '2026-11-07'::date, 6, 'The Bahamas', 'Nassau & Freeport', 654),
+      ('Carnival Jubilee', '2026-11-08'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 554),
+      ('Carnival Miracle', '2026-11-09'::date, 9, 'Eastern Caribbean', 'Eastern Caribbean ports', 844),
+      ('Carnival Breeze', '2026-11-12'::date, 3, 'Mexico', 'Cozumel & Progreso', 369),
+      ('Carnival Jubilee', '2026-11-14'::date, 7, 'The Bahamas', 'Nassau & Freeport', 844),
+      ('Carnival Dream', '2026-11-14'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 544),
+      ('Carnival Breeze', '2026-11-16'::date, 4, 'Mexico', 'Cozumel & Progreso', 334)
+  ) as v(ship_name, depart_date, nights, itinerary_label, ports_summary, min_price)
+)
+insert into public.sailings (
+  id,
+  ship_id,
+  departure_port,
+  depart_date,
+  return_date,
+  nights,
+  is_active,
+  itinerary_label,
+  ports_summary
+)
+select
+  gen_random_uuid(),
+  sh.id,
+  'Galveston',
+  v.depart_date,
+  (v.depart_date + (v.nights || ' days')::interval)::date,
+  v.nights,
+  true,
+  v.itinerary_label,
+  v.ports_summary
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+where not exists (
+  select 1
+  from public.sailings s
+  where s.ship_id = sh.id
+    and s.depart_date = v.depart_date
+);
+
+insert into public.pricing_snapshots (
+  sailing_id,
+  as_of,
+  currency,
+  min_per_person
+)
+select
+  s.id,
+  v.depart_date,
+  'USD',
+  v.min_price
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+join public.sailings s on s.ship_id = sh.id and s.depart_date = v.depart_date
+where not exists (
+  select 1
+  from public.pricing_snapshots p
+  where p.sailing_id = s.id
+    and p.as_of = v.depart_date
+);
+
+-- Seed: Late Sep / Oct 2026 Carnival sailings from Galveston (additive)
+with sailings_data as (
+  select *
+  from (
+    values
+      ('Carnival Jubilee', '2026-09-27'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 589),
+      ('Carnival Breeze', '2026-10-01'::date, 3, 'Mexico', 'Cozumel & Progreso', 369),
+      ('Carnival Jubilee', '2026-10-03'::date, 7, 'The Bahamas', 'Nassau & Freeport', 814),
+      ('Carnival Dream', '2026-10-03'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 714),
+      ('Carnival Breeze', '2026-10-05'::date, 4, 'Mexico', 'Cozumel & Progreso', 374),
+      ('Carnival Breeze', '2026-10-10'::date, 4, 'Mexico', 'Cozumel & Progreso', 454),
+      ('Carnival Dream', '2026-10-10'::date, 6, 'The Bahamas', 'Nassau & Freeport', 734),
+      ('Carnival Jubilee', '2026-10-11'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 629),
+      ('Carnival Miracle', '2026-10-12'::date, 9, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 789),
+      ('Carnival Breeze', '2026-10-15'::date, 3, 'Mexico', 'Cozumel & Progreso', 379)
+  ) as v(ship_name, depart_date, nights, itinerary_label, ports_summary, min_price)
+)
+insert into public.sailings (
+  id,
+  ship_id,
+  departure_port,
+  depart_date,
+  return_date,
+  nights,
+  is_active,
+  itinerary_label,
+  ports_summary
+)
+select
+  gen_random_uuid(),
+  sh.id,
+  'Galveston',
+  v.depart_date,
+  (v.depart_date + (v.nights || ' days')::interval)::date,
+  v.nights,
+  true,
+  v.itinerary_label,
+  v.ports_summary
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+where not exists (
+  select 1
+  from public.sailings s
+  where s.ship_id = sh.id
+    and s.depart_date = v.depart_date
+);
+
+insert into public.pricing_snapshots (
+  sailing_id,
+  as_of,
+  currency,
+  min_per_person
+)
+select
+  s.id,
+  v.depart_date,
+  'USD',
+  v.min_price
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+join public.sailings s on s.ship_id = sh.id and s.depart_date = v.depart_date
+where not exists (
+  select 1
+  from public.pricing_snapshots p
+  where p.sailing_id = s.id
+    and p.as_of = v.depart_date
+);
+
 -- Seed: September 2026 Carnival sailings from Galveston (additive)
 with sailings_data as (
   select *
