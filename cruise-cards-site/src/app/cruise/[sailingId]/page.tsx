@@ -59,7 +59,7 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
   const componentFactors = mapComponentsToFactors(result?.components);
 
   const itineraryLabel = sailing.itineraryLabel ?? titleCase(sailing.itineraryTags?.[0] ?? "Cruise");
-  const portsSummary = sailing.portsSummary ?? sailing.itineraryTags.join(", ") || "—";
+  const portsSummary = sailing.portsSummary ?? (sailing.itineraryTags.join(", ") || "—");
   const dates = `${baseDate} • ${formatDurationLabel(sailing.cruiseLine, sailing.nights)} ${itineraryLabel}`;
 
   const highlights = [
