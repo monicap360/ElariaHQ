@@ -93,6 +93,142 @@ where not exists (
     and p.as_of = v.depart_date
 );
 
+-- Seed: Late Dec 2026 / early Jan 2027 Carnival sailings from Galveston (additive)
+with sailings_data as (
+  select *
+  from (
+    values
+      ('Carnival Breeze', '2026-12-19'::date, 3, 'Mexico', 'Cozumel & Progreso', 539),
+      ('Carnival Dream', '2026-12-19'::date, 7, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 1124),
+      ('Carnival Miracle', '2026-12-21'::date, 4, 'Mexico', 'Cozumel & Progreso', 869),
+      ('Carnival Breeze', '2026-12-23'::date, 4, 'Mexico', 'Cozumel & Progreso', 894),
+      ('Carnival Jubilee', '2026-12-26'::date, 7, 'The Bahamas', 'Nassau & Freeport', 1629),
+      ('Carnival Miracle', '2026-12-26'::date, 3, 'Mexico', 'Cozumel & Progreso', 769),
+      ('Carnival Dream', '2026-12-27'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 939),
+      ('Carnival Breeze', '2026-12-28'::date, 4, 'Mexico', 'Cozumel & Progreso', 914),
+      ('Carnival Miracle', '2026-12-30'::date, 4, 'Mexico', 'Cozumel & Progreso', 889),
+      ('Carnival Breeze', '2027-01-02'::date, 4, 'Mexico', 'Cozumel & Progreso', 409)
+  ) as v(ship_name, depart_date, nights, itinerary_label, ports_summary, min_price)
+)
+insert into public.sailings (
+  id,
+  ship_id,
+  departure_port,
+  depart_date,
+  return_date,
+  nights,
+  is_active,
+  itinerary_label,
+  ports_summary
+)
+select
+  gen_random_uuid(),
+  sh.id,
+  'Galveston',
+  v.depart_date,
+  (v.depart_date + (v.nights || ' days')::interval)::date,
+  v.nights,
+  true,
+  v.itinerary_label,
+  v.ports_summary
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+where not exists (
+  select 1
+  from public.sailings s
+  where s.ship_id = sh.id
+    and s.depart_date = v.depart_date
+);
+
+insert into public.pricing_snapshots (
+  sailing_id,
+  as_of,
+  currency,
+  min_per_person
+)
+select
+  s.id,
+  v.depart_date,
+  'USD',
+  v.min_price
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+join public.sailings s on s.ship_id = sh.id and s.depart_date = v.depart_date
+where not exists (
+  select 1
+  from public.pricing_snapshots p
+  where p.sailing_id = s.id
+    and p.as_of = v.depart_date
+);
+
+-- Seed: December 2026 Carnival sailings from Galveston (additive)
+with sailings_data as (
+  select *
+  from (
+    values
+      ('Carnival Breeze', '2026-12-05'::date, 4, 'Mexico', 'Cozumel & Progreso', 334),
+      ('Carnival Dream', '2026-12-05'::date, 6, 'The Bahamas', 'Nassau & Freeport', 679),
+      ('Carnival Jubilee', '2026-12-06'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 534),
+      ('Carnival Miracle', '2026-12-07'::date, 9, 'Caribbean & Panama', 'Cozumel, Limón, Colón (Panama Canal) & Mahogany Bay', 909),
+      ('Carnival Breeze', '2026-12-10'::date, 3, 'Mexico', 'Cozumel & Progreso', 359),
+      ('Carnival Jubilee', '2026-12-12'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 534),
+      ('Carnival Dream', '2026-12-12'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 564),
+      ('Carnival Breeze', '2026-12-14'::date, 4, 'Mexico', 'Cozumel & Progreso', 354),
+      ('Carnival Miracle', '2026-12-17'::date, 3, 'Mexico', 'Cozumel & Progreso', 539),
+      ('Carnival Jubilee', '2026-12-18'::date, 7, 'The Bahamas', 'Nassau & Freeport', 1294)
+  ) as v(ship_name, depart_date, nights, itinerary_label, ports_summary, min_price)
+)
+insert into public.sailings (
+  id,
+  ship_id,
+  departure_port,
+  depart_date,
+  return_date,
+  nights,
+  is_active,
+  itinerary_label,
+  ports_summary
+)
+select
+  gen_random_uuid(),
+  sh.id,
+  'Galveston',
+  v.depart_date,
+  (v.depart_date + (v.nights || ' days')::interval)::date,
+  v.nights,
+  true,
+  v.itinerary_label,
+  v.ports_summary
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+where not exists (
+  select 1
+  from public.sailings s
+  where s.ship_id = sh.id
+    and s.depart_date = v.depart_date
+);
+
+insert into public.pricing_snapshots (
+  sailing_id,
+  as_of,
+  currency,
+  min_per_person
+)
+select
+  s.id,
+  v.depart_date,
+  'USD',
+  v.min_price
+from sailings_data v
+join public.ships sh on sh.name = v.ship_name
+join public.sailings s on s.ship_id = sh.id and s.depart_date = v.depart_date
+where not exists (
+  select 1
+  from public.pricing_snapshots p
+  where p.sailing_id = s.id
+    and p.as_of = v.depart_date
+);
+
 -- Seed: Late Nov / early Dec 2026 Carnival sailings from Galveston (additive)
 with sailings_data as (
   select *
