@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
 import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
+import DrivePageNextSteps from "@/components/DrivePageNextSteps";
+import DrivePageLinks from "@/components/DrivePageLinks";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Palmview, TX | Cruise Planning Guide",
@@ -70,6 +72,9 @@ export default function FromPalmviewPage() {
           <CvbSailingsSnapshot />
         </div>
       </section>
+
+      <DrivePageLinks slug="palmview" />
+      <DrivePageNextSteps />
     </main>
   );
 }

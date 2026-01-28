@@ -5,21 +5,21 @@ import DrivePageNextSteps from "@/components/DrivePageNextSteps";
 import DrivePageLinks from "@/components/DrivePageLinks";
 
 export const metadata: Metadata = {
-  title: "Driving to Galveston from Kingsville | Cruise Planning Guide",
+  title: "Driving to Galveston from Austin | Cruise Planning Guide",
   description:
-    "A practical visitor guide for driving to Galveston from Kingsville, including estimated drive time, route guidance, and embarkation planning tips.",
+    "A visitor guide for driving to Galveston from Austin, including drive time, arrival planning, and embarkation day tips for cruise travelers.",
 };
 
-export default function FromKingsvillePage() {
+export default function FromAustinPage() {
   return (
     <main>
       <section className="hero">
         <div className="wrap">
           <div className="kicker">Drive-To Cruise Guide</div>
-          <h1 className="heroTitle">Driving to Galveston from Kingsville</h1>
+          <h1 className="heroTitle">Driving to Galveston from Austin</h1>
           <p className="sectionDesc">
-            Kingsville travelers often choose Galveston for its drive-to convenience and straightforward embarkation
-            experience.
+            Austin travelers often drive to Galveston to begin their cruise with predictable logistics and flexible
+            arrival timing.
           </p>
         </div>
       </section>
@@ -28,11 +28,8 @@ export default function FromKingsvillePage() {
         <div className="wrap">
           <h2 className="sectionTitle">Estimated drive time</h2>
           <p>
-            The drive from Kingsville to Galveston typically takes <strong>about 5 to 5.5 hours</strong>, depending on
+            The drive from Austin to Galveston typically takes <strong>about 4 to 4.5 hours</strong>, depending on
             traffic and departure time.
-          </p>
-          <p>
-            <strong>Primary route:</strong> US-77 North -> I-69E North -> I-45 South.
           </p>
         </div>
       </section>
@@ -41,19 +38,19 @@ export default function FromKingsvillePage() {
         <div className="wrap">
           <h2 className="sectionTitle">Recommended arrival strategy</h2>
           <ul className="linkList">
-            <li>Plan for an early departure or arrive the day before sailing.</li>
-            <li>Allow extra time as you approach the Houston metro area.</li>
-            <li>Confirm parking or transportation before cruise day.</li>
+            <li>Depart early or arrive the day before for morning check-in windows.</li>
+            <li>Build buffer time for Houston-area traffic.</li>
+            <li>Confirm parking or port transfer details before travel day.</li>
           </ul>
         </div>
       </section>
 
       <section className="section">
         <div className="wrap">
-          <h2 className="sectionTitle">Why Galveston works for Kingsville travelers</h2>
+          <h2 className="sectionTitle">Why Galveston works for Austin travelers</h2>
           <p>
-            For South Texas travelers, Galveston provides a predictable highway drive and a practical alternative to
-            flying to out-of-state cruise ports.
+            Galveston provides a Gulf Coast departure that is accessible by highway and offers year-round cruise
+            options suited to weekend, mid-length, and longer itineraries.
           </p>
         </div>
       </section>
@@ -64,7 +61,7 @@ export default function FromKingsvillePage() {
         </div>
       </section>
 
-      <DrivePageLinks slug="kingsville" />
+      <DrivePageLinks slug="austin" />
       <DrivePageNextSteps />
     </main>
   );

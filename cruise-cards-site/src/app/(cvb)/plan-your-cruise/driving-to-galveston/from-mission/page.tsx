@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
 import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
+import DrivePageNextSteps from "@/components/DrivePageNextSteps";
+import DrivePageLinks from "@/components/DrivePageLinks";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Mission, TX | Cruise Planning Guide",
@@ -11,6 +13,44 @@ export const metadata: Metadata = {
 export default function FromMissionPage() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "How long does it take to drive to Galveston from Mission, Texas?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Driving from Mission, Texas to the Port of Galveston typically takes about 6.5 to 7.5 hours depending on traffic, route selection, and stops.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Should travelers from the Rio Grande Valley arrive early for a Galveston cruise?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Yes. Travelers from the Rio Grande Valley are encouraged to arrive in Galveston the day before sailing to allow for traffic delays and a smoother embarkation experience.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Is Galveston a good cruise port for South Texas travelers?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Galveston is a popular cruise departure point for South Texas travelers due to its highway access, year-round sailings, and predictable embarkation process.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
       <section className="hero">
         <div className="wrap">
           <div className="kicker">Drive-To Cruise Guide</div>
@@ -70,6 +110,9 @@ export default function FromMissionPage() {
           <CvbSailingsSnapshot />
         </div>
       </section>
+
+      <DrivePageLinks slug="mission" />
+      <DrivePageNextSteps />
     </main>
   );
 }

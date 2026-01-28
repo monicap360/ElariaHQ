@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
 import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
+import DrivePageNextSteps from "@/components/DrivePageNextSteps";
+import DrivePageLinks from "@/components/DrivePageLinks";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Houston | Cruise Planning Guide",
@@ -11,6 +13,44 @@ export const metadata: Metadata = {
 export default function FromHoustonPage() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "How long does it take to drive to Galveston from Houston?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Driving from Houston to the Port of Galveston typically takes about 1 to 1.25 hours depending on traffic and departure time.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Is same-day driving to a Galveston cruise realistic from Houston?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Yes. Many Houston-area travelers drive the same day, but it is still recommended to allow extra buffer time for traffic and causeway delays.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "What is the primary driving route from Houston to Galveston?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "The most common route is I-45 South directly to the island, following terminal signage once you arrive in Galveston.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
       <section className="hero">
         <div className="wrap">
           <div className="kicker">Drive-To Cruise Guide</div>
@@ -55,6 +95,9 @@ export default function FromHoustonPage() {
           <CvbSailingsSnapshot />
         </div>
       </section>
+
+      <DrivePageLinks slug="houston" />
+      <DrivePageNextSteps />
     </main>
   );
 }

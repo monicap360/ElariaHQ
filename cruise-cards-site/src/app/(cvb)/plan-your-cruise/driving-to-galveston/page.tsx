@@ -11,6 +11,62 @@ export const metadata: Metadata = {
 export default function DrivingToGalvestonPage() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Is Galveston a good drive-to cruise port?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Yes. The Port of Galveston is one of the most popular drive-to cruise ports in the United States, serving travelers from Texas, Louisiana, Oklahoma, Arkansas, Missouri, and surrounding regions.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "How far in advance should I arrive when driving to Galveston for a cruise?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Most travelers are advised to arrive in Galveston at least one day before their cruise departure, especially when driving more than 4-5 hours or traveling through major metro areas.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Where do cruise passengers park when driving to Galveston?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Cruise passengers may park at official Port of Galveston facilities or nearby private parking lots. Reserving parking in advance is strongly recommended during peak sailing dates.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Can I drive to Galveston the same day as my cruise?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Same-day driving is possible for travelers within close range, such as Houston or nearby cities. However, overnight arrival is recommended to reduce stress and avoid traffic delays.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Do travelers from out of state drive to Galveston for cruises?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text:
+                    "Yes. Many travelers from Louisiana, Oklahoma, Missouri, Colorado, and the Midwest choose Galveston for its consistent cruise schedule and drive-to accessibility.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
       <section className="hero">
         <div className="wrap">
           <div className="kicker">Visitor Planning</div>

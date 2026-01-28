@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
 import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
+import DrivePageNextSteps from "@/components/DrivePageNextSteps";
+import DrivePageLinks from "@/components/DrivePageLinks";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Lake Charles | Cruise Planning Guide",
@@ -35,6 +37,9 @@ export default function FromLakeCharlesPage() {
           <CvbSailingsSnapshot />
         </div>
       </section>
+
+      <DrivePageLinks slug="lake-charles" />
+      <DrivePageNextSteps />
     </main>
   );
 }

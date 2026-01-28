@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
 import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
+import DrivePageNextSteps from "@/components/DrivePageNextSteps";
+import DrivePageLinks from "@/components/DrivePageLinks";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Dallas-Fort Worth | Cruise Planning Guide",
@@ -57,6 +59,9 @@ export default function FromDFWPage() {
           <CvbSailingsSnapshot />
         </div>
       </section>
+
+      <DrivePageLinks slug="dallas-fort-worth" />
+      <DrivePageNextSteps />
     </main>
   );
 }

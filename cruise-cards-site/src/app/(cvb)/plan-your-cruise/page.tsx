@@ -81,6 +81,55 @@ const nearbyStates = [
 export default function PlanYourCruisePage() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            name: "How to Plan a Drive-To Cruise from Galveston",
+            description:
+              "A step-by-step visitor guide for planning a cruise departure from the Port of Galveston, including transportation, arrival timing, cruise length selection, and embarkation preparation.",
+            totalTime: "P1D",
+            supply: [
+              { "@type": "HowToSupply", name: "Government-issued photo ID or passport" },
+              { "@type": "HowToSupply", name: "Cruise reservation details" },
+            ],
+            step: [
+              {
+                "@type": "HowToStep",
+                name: "Determine if Galveston is the right cruise port",
+                text:
+                  "Confirm Galveston is a convenient departure port based on driving distance, available cruise lengths, and year-round sailing schedules.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Plan your transportation to Galveston",
+                text:
+                  "Decide whether to drive or fly into the Houston area. Most travelers within a regional distance choose to drive for flexibility and easier luggage handling.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Choose the appropriate cruise length",
+                text:
+                  "Select a cruise duration that aligns with your travel distance. Shorter cruises work well for nearby travelers, while longer itineraries are better for long-distance guests.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Arrange arrival timing and overnight stays",
+                text:
+                  "Plan to arrive in Galveston at least one day before departure to reduce travel stress and account for traffic or weather delays.",
+              },
+              {
+                "@type": "HowToStep",
+                name: "Prepare for embarkation day",
+                text:
+                  "Complete cruise check-in, print required documents, attach luggage tags, and arrive at the terminal during your assigned boarding window.",
+              },
+            ],
+          }),
+        }}
+      />
       <header className="hero">
         <div className="wrap">
           <div className="heroCard">
