@@ -56,4 +56,9 @@ create table if not exists risk_snapshots (
 
 -- Sailing itinerary display fields (optional if columns already exist)
 alter table public.sailings
-  add column if not exists ports_summary text;
+  add column if not exists itinerary_label text,
+  add column if not exists ports_summary text,
+  add column if not exists source text default 'seeded';
+
+create index if not exists idx_sailings_itinerary_label
+  on public.sailings (itinerary_label);
