@@ -116,7 +116,7 @@ export default function RootLayout({
                 "https://www.facebook.com/cruisesfromgalveston",
                 "https://www.instagram.com/cruisesfromgalveston",
                 "https://x.com/TexasCruisePort",
-                "https://www.linkedin.com/company/cruisesfromgalveston",
+                "https://www.linkedin.com/in/cruisesfromgalveston/",
               ],
               contactPoint: [
                 {
@@ -179,7 +179,7 @@ export default function RootLayout({
                 "https://www.facebook.com/cruisesfromgalveston",
                 "https://www.instagram.com/cruisesfromgalveston",
                 "https://x.com/TexasCruisePort",
-                "https://www.linkedin.com/company/cruisesfromgalveston",
+                "https://www.linkedin.com/in/cruisesfromgalveston/",
               ],
             }),
           }}
@@ -260,7 +260,7 @@ export default function RootLayout({
                   X
                 </a>
                 <a
-                  href="https://www.linkedin.com/company/cruisesfromgalveston"
+                  href="https://www.linkedin.com/in/cruisesfromgalveston/"
                   className="font-semibold text-primary-blue hover:underline"
                   target="_blank"
                   rel="noreferrer"
