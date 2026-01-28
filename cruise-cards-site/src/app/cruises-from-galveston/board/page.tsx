@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getSupabaseClient } from "@/lib/supabaseClient";
-
 type Sailing = {
   id: string;
   ship: string | null;
@@ -35,40 +33,10 @@ export default function CruiseBoardPage() {
     let active = true;
     (async () => {
       setLoading(true);
-      const supabase = getSupabaseClient();
-      if (!supabase) {
-        if (!active) return;
-        setSailings([]);
-        setLoading(false);
-        return;
-      }
-
-      const { data } = await supabase
-        .from("sailings")
-        .select("id, depart_date, nights, itinerary_label, ports_summary, ship:ships(name)")
-        .eq("departure_port", "Galveston")
-        .eq("is_active", true)
-        .order("depart_date", { ascending: true });
+      const res = await fetch("/api/board-sailings");
+      const json = await res.json();
       if (active) {
-        const rows = (data as Array<{
-          id: string;
-          depart_date: string | null;
-          nights: number | null;
-          itinerary_label: string | null;
-          ports_summary: string | null;
-          ship: { name: string } | null;
-        }>) ?? [];
-        setSailings(
-          rows.map((row) => ({
-            id: row.id,
-            depart_date: row.depart_date,
-            nights: row.nights,
-            itinerary_label: row.itinerary_label,
-            ports_summary: row.ports_summary,
-            ship: row.ship?.name ?? null,
-            min_price: null,
-          })),
-        );
+        setSailings((json.sailings as Sailing[]) || []);
         setLoading(false);
       }
     })();
