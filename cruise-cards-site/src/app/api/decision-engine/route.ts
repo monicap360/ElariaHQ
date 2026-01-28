@@ -222,7 +222,7 @@ async function loadPricing(supabase: ReturnType<typeof createAdminClient>): Prom
     .map((row) => ({
       sailingId: row.sailing_id,
       asOf: row.as_of,
-      currency: row.currency ?? "USD",
+      currency: "USD",
       minPerPerson: Number(row.min_per_person ?? 0),
       marketMedianPerPerson: row.market_median_per_person ? Number(row.market_median_per_person) : undefined,
     }));
