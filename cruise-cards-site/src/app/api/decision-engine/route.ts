@@ -39,6 +39,34 @@ type SailingRow = {
   } | null;
 };
 
+type RawSailingRow = {
+  id: string;
+  sail_date: string;
+  return_date: string;
+  ports?: string[] | string | null;
+  itinerary?: string | null;
+  departure_port?: string | null;
+  sea_pay_eligible?: boolean | null;
+  price_from?: number | string | null;
+  base_price?: number | string | null;
+  starting_price?: number | string | null;
+  min_price?: number | string | null;
+  ship:
+    | {
+        id: string;
+        name: string;
+        ship_class?: string | null;
+        cruise_line: { name?: string | null } | { name?: string | null }[] | null;
+      }
+    | {
+        id: string;
+        name: string;
+        ship_class?: string | null;
+        cruise_line: { name?: string | null } | { name?: string | null }[] | null;
+      }[]
+    | null;
+};
+
 type PricingSnapshotRow = {
   sailing_id: string;
   as_of: string;
@@ -86,7 +114,24 @@ export async function POST(req: Request) {
     .order("sail_date", { ascending: true })
     .limit(500);
 
-  const sailings = (sailingsData || []) as SailingRow[];
+  const sailings =
+    (sailingsData as RawSailingRow[] | null | undefined)?.map((row) => {
+      const shipRow = Array.isArray(row.ship) ? row.ship[0] : row.ship;
+      const cruiseLineRow = Array.isArray(shipRow?.cruise_line)
+        ? shipRow?.cruise_line[0]
+        : shipRow?.cruise_line;
+      return {
+        ...row,
+        ship: shipRow
+          ? {
+              id: shipRow.id,
+              name: shipRow.name,
+              ship_class: shipRow.ship_class ?? null,
+              cruise_line: cruiseLineRow ? { name: cruiseLineRow.name ?? null } : null,
+            }
+          : null,
+      } satisfies SailingRow;
+    }) ?? [];
   const sailingContext = mapSailings(sailings);
   const ships = mapShips(sailings);
 
