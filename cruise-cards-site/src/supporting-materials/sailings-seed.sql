@@ -169,7 +169,7 @@ with sailings_data as (
       ('Carnival Dream', '2027-05-01'::date, 6, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 739),
       ('Carnival Jubilee', '2027-05-01'::date, 7, 'The Bahamas', 'Nassau & Freeport', 934),
       ('Carnival Breeze', '2027-05-03'::date, 4, 'Mexico', 'Cozumel & Progreso', 539),
-      ('Carnival Miracle', '2027-05-06'::date, 13, 'Transatlantic', 'Transatlantic itinerary', 944),
+      ('Carnival Miracle', '2027-05-06'::date, 14, 'Transatlantic', 'Bermuda, Ponta Delgada, Funchal & Lisbon', 944),
       ('Carnival Breeze', '2027-05-08'::date, 4, 'Mexico', 'Cozumel & Progreso', 559),
       ('Carnival Dream', '2027-05-08'::date, 6, 'The Bahamas', 'Nassau & Freeport', 844),
       ('Carnival Jubilee', '2027-05-09'::date, 5, 'Western Caribbean', 'Cozumel, Roatán & Costa Maya', 689),
@@ -228,6 +228,18 @@ where not exists (
   where p.sailing_id = s.id
     and p.as_of = v.depart_date
 );
+
+-- Correction: Carnival Miracle Transatlantic (May 6, 2027)
+update public.sailings s
+set
+  nights = 14,
+  return_date = (s.depart_date + interval '14 days')::date,
+  itinerary_label = 'Transatlantic',
+  ports_summary = 'Bermuda, Ponta Delgada, Funchal & Lisbon'
+from public.ships sh
+where sh.id = s.ship_id
+  and sh.name = 'Carnival Miracle'
+  and s.depart_date = '2027-05-06'::date;
 
 -- Seed: April 2027 Carnival sailings from Galveston (additive)
 with sailings_data as (
