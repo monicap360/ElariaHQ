@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../../cruises-from-galveston/visitor-info/visitor-info.css";
+import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston for a Cruise | Visitor Guide",
@@ -60,6 +61,12 @@ export default function DrivingToGalvestonPage() {
               <a href="/plan-your-cruise/driving-to-galveston/from-missouri">Driving from Missouri</a>
             </li>
           </ul>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <CvbSailingsSnapshot />
         </div>
       </section>
     </main>

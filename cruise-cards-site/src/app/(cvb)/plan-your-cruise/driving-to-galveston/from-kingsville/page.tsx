@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
+import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Kingsville | Cruise Planning Guide",
@@ -51,6 +52,12 @@ export default function FromKingsvillePage() {
             The route from Kingsville is straightforward and well-suited for families or travelers with extra luggage,
             making Galveston a practical drive-to cruise choice.
           </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <CvbSailingsSnapshot />
         </div>
       </section>
     </main>

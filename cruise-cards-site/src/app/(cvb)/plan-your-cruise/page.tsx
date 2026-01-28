@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../cruises-from-galveston/visitor-info/visitor-info.css";
+import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
   title: "Plan Your Cruise from Galveston",
@@ -291,6 +292,12 @@ export default function PlanYourCruisePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <CvbSailingsSnapshot />
         </div>
       </section>
 

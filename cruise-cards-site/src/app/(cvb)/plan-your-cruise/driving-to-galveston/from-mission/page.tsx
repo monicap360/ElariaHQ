@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
+import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Mission | Cruise Planning Guide",
@@ -58,6 +59,12 @@ export default function FromMissionPage() {
             Galveston provides year-round departures and multiple parking options, making it a dependable drive-to
             cruise option for Rio Grande Valley travelers.
           </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <CvbSailingsSnapshot />
         </div>
       </section>
     </main>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
+import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Corpus Christi | Cruise Planning Guide",
@@ -51,6 +52,12 @@ export default function FromCorpusChristiPage() {
             Galveston offers a straightforward drive route, multiple parking options, and year-round cruise departures
             — making it a practical choice for South Texas travelers.
           </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <CvbSailingsSnapshot />
         </div>
       </section>
     </main>

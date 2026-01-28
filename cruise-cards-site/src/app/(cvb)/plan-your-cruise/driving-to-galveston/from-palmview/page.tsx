@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
+import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Palmview | Cruise Planning Guide",
@@ -57,6 +58,12 @@ export default function FromPalmviewPage() {
             With consistent cruise departures and multiple parking options, Galveston remains a reliable drive-to
             cruise choice for Rio Grande Valley residents.
           </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <CvbSailingsSnapshot />
         </div>
       </section>
     </main>

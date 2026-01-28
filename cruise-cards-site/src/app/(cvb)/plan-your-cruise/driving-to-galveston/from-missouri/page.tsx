@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../../../cruises-from-galveston/visitor-info/visitor-info.css";
+import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
   title: "Driving to Galveston from Missouri | Cruise Planning Guide",
@@ -52,6 +53,12 @@ export default function FromMissouriPage() {
             Galveston offers a full calendar of year-round sailings and the flexibility to drive on your own schedule,
             making it a strong option for longer-distance travelers.
           </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <CvbSailingsSnapshot />
         </div>
       </section>
     </main>
