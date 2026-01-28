@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export default async function ShipCalendarPage({ params }: { params: { shipSlug: string } }) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
-      <main className="mx-auto max-w-5xl px-6 py-12 text-navy">
+      <main className="mx-auto max-w-5xl px-6 py-12 text-slate">
         <h1 className="text-3xl font-semibold">Ship calendar</h1>
         <p className="mt-4 text-slate">Cruise data is unavailable right now. Please check back shortly.</p>
       </main>
@@ -30,7 +30,7 @@ export default async function ShipCalendarPage({ params }: { params: { shipSlug:
   const shipName = shipEntries[0]?.shipName ?? titleCase(slug.replace(/-/g, " "));
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12 text-navy">
+    <main className="mx-auto max-w-5xl px-6 py-12 text-slate">
       <h1 className="text-3xl font-semibold">{shipName} — Upcoming Sailings</h1>
       <p className="mt-3 text-slate">Engine-ranked sail dates for this ship.</p>
 
@@ -44,7 +44,7 @@ export default async function ShipCalendarPage({ params }: { params: { shipSlug:
               <th className="py-2">Demand</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-navy/10">
+          <tbody className="divide-y divide-slate-200">
             {shipEntries.map((entry) => (
               <tr key={entry.sailingId}>
                 <td className="py-2 pr-4">{formatDate(entry.departDate)}</td>

@@ -29,14 +29,14 @@ export default function MobileActionBar({ sailing, queryString }: Props) {
 
         <div className="flex items-center gap-2">
           {sailing.seaPayEligible && (
-            <span className="hidden rounded-full bg-navy/10 px-2 py-1 text-[11px] text-navy sm:inline-block">
+            <span className="hidden rounded-full bg-primary-blue/10 px-2 py-1 text-[11px] text-primary-blue sm:inline-block">
               SeaPay available
             </span>
           )}
 
           <Link
             href={`/cruise/${sailing.sailingId}?${queryString}`}
-            className="whitespace-nowrap rounded-lg bg-teal px-4 py-2 text-sm text-white"
+            className="whitespace-nowrap rounded-lg bg-primary-blue px-4 py-2 text-sm text-white hover:bg-primary-blue/90"
           >
             View
           </Link>

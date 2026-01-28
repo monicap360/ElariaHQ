@@ -5,12 +5,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: "#0B2A3D",
-        ocean: "#0F5E7A",
-        teal: "#1FA6A0",
-        sand: "#F4F7F6",
+        navy: "#0B2D4D",
+        ocean: "#0EA5E9",
+        teal: "#14B8A6",
+        sand: "#F8FAFC",
         cloud: "#FFFFFF",
-        slate: "#5F6E78",
+        slate: "#64748B",
         success: "#2E8B57",
         warning: "#C98A2C",
       },

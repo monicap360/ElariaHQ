@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #0b2a3d;
-  --ocean: #0f5e7a;
-  --teal: #1fa6a0;
-  --sand: #f4f7f6;
+  --navy: #0b2d4d;
+  --ocean: #0ea5e9;
+  --teal: #14b8a6;
+  --sand: #f8fafc;
   --cloud: #ffffff;
-  --slate: #5f6e78;
+  --slate: #64748b;
+  --border: #e2e8f0;
   --success: #2e8b57;
   --warning: #c98a2c;
   --background: var(--sand);
@@ -93,7 +94,7 @@
 
 @theme inline {
   --color-background-base: var(--sand);
-  --color-background-panel: #eef3f3;
+  --color-background-panel: var(--cloud);
   --color-background-card: var(--cloud);
   --color-primary-blue: var(--ocean);
   --color-primary-purple: #6a7f99;
@@ -101,7 +102,8 @@
   --color-accent-teal: var(--teal);
   --color-text-primary: var(--navy);
   --color-text-secondary: var(--slate);
-  --color-text-muted: #7a8a93;
+  --color-text-muted: #94a3b8;
+  --color-border: var(--border);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
@@ -169,8 +171,8 @@ body {
   background: var(--cloud);
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(11, 42, 61, 0.08);
-  box-shadow: 0 12px 30px rgba(11, 42, 61, 0.08);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
 .cruise-card img {

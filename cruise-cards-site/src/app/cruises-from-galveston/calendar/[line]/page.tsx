@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function LineCalendarPage({ params }: { params: { line: string } }) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
-      <main className="mx-auto max-w-5xl px-6 py-12 text-navy">
+      <main className="mx-auto max-w-5xl px-6 py-12 text-slate">
         <h1 className="text-3xl font-semibold">Cruise Line Calendar</h1>
         <p className="mt-4 text-slate">Cruise data is unavailable right now. Please check back shortly.</p>
       </main>
@@ -30,13 +30,13 @@ export default async function LineCalendarPage({ params }: { params: { line: str
   const entries = await buildCalendarEntries(input, provider);
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12 text-navy">
+    <main className="mx-auto max-w-5xl px-6 py-12 text-slate">
       <h1 className="text-3xl font-semibold">{cruiseLine} calendar</h1>
       <p className="mt-3 text-slate">Upcoming sail dates powered by the CruiseDecisionEngine.</p>
 
       <div className="mt-6 grid gap-4">
         {entries.map((entry) => (
-          <div key={entry.sailingId} className="rounded-2xl border border-navy/10 bg-cloud p-4">
+          <div key={entry.sailingId} className="rounded-2xl border border-slate-200 bg-white p-4">
             <div className="text-xs uppercase tracking-[0.2em] text-slate">{entry.shipName}</div>
             <div className="mt-2 text-lg font-semibold text-navy">
               {formatDate(entry.departDate)} • {entry.durationLabel}
@@ -45,7 +45,10 @@ export default async function LineCalendarPage({ params }: { params: { line: str
               {entry.priceFrom ? `From ${formatPrice(entry.priceFrom)}` : "Call for pricing"}
             </div>
             <div className="mt-3 text-xs text-slate capitalize">Demand: {entry.demandLevel}</div>
-            <Link href={`/cruise/${entry.sailingId}`} className="mt-3 inline-flex text-sm font-semibold text-ocean">
+            <Link
+              href={`/cruise/${entry.sailingId}`}
+              className="mt-3 inline-flex text-sm font-semibold text-primary-blue"
+            >
               View details →
             </Link>
           </div>

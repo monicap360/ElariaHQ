@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function CruiseDetailsPage({ params }: { params: { sailingId: string } }) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
-      <main className="mx-auto max-w-5xl px-6 py-12 text-navy">
+      <main className="mx-auto max-w-5xl px-6 py-12 text-slate">
         <p>Supabase is not configured for this environment.</p>
       </main>
     );
@@ -24,7 +24,7 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
 
   if (!sailing) {
     return (
-      <main className="mx-auto max-w-5xl px-6 py-12 text-navy">
+      <main className="mx-auto max-w-5xl px-6 py-12 text-slate">
         <p>This sailing is not available.</p>
       </main>
     );
@@ -78,7 +78,7 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
   const cabins = buildCabins(availability?.availableCabinTypes ?? [], fromPrice);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 pb-32 pt-10 text-navy">
+    <main className="mx-auto max-w-6xl px-4 pb-32 pt-10 text-slate">
       <CruiseHero
         ship={{ name: ship?.name ?? "Cruise Details", image: heroImageFor(sailing.shipId, ship?.name) }}
         dates={dates}

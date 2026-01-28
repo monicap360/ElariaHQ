@@ -97,7 +97,7 @@ export default async function CarnivalDreamPage() {
                     <td className="py-3">
                       <a
                         href="/cruises-from-galveston/search"
-                        className="inline-block rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                        className="inline-block rounded bg-primary-blue px-4 py-2 text-sm text-white hover:bg-primary-blue/90"
                       >
                         View / Book
                       </a>

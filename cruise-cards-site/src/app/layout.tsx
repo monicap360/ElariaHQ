@@ -174,8 +174,8 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}>
-        <div className="min-h-screen bg-background-base text-text-primary">
-          <header className="border-b border-white/10 bg-background-panel/80 backdrop-blur">
+        <div className="min-h-screen bg-background-base text-text-secondary">
+          <header className="border-b border-slate-200 bg-background-panel/80 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-4 leading-tight">
                 <span className="logo-holo h-16 w-16 sm:h-20 sm:w-20" aria-hidden="true">
@@ -211,7 +211,7 @@ export default function RootLayout({
             </div>
           </header>
           {children}
-          <footer className="border-t border-white/10 bg-background-panel/80">
+          <footer className="border-t border-slate-200 bg-background-panel/80">
             <div className="mx-auto max-w-6xl px-6 py-6 text-xs text-text-muted">
               Cruises From Galveston provides planning guidance and operational support. Pricing and official terms
               remain with cruise lines.

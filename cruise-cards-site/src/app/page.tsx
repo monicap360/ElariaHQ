@@ -496,7 +496,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(76,111,255,0.08),transparent_55%)] bg-background-base text-text-primary">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.08),transparent_55%)] bg-background-base text-text-secondary">
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
@@ -504,7 +504,7 @@ export default function Home() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
         >
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-background-panel/80 px-10 py-12 shadow-[0_0_40px_rgba(76,111,255,0.08)]">
+          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-background-panel/80 px-10 py-12 shadow-[0_0_40px_rgba(76,111,255,0.08)]">
             <Image
               src="/assets/symphony-of-the-seas.webp"
               alt="Cruise ship at sea"
@@ -542,7 +542,7 @@ export default function Home() {
                   Start with guidance
                 </a>
               </div>
-              <div className="mt-8 grid gap-4 border-t border-white/10 pt-6 sm:grid-cols-3">
+              <div className="mt-8 grid gap-4 border-t border-slate-200 pt-6 sm:grid-cols-3">
                 {stats.map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className="text-2xl font-semibold text-primary-blue">{stat.value}</div>
@@ -555,7 +555,7 @@ export default function Home() {
 
           <aside
             id="booking-panel"
-            className="rounded-3xl border border-white/10 bg-background-panel/80 px-8 py-10"
+            className="rounded-3xl border border-slate-200 bg-background-panel/80 px-8 py-10"
           >
             <h2 className="text-2xl font-semibold font-accent">Search & book with clarity</h2>
             <p className="mt-2 text-sm text-text-secondary">
@@ -567,7 +567,7 @@ export default function Home() {
                 <select
                   value={bookingForm.ship}
                   onChange={(event) => setBookingForm((prev) => ({ ...prev, ship: event.target.value }))}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
                 >
                   <option value="">Any ship</option>
                   {availableShips.map((ship) => (
@@ -582,7 +582,7 @@ export default function Home() {
                 <select
                   value={bookingForm.month}
                   onChange={(event) => setBookingForm((prev) => ({ ...prev, month: event.target.value }))}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
                 >
                   <option value="">Any month</option>
                   {availableMonths.map((month) => (
@@ -597,7 +597,7 @@ export default function Home() {
                 <select
                   value={bookingForm.nights}
                   onChange={(event) => setBookingForm((prev) => ({ ...prev, nights: event.target.value }))}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
                 >
                   <option value="">Any length</option>
                   {bookingNightsOptions.map((night) => (
@@ -612,7 +612,7 @@ export default function Home() {
                 <select
                   value={bookingForm.travelers}
                   onChange={(event) => setBookingForm((prev) => ({ ...prev, travelers: event.target.value }))}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
                     <option key={count} value={count}>
@@ -626,7 +626,7 @@ export default function Home() {
                 <select
                   value={roomsCount}
                   onChange={(event) => setRoomsCount(Number(event.target.value))}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
                 >
                   {[1, 2, 3, 4, 5, 6].map((count) => (
                     <option key={count} value={count}>
@@ -644,7 +644,7 @@ export default function Home() {
                       const value = Number(event.target.value);
                       setRoomGuests((prev) => prev.map((item, idx) => (idx === index ? value : item)));
                     }}
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                    className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
                   >
                     {[1, 2, 3, 4].map((count) => (
                       <option key={count} value={count}>
@@ -659,7 +659,7 @@ export default function Home() {
                 <select
                   value={deckPreference}
                   onChange={(event) => setDeckPreference(event.target.value)}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
                 >
                   <option value="">No preference</option>
                   <option value="Lower decks">Lower decks</option>
@@ -673,7 +673,7 @@ export default function Home() {
                 <select
                   value={roomTypePreference}
                   onChange={(event) => setRoomTypePreference(event.target.value)}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-background-card px-4 py-3 text-text-primary"
+                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
                 >
                   <option value="">No preference</option>
                   <option value="Interior">Interior</option>
@@ -687,7 +687,7 @@ export default function Home() {
                   type="checkbox"
                   checked={bookingForm.advisorOnly}
                   onChange={(event) => setBookingForm((prev) => ({ ...prev, advisorOnly: event.target.checked }))}
-                  className="h-4 w-4 rounded border-white/10 bg-background-card text-primary-blue"
+                  className="h-4 w-4 rounded border-slate-200 bg-background-card text-primary-blue"
                 />
                 Show advisor-recommended sailings only
               </label>
@@ -724,7 +724,7 @@ export default function Home() {
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {deskItems.map((card) => (
-                <div key={card.id} className="rounded-2xl border border-white/10 bg-background-card p-6">
+                <div key={card.id} className="rounded-2xl border border-slate-200 bg-background-card p-6">
                   <div className="text-base font-semibold text-text-primary">{card.title}</div>
                   {card.summary && <p className="mt-3 text-sm text-text-secondary">{card.summary}</p>}
                   {card.kind === "signal" && card.source && (
@@ -753,7 +753,7 @@ export default function Home() {
                   className={`rounded-full border px-4 py-2 text-xs font-semibold transition ${
                     filterYear === year
                       ? "border-primary-blue/60 bg-primary-blue/20 text-text-primary"
-                      : "border-white/10 bg-background-card text-text-secondary hover:border-primary-blue/40"
+                      : "border-slate-200 bg-background-card text-text-secondary hover:border-primary-blue/40"
                   }`}
                 >
                   {year === "all" ? "All Years" : year}
@@ -765,7 +765,7 @@ export default function Home() {
             <select
               value={filterLine}
               onChange={(event) => setFilterLine(event.target.value)}
-              className="rounded-full border border-white/10 bg-background-card px-4 py-2 text-xs text-text-primary"
+              className="rounded-full border border-slate-200 bg-background-card px-4 py-2 text-xs text-text-primary"
               aria-label="Cruise line filter"
             >
               <option value="all">All Cruise Lines</option>
@@ -780,7 +780,7 @@ export default function Home() {
                 key={key}
                 type="button"
                 onClick={() => setSortKey(key as "price" | "duration" | "date" | "score")}
-                className="rounded-full border border-white/10 bg-background-card px-4 py-2 text-xs font-semibold text-text-primary hover:border-primary-blue/50"
+                className="rounded-full border border-slate-200 bg-background-card px-4 py-2 text-xs font-semibold text-text-primary hover:border-primary-blue/50"
               >
                 Sort by {key.charAt(0).toUpperCase() + key.slice(1)}
               </button>
@@ -841,8 +841,8 @@ export default function Home() {
             </p>
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               {shipBoards.map((board) => (
-                <div key={board.ship} className="rounded-3xl border border-white/10 bg-background-panel">
-                  <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+                <div key={board.ship} className="rounded-3xl border border-slate-200 bg-background-panel">
+                  <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
                     <div>
                       <div className="text-lg font-semibold text-text-primary">{board.ship}</div>
                       <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{board.line}</div>
@@ -851,13 +851,13 @@ export default function Home() {
                       <a href="#booking-panel" className="rounded-full border border-primary-blue/40 px-3 py-1 text-primary-blue">
                         Request booking
                       </a>
-                      <a href="#booking-panel" className="rounded-full border border-white/10 px-3 py-1 text-text-secondary">
+                      <a href="#booking-panel" className="rounded-full border border-slate-200 px-3 py-1 text-text-secondary">
                         24 hour hold
                       </a>
-                      <a href="#booking-panel" className="rounded-full border border-white/10 px-3 py-1 text-text-secondary">
+                      <a href="#booking-panel" className="rounded-full border border-slate-200 px-3 py-1 text-text-secondary">
                         48 hour hold
                       </a>
-                      <a href="#booking-panel" className="rounded-full border border-white/10 px-3 py-1 text-text-secondary">
+                      <a href="#booking-panel" className="rounded-full border border-slate-200 px-3 py-1 text-text-secondary">
                         72 hour hold
                       </a>
                     </div>
@@ -877,7 +877,7 @@ export default function Home() {
                           <th className="px-6 py-3">From</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-white/10">
+                      <tbody className="divide-y divide-slate-200">
                         {board.rows.map((row) => (
                           <tr key={`${board.ship}-${row.sailDate}`} className="text-text-secondary">
                             <td className="px-6 py-3 text-text-primary">{formatDate(row.sailDate)}</td>
@@ -912,7 +912,7 @@ export default function Home() {
           </div>
           <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {photoGallery.map((item) => (
-              <div key={item.src} className="overflow-hidden rounded-2xl border border-white/10 bg-background-card">
+              <div key={item.src} className="overflow-hidden rounded-2xl border border-slate-200 bg-background-card">
                 <Image
                   src={item.src}
                   alt={item.title}
@@ -936,7 +936,7 @@ export default function Home() {
             <p className="mt-2 text-sm text-text-secondary">Advisor notes and ship profiles from our desk.</p>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {ships.map((ship) => (
-                <div key={ship.id} className="rounded-2xl border border-white/10 bg-background-card p-6">
+                <div key={ship.id} className="rounded-2xl border border-slate-200 bg-background-card p-6">
                   <div className="text-lg font-semibold text-text-primary">{ship.name}</div>
                   {ship.home_port && (
                     <p className="mt-2 text-sm text-text-secondary">Home port: {ship.home_port}</p>
@@ -967,7 +967,7 @@ export default function Home() {
               {ports.map((port) => {
                 const portImage = portImageFor(port);
                 return (
-                  <div key={port} className="overflow-hidden rounded-2xl border border-white/10 bg-background-card">
+                  <div key={port} className="overflow-hidden rounded-2xl border border-slate-200 bg-background-card">
                     {portImage && (
                       <Image
                         src={portImage}
@@ -1003,7 +1003,7 @@ export default function Home() {
               <a
                 key={item.label}
                 href={item.href}
-                className="rounded-2xl border border-white/10 bg-background-card px-5 py-4 text-sm font-semibold text-text-primary"
+                className="rounded-2xl border border-slate-200 bg-background-card px-5 py-4 text-sm font-semibold text-text-primary"
               >
                 {item.label}
               </a>
@@ -1036,7 +1036,7 @@ export default function Home() {
                 description: "What a Cozumel, Costa Maya, Falmouth, or Nassau stop actually means for time ashore.",
               },
             ].map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/10 bg-background-panel px-6 py-6">
+              <div key={item.title} className="rounded-2xl border border-slate-200 bg-background-panel px-6 py-6">
                 <div className="text-base font-semibold text-text-primary">{item.title}</div>
                 <p className="mt-2 text-sm text-text-secondary">{item.description}</p>
               </div>
@@ -1047,7 +1047,7 @@ export default function Home() {
         <section className="mt-16" id="authority">
           <h2 className="text-center text-2xl font-semibold font-accent">Why trust the desk</h2>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-text-muted">
-            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-background-panel px-4 py-2">
+            <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-background-panel px-4 py-2">
               <Image
                 src="/assets/BBB_ABSeal_H_7469_US-301x107-e7ea6d8 (1).png"
                 alt="BBB Accredited Business"
@@ -1081,7 +1081,7 @@ export default function Home() {
                   "From planning to return day, our team stays available for questions and operational updates.",
               },
             ].map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/10 bg-background-panel px-6 py-8">
+              <div key={item.title} className="rounded-2xl border border-slate-200 bg-background-panel px-6 py-8">
                 <div className="text-lg font-semibold text-text-primary">{item.title}</div>
                 <p className="mt-3 text-sm text-text-secondary">{item.description}</p>
               </div>
@@ -1090,7 +1090,7 @@ export default function Home() {
         </section>
 
         <section className="mt-16" id="contact">
-          <div className="rounded-3xl border border-white/10 bg-background-panel px-8 py-10 text-center">
+          <div className="rounded-3xl border border-slate-200 bg-background-panel px-8 py-10 text-center">
             <h2 className="text-2xl font-semibold font-accent">Need personal guidance?</h2>
             <p className="mt-3 text-sm text-text-secondary">
               The Cruises From Galveston Desk answers complex questions and confirms the best fit before you book.

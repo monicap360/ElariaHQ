@@ -112,7 +112,7 @@ export default function MonthCalendar({
 
   return (
     <section className="grid gap-6 lg:grid-cols-[1fr_420px]">
-      <div className="rounded-2xl bg-cloud p-4 shadow-lg">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm text-slate">Highlight strong sail dates</span>
           <label className="inline-flex cursor-pointer items-center gap-2 text-sm">
@@ -145,12 +145,12 @@ export default function MonthCalendar({
               <button
                 key={cell.iso}
                 onClick={() => setSelectedDate(cell.iso)}
-                className={[
+              className={[
                   "h-24 rounded-xl border p-2 text-left transition",
                   top?.recommended
                     ? "border-teal bg-teal/5 ring-2 ring-teal/30"
-                    : "border-gray-200 hover:border-teal/40 hover:bg-sand/40",
-                  isSelected ? "ring-2 ring-teal/35" : "",
+                    : "border-gray-200 hover:border-primary-blue/40 hover:bg-sand/40",
+                  isSelected ? "ring-2 ring-primary-blue/30" : "",
                 ].join(" ")}
                 type="button"
               >
@@ -167,12 +167,12 @@ export default function MonthCalendar({
                   <div className="mt-2">
                     <div className="line-clamp-1 text-xs font-semibold text-navy">{top.shipName}</div>
                     {top.recommended && (
-                      <span className="mt-1 inline-flex rounded-full bg-teal/15 px-2 py-0.5 text-[10px] text-teal">
+                      <span className="mt-1 inline-flex rounded-full bg-teal/10 px-2 py-0.5 text-[10px] text-teal">
                         Recommended
                       </span>
                     )}
                     {top.seaPayEligible && (
-                      <span className="mt-1 inline-block rounded-full bg-navy/10 px-2 py-0.5 text-[10px] text-navy">
+                      <span className="mt-1 inline-block rounded-full bg-primary-blue/10 px-2 py-0.5 text-[10px] text-primary-blue">
                         SeaPay available
                       </span>
                     )}
@@ -190,7 +190,7 @@ export default function MonthCalendar({
         </div>
       </div>
 
-      <aside className="rounded-2xl bg-cloud p-5 shadow-lg">
+      <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="font-semibold text-navy">Sailings</h2>
         <p className="mt-1 text-sm text-slate">
           {selectedDate ? fmtDayLabel(selectedDate) : "Select a date to view departures."}
@@ -215,9 +215,7 @@ export default function MonthCalendar({
                   } ${ring}`}
                   type="button"
                 >
-                  {entry.recommended && (
-                    <div className="mb-2 text-xs font-medium text-teal">★ Recommended date</div>
-                  )}
+                  {entry.recommended && <div className="mb-2 text-xs font-medium text-teal">★ Recommended date</div>}
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="text-sm font-semibold text-navy">{entry.shipName}</div>
@@ -225,10 +223,10 @@ export default function MonthCalendar({
                         {entry.durationLabel} • Departs {entry.departDate}
                       </div>
                       {entry.seaPayEligible && entry.recommended && (
-                        <div className="mt-1 text-xs font-medium text-teal">SeaPay eligible</div>
+                        <div className="mt-1 text-xs font-medium text-primary-blue">SeaPay eligible</div>
                       )}
                       {entry.seaPayEligible && !entry.recommended && (
-                        <div className="mt-1 text-xs text-navy">Deposit option available</div>
+                        <div className="mt-1 text-xs text-primary-blue">Deposit option available</div>
                       )}
                     </div>
                     <div className="text-right">
@@ -255,7 +253,7 @@ export default function MonthCalendar({
                   <div className="mt-4 flex gap-2">
                     <Link
                       href={href}
-                      className="inline-flex items-center justify-center rounded-lg bg-teal px-4 py-2 text-sm text-white"
+                      className="inline-flex items-center justify-center rounded-lg bg-primary-blue px-4 py-2 text-sm text-white hover:bg-primary-blue/90"
                     >
                       View Details
                     </Link>

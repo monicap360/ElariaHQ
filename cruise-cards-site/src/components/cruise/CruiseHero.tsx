@@ -38,10 +38,13 @@ export default function CruiseHero({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <span className="text-xl font-semibold text-navy">From {price}</span>
           <div className="flex gap-2">
-            <a href={viewCabinsHref} className="rounded-lg border border-navy/20 px-5 py-2 text-navy">
+            <a
+              href={viewCabinsHref}
+              className="rounded-lg border border-primary-blue/40 bg-white px-5 py-2 text-primary-blue hover:bg-primary-blue/5"
+            >
               View Cabins
             </a>
-            <a href={reserveHref} className="rounded-lg bg-teal px-5 py-2 text-white">
+            <a href={reserveHref} className="rounded-lg bg-primary-blue px-5 py-2 text-white hover:bg-primary-blue/90">
               Reserve with Deposit
             </a>
           </div>

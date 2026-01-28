@@ -53,7 +53,7 @@ export default async function CalendarPage({
 }) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
-      <main className="mx-auto max-w-6xl px-6 py-12 text-navy">
+      <main className="mx-auto max-w-6xl px-6 py-12 text-slate">
         <h1 className="text-3xl font-semibold">Cruises from Galveston Calendar</h1>
         <p className="mt-4 text-slate">Cruise data is unavailable right now. Please check back shortly.</p>
       </main>
@@ -167,7 +167,7 @@ export default async function CalendarPage({
     .slice(0, 6);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12 text-navy">
+    <main className="mx-auto max-w-6xl px-6 py-12 text-slate">
       <header className="flex items-center justify-between gap-4 pb-4 pt-8">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-semibold text-navy">
@@ -194,7 +194,7 @@ export default async function CalendarPage({
         <h2 className="text-2xl font-semibold">Recommended dates</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {recommended.map((entry) => (
-            <div key={entry.sailingId} className="rounded-2xl border border-navy/10 bg-cloud p-4 shadow-sm">
+            <div key={entry.sailingId} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="text-xs uppercase tracking-[0.2em] text-slate">{entry.shipName}</div>
               <div className="mt-2 text-lg font-semibold text-navy">
                 {formatDate(entry.departDate)} • {entry.durationLabel}
@@ -204,13 +204,13 @@ export default async function CalendarPage({
               </div>
               <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate">
                 {badgeFrom(entry).map((badge) => (
-                  <span key={badge} className="rounded-full border border-navy/10 px-3 py-1">
+                  <span key={badge} className="rounded-full border border-slate-200 px-3 py-1">
                     {badge}
                   </span>
                 ))}
               </div>
               <Link
-                className="mt-4 inline-flex rounded-lg bg-teal px-4 py-2 text-sm font-semibold text-white"
+                className="mt-4 inline-flex rounded-lg bg-primary-blue px-4 py-2 text-sm font-semibold text-white hover:bg-primary-blue/90"
                 href={buildTravelerHref(entry.sailingId, {
                   adults,
                   children,
@@ -250,7 +250,7 @@ export default async function CalendarPage({
         <h2 className="text-2xl font-semibold">Ship calendars</h2>
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           {shipGroups.map((group) => (
-            <div key={group.label} className="rounded-2xl border border-navy/10 bg-cloud p-5">
+            <div key={group.label} className="rounded-2xl border border-slate-200 bg-white p-5">
               <h3 className="text-lg font-semibold text-navy">{group.label}</h3>
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full text-left text-sm">
@@ -262,7 +262,7 @@ export default async function CalendarPage({
                       <th className="py-2">Demand</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-navy/10">
+                  <tbody className="divide-y divide-slate-200">
                     {group.entries.map((entry) => (
                       <tr key={entry.sailingId}>
                         <td className="py-2 pr-4">{formatDate(entry.departDate)}</td>
@@ -278,7 +278,7 @@ export default async function CalendarPage({
               </div>
               <Link
                 href={`/cruises-from-galveston/ship/${slugify(group.label)}`}
-                className="mt-4 inline-flex text-sm font-semibold text-ocean"
+                className="mt-4 inline-flex text-sm font-semibold text-primary-blue"
               >
                 View full ship calendar →
               </Link>
