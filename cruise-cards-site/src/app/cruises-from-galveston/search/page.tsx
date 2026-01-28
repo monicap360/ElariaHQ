@@ -25,7 +25,9 @@ export default async function CruiseSearchPage() {
 
   const { data } = await supabase
     .from("sailings")
-    .select("id,sail_date,return_date,ports,itinerary,price_from,base_price,starting_price,min_price,ship:ships(name,cruise_line:cruise_lines(name))")
+    .select(
+      "id,sail_date,return_date,ports,itinerary,itinerary_label,ports_summary,price_from,base_price,starting_price,min_price,ship:ships(name,cruise_line:cruise_lines(name))"
+    )
     .eq("is_active", true)
     .order("sail_date", { ascending: true });
 
@@ -40,7 +42,7 @@ export default async function CruiseSearchPage() {
               Math.round((new Date(returnDate).getTime() - new Date(sailDate).getTime()) / (1000 * 60 * 60 * 24))
             )
           : null;
-      const itinerary =
+      const fallbackPorts =
         (Array.isArray(row.ports) ? row.ports.filter(Boolean).join(", ") : row.ports?.toString()) ||
         row.itinerary ||
         null;
@@ -65,7 +67,9 @@ export default async function CruiseSearchPage() {
         line: cruiseLineRow?.name ?? null,
         departure_date: sailDate ?? null,
         nights,
-        itinerary,
+        itinerary_label: row.itinerary_label ?? null,
+        ports_summary: row.ports_summary ?? fallbackPorts,
+        itinerary: fallbackPorts,
         starting_price: numeric ?? null,
       };
     }) || [];

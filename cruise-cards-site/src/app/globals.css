@@ -197,6 +197,13 @@ body {
   margin-bottom: 0.75rem;
 }
 
+.meta-secondary {
+  font-size: 0.8rem;
+  color: var(--slate);
+  margin-top: -0.4rem;
+  margin-bottom: 0.75rem;
+}
+
 .reasons {
   list-style: none;
   padding: 0;

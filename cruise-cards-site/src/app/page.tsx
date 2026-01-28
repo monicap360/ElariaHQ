@@ -11,7 +11,8 @@ type CruiseMatrixRow = {
   lineKey: string;
   ship: string;
   duration: number;
-  ports: string;
+  itineraryLabel: string;
+  portsSummary: string;
   priceDisplay: string;
   priceNumber: number | null;
   scoreDisplay: string;
@@ -29,6 +30,8 @@ type SailingRow = {
   return_date: string;
   ports?: string[] | string | null;
   itinerary?: string | null;
+  itinerary_label?: string | null;
+  ports_summary?: string | null;
   price_from?: number | string | null;
   base_price?: number | string | null;
   starting_price?: number | string | null;
@@ -57,6 +60,8 @@ type DecisionResult = {
     return_date: string;
     ports?: string[] | string | null;
     itinerary?: string | null;
+    itinerary_label?: string | null;
+    ports_summary?: string | null;
     cruise_line?: string | null;
     price_from?: number | string | null;
     base_price?: number | string | null;
@@ -273,7 +278,8 @@ export default function Home() {
         const lineName = row.cruise_line ?? row.ship?.cruise_line?.name ?? "Unknown cruise line";
         const lineKey = normalizeLineKey(lineName);
         const duration = calcNights(row.sail_date, row.return_date);
-        const portsValue = formatPorts(row.ports) ?? formatPorts(row.itinerary) ?? "TBA";
+            const itineraryLabel = row.itinerary_label ?? "Cruise";
+            const portsSummary = row.ports_summary ?? formatPorts(row.ports) ?? formatPorts(row.itinerary) ?? "Ports TBA";
         const priceCandidate =
           parsePrice(row.price_from) ??
           parsePrice(row.base_price) ??
@@ -289,7 +295,8 @@ export default function Home() {
           lineKey,
           ship: row.ship?.name ?? "Unknown ship",
           duration,
-          ports: portsValue,
+                itineraryLabel,
+                portsSummary,
           priceDisplay: formatPrice(priceCandidate),
           priceNumber: priceCandidate,
           scoreDisplay: `${Math.round(result.score * 100)}/100`,
@@ -807,8 +814,10 @@ export default function Home() {
                     <div className="cruise-info">
                       <h3>{cruise.ship}</h3>
                       <p className="meta">
-                        {formatDurationLabel(cruise.line, cruise.duration)} {cruise.ports} • {formatDate(cruise.sailDate)}
+                        {formatDurationLabel(cruise.line, cruise.duration)} {cruise.itineraryLabel} •{" "}
+                        {formatDate(cruise.sailDate)}
                       </p>
+                      <p className="meta-secondary">{cruise.portsSummary}</p>
                       <ul className="reasons">
                         {(cruise.reasons || []).slice(0, 3).map((reason) => {
                           const isWarn = reason.toLowerCase().includes("limited");
@@ -883,7 +892,10 @@ export default function Home() {
                             <td className="px-6 py-3 text-text-primary">{formatDate(row.sailDate)}</td>
                             <td className="px-6 py-3">{row.departureDay}</td>
                             <td className="px-6 py-3">{formatDurationLabel(row.line, row.duration)}</td>
-                            <td className="px-6 py-3">{row.ports}</td>
+                            <td className="px-6 py-3">
+                              <div className="text-xs font-semibold text-text-primary">{row.itineraryLabel}</div>
+                              <div className="text-xs text-text-secondary">{row.portsSummary}</div>
+                            </td>
                             <td className="px-6 py-3 capitalize">{row.demandTier}</td>
                             <td className="px-6 py-3">{row.priceDisplay}</td>
                           </tr>

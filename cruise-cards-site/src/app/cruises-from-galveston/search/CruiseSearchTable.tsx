@@ -8,6 +8,8 @@ type Sailing = {
   line?: string | null;
   departure_date: string | null;
   nights: number | null;
+  itinerary_label?: string | null;
+  ports_summary?: string | null;
   itinerary: string | null;
   starting_price: number | string | null;
 };
@@ -184,7 +186,10 @@ export default function CruiseSearchTable({ sailings }: Props) {
                 <td className="py-3 pr-4 font-medium">{sailing.ship || "TBD"}</td>
                 <td className="py-3 pr-4">{formatDate(sailing.departure_date)}</td>
                 <td className="py-3 pr-4">{formatDurationLabel(sailing.line, sailing.nights)}</td>
-                <td className="py-3 pr-4">{sailing.itinerary || "TBA"}</td>
+                <td className="py-3 pr-4">
+                  <div className="text-sm font-medium text-navy">{sailing.itinerary_label ?? "Cruise"}</div>
+                  <div className="text-xs text-slate">{sailing.ports_summary || sailing.itinerary || "TBA"}</div>
+                </td>
                 <td className="py-3 pr-4">{formatPrice(sailing.starting_price)}</td>
                 <td className="py-3">
                   <a

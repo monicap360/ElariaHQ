@@ -52,6 +52,8 @@ export type Sailing = {
   cruiseLine: string;
   shipId: string;
   itineraryTags: string[];
+  itineraryLabel?: string | null;
+  portsSummary?: string | null;
   seaPayEligible: boolean;
 };
 

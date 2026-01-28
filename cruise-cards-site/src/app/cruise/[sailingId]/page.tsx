@@ -58,9 +58,9 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
   const fromPrice = price;
   const componentFactors = mapComponentsToFactors(result?.components);
 
-  const dates = `${baseDate} • ${formatDurationLabel(sailing.cruiseLine, sailing.nights)} ${titleCase(
-    sailing.itineraryTags?.[0] ?? "Cruise"
-  )}`;
+  const itineraryLabel = sailing.itineraryLabel ?? titleCase(sailing.itineraryTags?.[0] ?? "Cruise");
+  const portsSummary = sailing.portsSummary ?? sailing.itineraryTags.join(", ") || "—";
+  const dates = `${baseDate} • ${formatDurationLabel(sailing.cruiseLine, sailing.nights)} ${itineraryLabel}`;
 
   const highlights = [
     ...reasons.slice(0, 2),
@@ -70,7 +70,8 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
 
   const details = [
     { label: "Departure", value: "Galveston, TX" },
-    { label: "Ports", value: sailing.itineraryTags.join(", ") || "—" },
+    { label: "Itinerary", value: itineraryLabel },
+    { label: "Ports", value: portsSummary },
     { label: "Nights", value: String(sailing.nights) },
     { label: "Cruise line", value: sailing.cruiseLine },
   ];

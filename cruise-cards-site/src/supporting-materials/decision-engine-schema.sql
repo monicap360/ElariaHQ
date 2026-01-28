@@ -53,3 +53,7 @@ create table if not exists risk_snapshots (
   risk_score numeric,
   created_at timestamptz not null default now()
 );
+
+-- Sailing itinerary display fields (optional if columns already exist)
+alter table public.sailings
+  add column if not exists ports_summary text;

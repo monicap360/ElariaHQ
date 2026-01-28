@@ -10,6 +10,8 @@ type SailingRow = {
   cruise_line: string;
   ship_id: string;
   itinerary_tags?: string[] | null;
+  itinerary_label?: string | null;
+  ports_summary?: string | null;
   seapay_eligible?: boolean | null;
 };
 
@@ -63,6 +65,8 @@ export function providerFromSupabase(): CruiseDataProvider {
         cruiseLine: data.cruise_line,
         shipId: data.ship_id,
         itineraryTags: data.itinerary_tags ?? [],
+        itineraryLabel: data.itinerary_label ?? null,
+        portsSummary: data.ports_summary ?? null,
         seaPayEligible: !!data.seapay_eligible,
       };
     },
@@ -90,6 +94,8 @@ export function providerFromSupabase(): CruiseDataProvider {
         cruiseLine: row.cruise_line,
         shipId: row.ship_id,
         itineraryTags: row.itinerary_tags ?? [],
+        itineraryLabel: row.itinerary_label ?? null,
+        portsSummary: row.ports_summary ?? null,
         seaPayEligible: Boolean(row.seapay_eligible),
       })) as Sailing[];
     },
