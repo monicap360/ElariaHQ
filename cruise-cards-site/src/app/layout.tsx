@@ -190,9 +190,14 @@ export default function RootLayout({
           <header className="border-b border-slate-200 bg-background-panel/80 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-4 leading-tight">
-                <span className="logo-shine h-20 w-20 sm:h-28 sm:w-28" aria-hidden="true">
-                  <Image src="/brand/cfg-logo.webp" alt="" fill sizes="80px" className="object-cover" priority />
-                </span>
+                <Image
+                  src="/brand/cfg-logo.webp"
+                  alt="Cruises From Galveston"
+                  width={140}
+                  height={140}
+                  className="h-24 w-24 sm:h-32 sm:w-32 object-contain"
+                  priority
+                />
                 <span className="flex flex-col">
                   <span className="text-sm font-semibold uppercase tracking-[0.3em] text-text-muted">
                     CruisesFromGalveston.net

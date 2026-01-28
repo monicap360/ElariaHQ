@@ -6,10 +6,11 @@ import { getSupabaseClient } from "@/lib/supabaseClient";
 type Sailing = {
   id: string;
   ship: string | null;
-  departure_date: string | null;
+  depart_date: string | null;
   nights: number | null;
-  itinerary: string | null;
-  starting_price: number | string | null;
+  itinerary_label: string | null;
+  ports_summary: string | null;
+  min_price: number | null;
 };
 
 function formatDate(value: string | null) {
@@ -19,7 +20,7 @@ function formatDate(value: string | null) {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-function formatPrice(value: Sailing["starting_price"]) {
+function formatPrice(value: number | null) {
   if (value === null || value === undefined || value === "") return "Call";
   const numeric = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(numeric)) return "Call";
@@ -43,11 +44,31 @@ export default function CruiseBoardPage() {
       }
 
       const { data } = await supabase
-        .from("upcoming_sailings")
-        .select("*")
-        .order("departure_date", { ascending: true });
+        .from("sailings")
+        .select("id, depart_date, nights, itinerary_label, ports_summary, ship:ships(name)")
+        .eq("departure_port", "Galveston")
+        .eq("is_active", true)
+        .order("depart_date", { ascending: true });
       if (active) {
-        setSailings((data as Sailing[]) || []);
+        const rows = (data as Array<{
+          id: string;
+          depart_date: string | null;
+          nights: number | null;
+          itinerary_label: string | null;
+          ports_summary: string | null;
+          ship: { name: string } | null;
+        }>) ?? [];
+        setSailings(
+          rows.map((row) => ({
+            id: row.id,
+            depart_date: row.depart_date,
+            nights: row.nights,
+            itinerary_label: row.itinerary_label,
+            ports_summary: row.ports_summary,
+            ship: row.ship?.name ?? null,
+            min_price: null,
+          })),
+        );
         setLoading(false);
       }
     })();
@@ -110,10 +131,12 @@ export default function CruiseBoardPage() {
                   sailings.map((sailing) => (
                     <tr key={sailing.id} className="border-t border-slate-800">
                       <td className="px-5 py-4 font-semibold text-white">{sailing.ship || "TBD"}</td>
-                      <td className="px-5 py-4">{formatDate(sailing.departure_date)}</td>
+                      <td className="px-5 py-4">{formatDate(sailing.depart_date)}</td>
                       <td className="px-5 py-4">{sailing.nights ?? "TBD"}</td>
-                      <td className="px-5 py-4 text-slate-300">{sailing.itinerary || "TBA"}</td>
-                      <td className="px-5 py-4 text-cyan-200">{formatPrice(sailing.starting_price)}</td>
+                      <td className="px-5 py-4 text-slate-300">
+                        {sailing.itinerary_label || sailing.ports_summary || "TBA"}
+                      </td>
+                      <td className="px-5 py-4 text-cyan-200">{formatPrice(sailing.min_price)}</td>
                       <td className="px-5 py-4">
                         <div className="flex flex-wrap gap-2">
                           <button className="rounded-full border border-cyan-400/60 px-3 py-1 text-xs text-cyan-200 hover:bg-cyan-500/10">
