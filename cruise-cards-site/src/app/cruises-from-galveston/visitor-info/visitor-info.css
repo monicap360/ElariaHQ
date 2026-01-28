@@ -448,6 +448,22 @@ button, input, select{ font:inherit; }
   background:#fff;
 }
 
+.linkList{
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.linkList a{
+  color: var(--navy);
+  text-decoration: none;
+}
+
+.linkList a:hover{
+  text-decoration: underline;
+}
+
 /* Responsive */
 @media (max-width: 980px){
   .heroInner{ grid-template-columns:1fr; }
