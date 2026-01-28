@@ -288,7 +288,7 @@ export default function Home() {
         const departureDay = row.sail_date
           ? new Date(row.sail_date).toLocaleDateString("en-US", { weekday: "long" })
           : "TBD";
-        const demandTier = duration >= 8 ? "long" : duration >= 6 ? "standard" : "short";
+            const demandTier: CruiseMatrixRow["demandTier"] = duration >= 8 ? "long" : duration >= 6 ? "standard" : "short";
         return {
           id: row.id,
           line: lineName,
