@@ -23,7 +23,20 @@ type Room = {
   insurance: boolean;
   gratuities: boolean;
   price: number;
+  contact_email: string;
+  contact_phone: string;
+  guests: Array<{
+    first_name: string;
+    last_name: string;
+    date_of_birth: string;
+    membership_number: string;
+  }>;
 };
+
+function maxGuestsForCabin(cabinType: string) {
+  if (cabinType.toLowerCase().includes("ocean")) return 5;
+  return 4;
+}
 
 function money(n: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n || 0);
@@ -53,7 +66,20 @@ export default function BookingPage() {
 
   // Rooms
   const [rooms, setRooms] = useState<Room[]>([
-    { cabin_type: "BALCONY", guest_count: 2, dining_time: "any", insurance: false, gratuities: false, price: 0 },
+    {
+      cabin_type: "BALCONY",
+      guest_count: 2,
+      dining_time: "any",
+      insurance: false,
+      gratuities: false,
+      price: 0,
+      contact_email: "",
+      contact_phone: "",
+      guests: [
+        { first_name: "", last_name: "", date_of_birth: "", membership_number: "" },
+        { first_name: "", last_name: "", date_of_birth: "", membership_number: "" },
+      ],
+    },
   ]);
 
   const total = useMemo(() => rooms.reduce((sum, r) => sum + (Number(r.price) || 0), 0), [rooms]);
@@ -169,10 +195,31 @@ export default function BookingPage() {
     setRooms((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
   }
 
+  function normalizeGuests(count: number, existing: Room["guests"]) {
+    const next = existing.slice(0, count);
+    while (next.length < count) {
+      next.push({ first_name: "", last_name: "", date_of_birth: "", membership_number: "" });
+    }
+    return next;
+  }
+
   function addRoom() {
     setRooms((prev) => [
       ...prev,
-      { cabin_type: "BALCONY", guest_count: 2, dining_time: "any", insurance: false, gratuities: false, price: 0 },
+      {
+        cabin_type: "BALCONY",
+        guest_count: 2,
+        dining_time: "any",
+        insurance: false,
+        gratuities: false,
+        price: 0,
+        contact_email: "",
+        contact_phone: "",
+        guests: [
+          { first_name: "", last_name: "", date_of_birth: "", membership_number: "" },
+          { first_name: "", last_name: "", date_of_birth: "", membership_number: "" },
+        ],
+      },
     ]);
   }
 
@@ -187,6 +234,19 @@ export default function BookingPage() {
     if (!rooms.length) return alert("Add at least one room.");
     if (rooms.some((r) => !r.cabin_type || !r.guest_count || !(Number(r.price) >= 0))) {
       return alert("Please complete all room fields (cabin type, guest count, price).");
+    }
+    if (rooms.some((r) => r.guest_count > maxGuestsForCabin(r.cabin_type))) {
+      return alert("Guest count exceeds the allowed maximum for one or more cabin types.");
+    }
+    if (rooms.some((r) => !r.contact_email || !r.contact_phone)) {
+      return alert("Please add a contact email and phone for each room.");
+    }
+    if (
+      rooms.some((r) =>
+        r.guests.some((g) => !g.first_name.trim() || !g.last_name.trim() || !g.date_of_birth),
+      )
+    ) {
+      return alert("Please complete legal name and date of birth for each guest.");
     }
 
     setSubmitting(true);
@@ -212,6 +272,14 @@ export default function BookingPage() {
       insurance: !!r.insurance,
       gratuities: !!r.gratuities,
       price: Number(r.price),
+      contact_email: r.contact_email,
+      contact_phone: r.contact_phone,
+      guests: r.guests.map((g) => ({
+        first_name: g.first_name.trim(),
+        last_name: g.last_name.trim(),
+        date_of_birth: g.date_of_birth,
+        membership_number: g.membership_number.trim(),
+      })),
     }));
 
     const { data, error } = await supabase.rpc("create_booking_with_rooms", {
@@ -386,7 +454,16 @@ export default function BookingPage() {
                 <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Cabin Type</label>
                 <select
                   value={room.cabin_type}
-                  onChange={(e) => updateRoom(idx, { cabin_type: e.target.value })}
+                  onChange={(e) => {
+                    const nextType = e.target.value;
+                    const maxGuests = maxGuestsForCabin(nextType);
+                    const nextCount = Math.min(room.guest_count, maxGuests);
+                    updateRoom(idx, {
+                      cabin_type: nextType,
+                      guest_count: nextCount,
+                      guests: normalizeGuests(nextCount, room.guests),
+                    });
+                  }}
                   style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
                 >
                   {cabinTypes.map((ct) => (
@@ -401,15 +478,26 @@ export default function BookingPage() {
                 <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Guests</label>
                 <select
                   value={room.guest_count}
-                  onChange={(e) => updateRoom(idx, { guest_count: Number(e.target.value) })}
+                  onChange={(e) => {
+                    const nextCount = Number(e.target.value);
+                    updateRoom(idx, {
+                      guest_count: nextCount,
+                      guests: normalizeGuests(nextCount, room.guests),
+                    });
+                  }}
                   style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                  {Array.from({ length: maxGuestsForCabin(room.cabin_type) }, (_, i) => i + 1).map((n) => (
                     <option key={n} value={n}>
                       {n}
                     </option>
                   ))}
                 </select>
+                <div style={{ fontSize: 11, opacity: 0.7, marginTop: 6 }}>
+                  {maxGuestsForCabin(room.cabin_type) === 5
+                    ? "Oceanview rooms allow up to 5 guests."
+                    : "All other cabin types allow up to 4 guests."}
+                </div>
               </div>
 
               <div>
@@ -459,6 +547,102 @@ export default function BookingPage() {
                   placeholder="0.00"
                   style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
                 />
+              </div>
+            </div>
+
+            <div style={{ marginTop: 16 }}>
+              <div style={{ fontWeight: 800, marginBottom: 8 }}>Room Contact</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <div>
+                  <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Email</label>
+                  <input
+                    type="email"
+                    value={room.contact_email}
+                    onChange={(e) => updateRoom(idx, { contact_email: e.target.value })}
+                    placeholder="guest@email.com"
+                    style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Phone</label>
+                  <input
+                    type="tel"
+                    value={room.contact_phone}
+                    onChange={(e) => updateRoom(idx, { contact_phone: e.target.value })}
+                    placeholder="(###) ###-####"
+                    style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: 16 }}>
+              <div style={{ fontWeight: 800, marginBottom: 8 }}>Guest Details (Legal Name + DOB)</div>
+              <div style={{ display: "grid", gap: 10 }}>
+                {room.guests.map((guest, guestIdx) => (
+                  <div
+                    key={guestIdx}
+                    style={{ border: "1px solid #e5e7eb", borderRadius: 10, padding: 12 }}
+                  >
+                    <div style={{ fontWeight: 700, marginBottom: 8 }}>Guest {guestIdx + 1}</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 10 }}>
+                      <div>
+                        <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>First Name</label>
+                        <input
+                          value={guest.first_name}
+                          onChange={(e) => {
+                            const next = room.guests.slice();
+                            next[guestIdx] = { ...guest, first_name: e.target.value };
+                            updateRoom(idx, { guests: next });
+                          }}
+                          placeholder="Legal first name"
+                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Last Name</label>
+                        <input
+                          value={guest.last_name}
+                          onChange={(e) => {
+                            const next = room.guests.slice();
+                            next[guestIdx] = { ...guest, last_name: e.target.value };
+                            updateRoom(idx, { guests: next });
+                          }}
+                          placeholder="Legal last name"
+                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Date of Birth</label>
+                        <input
+                          type="date"
+                          value={guest.date_of_birth}
+                          onChange={(e) => {
+                            const next = room.guests.slice();
+                            next[guestIdx] = { ...guest, date_of_birth: e.target.value };
+                            updateRoom(idx, { guests: next });
+                          }}
+                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>
+                          VIFP / Membership #
+                        </label>
+                        <input
+                          value={guest.membership_number}
+                          onChange={(e) => {
+                            const next = room.guests.slice();
+                            next[guestIdx] = { ...guest, membership_number: e.target.value };
+                            updateRoom(idx, { guests: next });
+                          }}
+                          placeholder="Optional"
+                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
