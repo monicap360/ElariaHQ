@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type SearchRow = {
@@ -40,7 +39,6 @@ function fmtMoney(value?: number | null) {
 }
 
 export default function VisitorSearch() {
-  const router = useRouter();
   const supabase = useMemo(() => getSupabaseClient(), []);
   const [rows, setRows] = useState<SearchRow[]>([]);
   const [status, setStatus] = useState<string>("Ready");
@@ -294,17 +292,15 @@ export default function VisitorSearch() {
                     <span className="fineprint">{fine}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <button
-                      className="mutebtn"
-                      type="button"
-                      onClick={() => {
-                        if (!sailingId) return;
-                        router.push(`/cruise/${sailingId}`);
-                      }}
-                      disabled={!sailingId}
-                    >
-                      View details
-                    </button>
+                    {sailingId ? (
+                      <a className="mutebtn" href={`/cruises-from-galveston/sailings/${sailingId}`}>
+                        View details
+                      </a>
+                    ) : (
+                      <span className="mutebtn" aria-disabled="true" style={{ opacity: 0.6 }}>
+                        View details
+                      </span>
+                    )}
                   </div>
                 </div>
               );

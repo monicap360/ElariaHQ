@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import VisitorSearch from "./VisitorSearch";
+import ScrollButton from "@/components/ScrollButton";
 import "./visitor-info.css";
 
 export const metadata: Metadata = {
@@ -35,13 +36,7 @@ export default function VisitorInfoPage() {
                 <span aria-hidden="true">ℹ︎</span>
                 <span>Guidance, not pressure</span>
               </div>
-              <button
-                className="btn"
-                type="button"
-                onClick={() => document.querySelector("#sailings")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                Explore Sailings
-              </button>
+              <ScrollButton targetId="sailings" label="Explore Sailings" className="btn" />
             </div>
           </div>
         </div>
@@ -79,27 +74,9 @@ export default function VisitorInfoPage() {
                   <strong> per person, double occupancy</strong>, including port expenses and government fees.
                 </p>
                 <div className="asideRow">
-                  <button
-                    className="ghost"
-                    type="button"
-                    onClick={() => document.querySelector("#destinations")?.scrollIntoView({ behavior: "smooth" })}
-                  >
-                    Destinations
-                  </button>
-                  <button
-                    className="ghost"
-                    type="button"
-                    onClick={() => document.querySelector("#port")?.scrollIntoView({ behavior: "smooth" })}
-                  >
-                    Port Guide
-                  </button>
-                  <button
-                    className="ghost"
-                    type="button"
-                    onClick={() => document.querySelector("#sailings")?.scrollIntoView({ behavior: "smooth" })}
-                  >
-                    Sailings
-                  </button>
+                  <ScrollButton targetId="destinations" label="Destinations" className="ghost" />
+                  <ScrollButton targetId="port" label="Port Guide" className="ghost" />
+                  <ScrollButton targetId="sailings" label="Sailings" className="ghost" />
                 </div>
               </aside>
             </div>
