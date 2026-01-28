@@ -310,7 +310,7 @@ export default function Home() {
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [bookingForm.travelers]);
 
   const filteredCruises = useMemo(() => {
     const byLine = filterLine === "all" ? cruiseMatrix : cruiseMatrix.filter((cruise) => cruise.lineKey === filterLine);
