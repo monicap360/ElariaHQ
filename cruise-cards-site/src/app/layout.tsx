@@ -197,15 +197,6 @@ export default function RootLayout({
               <span>We&apos;re here even if you already booked</span>
             </div>
           </div>
-          <div className="border-b border-slate-200 bg-background-panel/70 px-6 py-2 text-[11px] text-text-muted">
-            <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-x-3 gap-y-1 text-center">
-              <span>Serving Galveston cruisers since 2017</span>
-              <span aria-hidden="true">•</span>
-              <span>Local hospitality guidance</span>
-              <span aria-hidden="true">•</span>
-              <span>We&apos;re here even if you already booked</span>
-            </div>
-          </div>
           <header className="border-b border-slate-200 bg-background-panel/80 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-4 leading-tight">
@@ -285,55 +276,6 @@ export default function RootLayout({
                 </Link>
                 <a href="mailto:hello@cruisesfromgalveston.net" className="hover:text-primary-blue">
                   Contact
-                </a>
-              </div>
-              <div className="flex flex-wrap items-center gap-3 text-text-secondary">
-                <Link href="/cruises-from-galveston/founders-welcome" className="font-semibold text-primary-blue">
-                  About
-                </Link>
-                <Link href="/cruises-from-galveston/guest-help" className="font-semibold text-primary-blue">
-                  Guest Help Desk
-                </Link>
-                <Link href="/cruises-from-galveston/parking-and-transportation" className="font-semibold text-primary-blue">
-                  Parking & Transportation
-                </Link>
-                <Link href="/cruises-from-galveston/private-islands" className="font-semibold text-primary-blue">
-                  Destinations
-                </Link>
-                <Link href="/cruises-from-galveston/how-to-plan" className="font-semibold text-primary-blue">
-                  Contact
-                </Link>
-                <a
-                  href="https://www.facebook.com/cruisesfromgalveston"
-                  className="font-semibold text-primary-blue hover:underline"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Facebook
-                </a>
-                <a
-                  href="https://www.instagram.com/cruisesfromgalveston"
-                  className="font-semibold text-primary-blue hover:underline"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Instagram
-                </a>
-                <a
-                  href="https://x.com/TexasCruisePort"
-                  className="font-semibold text-primary-blue hover:underline"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  X
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/cruisesfromgalveston/"
-                  className="font-semibold text-primary-blue hover:underline"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  LinkedIn
                 </a>
               </div>
             </div>
