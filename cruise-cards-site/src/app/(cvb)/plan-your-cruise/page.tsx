@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "../../cruises-from-galveston/visitor-info/visitor-info.css";
 import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
@@ -317,27 +318,27 @@ export default function PlanYourCruisePage() {
               <div className="cardBody">
                 <h3>Driving details</h3>
                 <p>Review the full driving guide with regional routes and arrival advice.</p>
-                <a className="mutebtn" href="/cruises-from-galveston/driving-to-galveston">
+                <Link className="mutebtn" href="/cruises-from-galveston/driving-to-galveston">
                   Driving guide
-                </a>
+                </Link>
               </div>
             </div>
             <div className="card">
               <div className="cardBody">
                 <h3>Planning guide</h3>
                 <p>Explore port tips, embarkation guidance, and pre-cruise planning reminders.</p>
-                <a className="mutebtn" href="/cruises-from-galveston/how-to-plan">
+                <Link className="mutebtn" href="/cruises-from-galveston/how-to-plan">
                   Planning guide
-                </a>
+                </Link>
               </div>
             </div>
             <div className="card">
               <div className="cardBody">
                 <h3>Explore sailings</h3>
                 <p>Compare ships, itineraries, and travel dates departing from Galveston.</p>
-                <a className="btn" href="/cruises-from-galveston/visitor-info#sailings">
+                <Link className="btn" href="/cruises-from-galveston/visitor-info#sailings">
                   Explore sailings
-                </a>
+                </Link>
               </div>
             </div>
           </div>
