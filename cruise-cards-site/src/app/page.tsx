@@ -989,7 +989,7 @@ export default function Home() {
 
         {ports.length > 0 && (
           <section className="mt-16" id="ports">
-            <h2 className="text-2xl font-semibold font-accent">Where Galveston cruises go</h2>
+            <h2 className="text-2xl font-semibold font-accent">Where Cruises From Galveston go</h2>
             <p className="mt-2 text-sm text-text-secondary">Based on live Galveston sailings and recent itineraries.</p>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {ports.map((port) => {
