@@ -79,6 +79,14 @@ insert into public.destination_aliases (alias, canonical_name) values
 on conflict (alias) do nothing;
 
 -- Destination group mapping (optional taxonomy).
+create table if not exists public.destination_groups (
+  group_slug text primary key,
+  group_name text not null,
+  seo_title text,
+  seo_h1 text,
+  seo_description text
+);
+
 create table if not exists public.destination_group_members (
   destination_name text not null,
   group_slug text not null,
