@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type SearchRow = {
@@ -61,8 +62,10 @@ export default function VisitorSearch() {
       if (typeof nextFilters.maxDuration === "number") params.set("maxDuration", String(nextFilters.maxDuration));
 
       const res = await fetch(`/api/visitor-sailings?${params.toString()}`);
-      if (!res.ok) throw new Error("Visitor sailings request failed");
-      const json = await res.json();
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(json?.error || "Visitor sailings request failed");
+      }
       setRows((json.sailings as SearchRow[]) ?? []);
       setStatus("Updated");
       setErrorMessage(null);
@@ -70,7 +73,7 @@ export default function VisitorSearch() {
       console.error(err);
       setRows([]);
       setStatus("Error");
-      setErrorMessage("Unable to load sailings. Please try again shortly.");
+      setErrorMessage(err instanceof Error ? err.message : "Unable to load sailings. Please try again shortly.");
     } finally {
       setLoading(false);
     }
@@ -280,9 +283,9 @@ export default function VisitorSearch() {
                   </div>
                   <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     {sailingId ? (
-                      <a className="mutebtn" href={`/cruises-from-galveston/sailings/${sailingId}`}>
+                      <Link className="mutebtn" href={`/cruises-from-galveston/sailings/${sailingId}`}>
                         View details
-                      </a>
+                      </Link>
                     ) : (
                       <span className="mutebtn" aria-disabled="true" style={{ opacity: 0.6 }}>
                         View details

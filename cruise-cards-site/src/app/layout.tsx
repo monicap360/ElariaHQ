@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Merriweather } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,10 +10,11 @@ const inter = Inter({
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const merriweather = Merriweather({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-merriweather",
   display: "swap",
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -185,8 +186,8 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}>
-        <div className="min-h-screen bg-background-base text-text-secondary">
+      <body className={`${inter.variable} ${merriweather.variable} font-sans antialiased`}>
+        <div className="min-h-screen bg-background-base text-text-secondary pb-20 md:pb-0">
           <header className="border-b border-slate-200 bg-background-panel/80 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-4 leading-tight">
@@ -202,7 +203,10 @@ export default function RootLayout({
                   <span className="text-sm font-semibold uppercase tracking-[0.3em] text-text-muted">
                     CruisesFromGalveston.net
                   </span>
-                  <span className="text-lg font-semibold text-text-primary">Cruises From Galveston</span>
+                  <span className="text-lg font-semibold text-text-primary">The Original Cruises From Galveston®</span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+                    Serving Galveston cruisers since 2017
+                  </span>
                 </span>
               </Link>
               <nav className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
@@ -230,14 +234,24 @@ export default function RootLayout({
           {children}
           <footer className="border-t border-slate-200 bg-background-panel/80">
             <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-text-muted md:flex-row md:items-center md:justify-between">
-              <span>
-                Cruises From Galveston provides planning guidance and operational support. Pricing and official terms
-                remain with cruise lines. Locally operated in Galveston, Texas — serving cruise guests before and after
-                sailing. Questions before you sail?{" "}
-                <Link href="/cruises-from-galveston/guest-help" className="font-semibold text-primary-blue">
-                  Even if you already booked, we&apos;re here.
-                </Link>
-              </span>
+              <div>
+                <div style={{ fontWeight: 800 }}>The Original · Since 2017 · Founded by Monica Peña</div>
+                <div style={{ marginTop: 6 }}>Cruises From Galveston®</div>
+                <p style={{ marginTop: 6 }}>
+                  The Real Cruises From Galveston Experience™ by Monica Peña. Original content based on real Galveston
+                  cruise operations and hospitality experience.
+                </p>
+                <p style={{ marginTop: 6 }}>
+                  Cruises From Galveston is a trade name in continuous use since 2017. Unauthorized reproduction,
+                  imitation, or use causing consumer confusion is prohibited.
+                </p>
+                <p style={{ marginTop: 6 }}>
+                  Questions before you sail?{" "}
+                  <Link href="/cruises-from-galveston/guest-help" className="font-semibold text-primary-blue">
+                    Even if you already booked, we&apos;re here.
+                  </Link>
+                </p>
+              </div>
               <div className="flex flex-wrap items-center gap-3 text-text-secondary">
                 <a
                   href="https://www.facebook.com/cruisesfromgalveston"
@@ -274,6 +288,22 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
+          <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 backdrop-blur md:hidden">
+            <div className="mx-auto flex max-w-6xl items-center justify-around px-6 py-3 text-xs font-semibold text-slate-700">
+              <Link href="/" className="flex flex-col items-center gap-1">
+                Start
+              </Link>
+              <Link href="/cruises-from-galveston/guest-help" className="flex flex-col items-center gap-1">
+                Guest Help
+              </Link>
+              <Link href="/cruises-from-galveston/parking-and-transportation" className="flex flex-col items-center gap-1">
+                Parking
+              </Link>
+              <Link href="/cruises-from-galveston/embarkation-day" className="flex flex-col items-center gap-1">
+                Arriving
+              </Link>
+            </div>
+          </nav>
         </div>
       </body>
     </html>

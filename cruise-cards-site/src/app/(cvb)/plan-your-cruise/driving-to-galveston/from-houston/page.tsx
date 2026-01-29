@@ -85,6 +85,58 @@ export default function FromHoustonPage() {
 
       <section className="section">
         <div className="wrap">
+          <h2 className="sectionTitle">Coming from I-10 East, Loop 610, or Beltway 8?</h2>
+          <p>
+            If you&apos;re approaching Galveston from the east or northeast side of Houston, you&apos;re likely traveling along
+            I-10 East, connecting through Loop 610 or Beltway 8 before heading south.
+          </p>
+          <p>
+            This route is commonly used by cruise guests traveling from East Houston and the I-10 corridor, including
+            Baytown, La Porte, Deer Park, Pasadena, Channelview, Crosby, Highlands, Jacinto City, Beaumont, Port Arthur,
+            and Orange.
+          </p>
+          <p>
+            Guests also regularly drive in from Louisiana (Lake Charles, Lafayette, Baton Rouge, New Orleans), East
+            Texas (Lufkin, Nacogdoches, Tyler), and Southwest Louisiana communities along I-10, plus travelers flying
+            into IAH or Hobby and renting a car.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">Why this route matters on embarkation day</h2>
+          <ul className="linkList">
+            <li>You&apos;ll hit Houston traffic before Galveston traffic.</li>
+            <li>Timing your approach matters more than distance.</li>
+            <li>Having a pre-Galveston plan can reduce stress significantly.</li>
+          </ul>
+          <p>
+            Many guests coming from this direction choose a Houston-side park-and-ride or an overnight stay before
+            heading to the island. It&apos;s not about cutting corners — it&apos;s about arriving calm and prepared.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">A local perspective</h2>
+          <p>
+            In real embarkation-day operations, guests coming from I-10 East often benefit from parking before reaching
+            Galveston, avoiding last-minute lane changes near the terminals, and letting someone else handle the final
+            drop-off. This is especially helpful for first-time cruisers, families, groups with multiple bags, and
+            anyone unfamiliar with Galveston&apos;s port layout.
+          </p>
+          <p>
+            If you&apos;re reading this section, it means you&apos;re thinking ahead — and that&apos;s exactly what this site is
+            here for. Cruising from Galveston isn&apos;t complicated, but it is different depending on where you&apos;re coming
+            from. Knowing your route is the first step to a smooth embarkation day.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
           <h2 className="sectionTitle">Why Galveston works for Houston travelers</h2>
           <p>Proximity allows flexible arrival times and same-day travel for many sailings.</p>
         </div>

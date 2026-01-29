@@ -90,16 +90,18 @@ export async function GET(request: NextRequest) {
   const viewResult = await viewQuery;
   if (!viewResult.error) {
     const rows = (viewResult.data ?? []) as FutureSailingRow[];
-    const mapped: SearchRow[] = rows.map((row) => ({
-      sailing_id: row.sailing_id,
-      ship_name: row.ship_name ?? null,
-      destination: row.itinerary_code ?? null,
-      itinerary_label: row.itinerary_code ?? null,
-      departure_date: row.sail_date ?? null,
-      duration_days: row.duration ?? null,
-      price_from: null,
-    }));
-    return NextResponse.json({ sailings: mapped, source: "future_sailings_list" });
+    if (rows.length) {
+      const mapped: SearchRow[] = rows.map((row) => ({
+        sailing_id: row.sailing_id,
+        ship_name: row.ship_name ?? null,
+        destination: row.itinerary_code ?? null,
+        itinerary_label: row.itinerary_code ?? null,
+        departure_date: row.sail_date ?? null,
+        duration_days: row.duration ?? null,
+        price_from: null,
+      }));
+      return NextResponse.json({ sailings: mapped, source: "future_sailings_list" });
+    }
   }
 
   const selectColumns =
@@ -126,7 +128,10 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json(
-    { sailings: [], error: viewResult.error.message || "Unable to load sailings." },
+    {
+      sailings: [],
+      error: viewResult.error?.message || searchResult.error?.message || "Unable to load sailings.",
+    },
     { status: 500 },
   );
 }

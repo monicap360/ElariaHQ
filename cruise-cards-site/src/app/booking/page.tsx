@@ -427,9 +427,34 @@ export default function BookingPage() {
 
       <div style={{ display: "grid", gap: 12, marginBottom: 16 }}>
         {rooms.map((room, idx) => (
-          <div key={idx} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14 }}>
+          <div
+            key={idx}
+            style={{
+              border: "2px solid #cbd5f5",
+              borderRadius: 16,
+              padding: 16,
+              background: "#f8fafc",
+              boxShadow: "0 10px 24px rgba(15, 23, 42, 0.08)",
+            }}
+          >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-              <div style={{ fontWeight: 800 }}>Room {idx + 1}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span
+                  style={{
+                    padding: "4px 10px",
+                    borderRadius: 999,
+                    background: idx % 2 === 0 ? "#dbeafe" : "#fef3c7",
+                    color: "#0f172a",
+                    fontWeight: 800,
+                    fontSize: 12,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Room {idx + 1}
+                </span>
+                <div style={{ fontWeight: 800, fontSize: 18 }}>Guest details</div>
+              </div>
               {rooms.length > 1 && (
                 <button
                   type="button"
@@ -449,6 +474,22 @@ export default function BookingPage() {
               )}
             </div>
 
+            <div
+              style={{
+                marginBottom: 12,
+                padding: "10px 12px",
+                borderRadius: 10,
+                background: "rgba(148, 163, 184, 0.12)",
+                color: "#334155",
+                fontSize: 12,
+              }}
+            >
+              Legal names are required. Names must appear exactly as shown on non-expired legal travel documents (a
+              non-expired ID and a birth certificate or a non-expired passport). If names do not match, name change
+              fees may apply.
+            </div>
+
+            <div style={{ fontWeight: 800, marginBottom: 8 }}>Cabin & Pricing</div>
             <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr 1fr 1fr 1fr 1fr", gap: 10 }}>
               <div>
                 <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Cabin Type</label>

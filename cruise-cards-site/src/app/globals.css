@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #0b2d4d;
-  --ocean: #0ea5e9;
-  --teal: #14b8a6;
-  --sand: #f8fafc;
+  --navy: #0e2a3a;
+  --ocean: #2f6f8f;
+  --teal: #3fa9a3;
+  --sand: #f4efea;
   --cloud: #ffffff;
-  --slate: #64748b;
-  --border: #e2e8f0;
+  --slate: #6e7c87;
+  --border: #e3ded8;
   --success: #2e8b57;
   --warning: #c98a2c;
   --background: var(--sand);
@@ -107,7 +107,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
-  --font-accent: var(--font-space-grotesk);
+  --font-accent: var(--font-merriweather);
 }
 
 body {
@@ -117,7 +117,7 @@ body {
 }
 
 .font-accent {
-  font-family: var(--font-space-grotesk), var(--font-inter), Arial, Helvetica, sans-serif;
+  font-family: var(--font-merriweather), var(--font-inter), Arial, Helvetica, sans-serif;
 }
 
 

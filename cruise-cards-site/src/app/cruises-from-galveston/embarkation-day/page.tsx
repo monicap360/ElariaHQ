@@ -68,6 +68,142 @@ export default function EmbarkationDayPage() {
       </section>
 
       <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
+        <h2 className="text-xl font-semibold text-slate-900">Arriving from I-45 South or Mainland Galveston</h2>
+        <p className="mt-3 text-sm text-slate-600">
+          If you&apos;re traveling south toward Galveston on I-45, you&apos;re coming from the most common cruise approach
+          route in Texas. This route serves guests driving in from Central Texas, North Texas, and the Houston metro,
+          and it&apos;s the primary artery into the island on sailing days.
+        </p>
+        <p className="mt-3 text-sm text-slate-600">Cruise guests regularly arrive from:</p>
+        <div className="mt-3 grid gap-4 text-sm text-slate-600 md:grid-cols-3">
+          <div>
+            <div className="font-semibold text-slate-800">Houston metro (north & central)</div>
+            <ul className="mt-2 space-y-1">
+              <li>Downtown Houston</li>
+              <li>The Heights</li>
+              <li>Midtown</li>
+              <li>Montrose</li>
+              <li>Spring</li>
+              <li>The Woodlands</li>
+              <li>Conroe</li>
+              <li>Cypress</li>
+            </ul>
+          </div>
+          <div>
+            <div className="font-semibold text-slate-800">Mainland Gulf Coast</div>
+            <ul className="mt-2 space-y-1">
+              <li>League City</li>
+              <li>Clear Lake</li>
+              <li>Webster</li>
+              <li>Friendswood</li>
+              <li>Dickinson</li>
+              <li>Texas City</li>
+            </ul>
+          </div>
+          <div>
+            <div className="font-semibold text-slate-800">Central & North Texas</div>
+            <ul className="mt-2 space-y-1">
+              <li>Austin</li>
+              <li>San Antonio</li>
+              <li>Waco</li>
+              <li>College Station</li>
+              <li>Dallas–Fort Worth</li>
+              <li>Bryan / College Station</li>
+            </ul>
+          </div>
+        </div>
+        <p className="mt-4 text-sm text-slate-600">
+          If you&apos;re coming from any of these areas, I-45 South is your main route into Galveston.
+        </p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
+        <h2 className="text-xl font-semibold text-slate-900">What to know about I-45 on embarkation day</h2>
+        <ul className="mt-3 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+          <li>Traffic increases significantly after 7:30–8:00 AM.</li>
+          <li>Backups are common near Texas City, Dickinson, and the Causeway.</li>
+          <li>Lane closures or weather can slow entry to the island.</li>
+        </ul>
+        <p className="mt-3 text-sm text-slate-600">
+          Because of this, experienced cruisers often arrive in Galveston the night before, plan extra buffer time, and
+          choose parking options close to their terminal. This site helps you decide what makes sense based on your
+          route, not just distance.
+        </p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
+        <h2 className="text-xl font-semibold text-slate-900">A local insight</h2>
+        <p className="mt-3 text-sm text-slate-600">
+          From real embarkation-day operations, guests coming down I-45 often underestimate how long the final stretch
+          can take. Galveston is an island — once traffic backs up, there are limited alternate routes. Planning ahead
+          isn&apos;t overthinking — it&apos;s how you start your cruise relaxed instead of rushed.
+        </p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
+        <h2 className="text-xl font-semibold text-slate-900">Where are you coming from? Choose your arrival route</h2>
+        <p className="mt-3 text-sm text-slate-600">
+          Every cruiser&apos;s journey to Galveston is different. That&apos;s why Cruises From Galveston is organized by how
+          guests actually arrive, not just by ship or cruise line.
+        </p>
+        <div className="mt-6 grid gap-4 text-sm text-slate-600 md:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="font-semibold text-slate-800">Coming from I-10 East / Houston side</div>
+            <p className="mt-2">
+              Best for travelers from East Houston, Baytown, Beaumont, Port Arthur, Louisiana, and East Texas.
+            </p>
+            <p className="mt-2">Helpful if you want park-and-ride options or a guided terminal arrival.</p>
+            <Link
+              href="/plan-your-cruise/driving-to-galveston/from-houston"
+              className="mt-3 inline-flex text-sm font-semibold text-primary-blue"
+            >
+              Driving from Houston →
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="font-semibold text-slate-800">Coming from I-45 South</div>
+            <p className="mt-2">Best for travelers from Houston metro, Central Texas, and North Texas.</p>
+            <p className="mt-2">Helpful if you want overnight hotel options and timing tips for Causeway traffic.</p>
+            <Link
+              href="/plan-your-cruise/driving-to-galveston"
+              className="mt-3 inline-flex text-sm font-semibold text-primary-blue"
+            >
+              Driving to Galveston →
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="font-semibold text-slate-800">Flying into Houston</div>
+            <p className="mt-2">Best for travelers flying into Hobby (HOU) or Bush Intercontinental (IAH).</p>
+            <p className="mt-2">Helpful for shuttle vs. rental car advice and arrival-day planning.</p>
+            <Link
+              href="/cruises-from-galveston/how-to-plan"
+              className="mt-3 inline-flex text-sm font-semibold text-primary-blue"
+            >
+              Airport-to-ship guidance →
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="font-semibold text-slate-800">Staying overnight in Galveston</div>
+            <p className="mt-2">Best for travelers who want a relaxed embarkation morning.</p>
+            <p className="mt-2">Helpful for hotel location guidance and park-and-cruise options.</p>
+            <Link href="/cruises-from-galveston/guest-help" className="mt-3 inline-flex text-sm font-semibold text-primary-blue">
+              Overnight planning help →
+            </Link>
+          </div>
+        </div>
+        <p className="mt-4 text-sm text-slate-600">
+          Most cruise websites assume everyone arrives the same way. In real life, how you get to Galveston determines
+          everything: when you should leave, where you should park, whether a shuttle makes sense, and how stressful
+          embarkation day feels. That&apos;s why this site starts with you, not the ship.
+        </p>
+        <p className="mt-3 text-sm text-slate-600">
+          Cruising from Galveston works best when you understand your route, give yourself margin, and arrive informed,
+          not rushed. That&apos;s the heart of this site. Welcome to Galveston. No matter how you arrive, we&apos;re glad you&apos;re
+          here.
+        </p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="text-xl font-semibold text-slate-900">Luggage drop-off</h2>
         <p className="mt-3 text-sm text-slate-600">
           When you arrive, port staff will tag your larger luggage and take it onboard separately. You keep your

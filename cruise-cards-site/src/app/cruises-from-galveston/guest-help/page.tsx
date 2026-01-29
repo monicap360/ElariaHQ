@@ -94,6 +94,10 @@ export default async function GuestHelpPage() {
           Whether you booked through us, another agent, directly with the cruise line, or years ago… you&apos;re welcome
           here.
         </p>
+        <p className="mt-3 text-sm text-slate-600">
+          Written from real Galveston embarkation experience by the founder of Cruises From Galveston®, established
+          2017.
+        </p>
         <div className="mt-6 flex flex-wrap gap-3 text-sm font-semibold">
           <Link href="/cruises-from-galveston/plan-your-cruise" className="text-primary-blue">
             Plan your cruise
@@ -301,6 +305,14 @@ export default async function GuestHelpPage() {
             lifetime commitment to hospitality.
           </p>
           <p>Welcome to Galveston. Welcome to cruising with clarity. Sea you on deck.</p>
+        </div>
+        <div
+          className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600"
+          style={{ background: "rgba(15, 23, 42, 0.02)" }}
+        >
+          <div className="text-sm font-semibold text-slate-800">Monica Peña</div>
+          <div>Founder, Cruises From Galveston® (Est. 2017)</div>
+          <div>Hotel General Manager · Cruise Shuttle Operations · Galveston Port Logistics</div>
         </div>
       </section>
 
