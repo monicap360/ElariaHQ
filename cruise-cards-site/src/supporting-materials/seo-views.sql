@@ -39,7 +39,11 @@ create table if not exists public.destination_group_members (
 );
 
 insert into public.destination_group_members (destination_name, group_slug) values
-  ('Roatán', 'western-caribbean')
+  ('Roatán', 'western-caribbean'),
+  ('Cozumel', 'western-caribbean'),
+  ('Belize City', 'western-caribbean'),
+  ('Montego Bay', 'western-caribbean'),
+  ('Grand Cayman', 'western-caribbean')
 on conflict do nothing;
 
 -- Future sailings list (Galveston only).
