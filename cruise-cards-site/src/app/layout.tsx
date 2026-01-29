@@ -188,6 +188,24 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${merriweather.variable} font-sans antialiased`}>
         <div className="min-h-screen bg-background-base text-text-secondary pb-20 md:pb-0">
+          <div className="border-b border-slate-200 bg-background-panel/80 text-xs text-text-muted">
+            <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-2 px-6 py-2 text-center">
+              <span>Serving Galveston cruisers since 2017</span>
+              <span aria-hidden="true">•</span>
+              <span>Local hospitality guidance</span>
+              <span aria-hidden="true">•</span>
+              <span>We&apos;re here even if you already booked</span>
+            </div>
+          </div>
+          <div className="border-b border-slate-200 bg-background-panel/70 px-6 py-2 text-[11px] text-text-muted">
+            <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-x-3 gap-y-1 text-center">
+              <span>Serving Galveston cruisers since 2017</span>
+              <span aria-hidden="true">•</span>
+              <span>Local hospitality guidance</span>
+              <span aria-hidden="true">•</span>
+              <span>We&apos;re here even if you already booked</span>
+            </div>
+          </div>
           <header className="border-b border-slate-200 bg-background-panel/80 backdrop-blur">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-4 leading-tight">
@@ -233,8 +251,8 @@ export default function RootLayout({
           </header>
           {children}
           <footer className="border-t border-slate-200 bg-background-panel/80">
-            <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-text-muted md:flex-row md:items-center md:justify-between">
-              <div>
+            <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-6 text-xs text-text-muted md:flex-row md:items-start md:justify-between">
+              <div className="max-w-xl">
                 <div style={{ fontWeight: 800 }}>The Original · Since 2017 · Founded by Monica Peña</div>
                 <div style={{ marginTop: 6 }}>Cruises From Galveston®</div>
                 <p style={{ marginTop: 6 }}>
@@ -252,7 +270,39 @@ export default function RootLayout({
                   </Link>
                 </p>
               </div>
+              <div className="grid gap-2 text-xs font-semibold text-text-secondary">
+                <Link href="/cruises-from-galveston/founders-welcome" className="hover:text-primary-blue">
+                  About
+                </Link>
+                <Link href="/cruises-from-galveston/guest-help" className="hover:text-primary-blue">
+                  Guest Help Desk
+                </Link>
+                <Link href="/cruises-from-galveston/parking-and-transportation" className="hover:text-primary-blue">
+                  Parking & Transportation
+                </Link>
+                <Link href="/#ports" className="hover:text-primary-blue">
+                  Destinations
+                </Link>
+                <a href="mailto:hello@cruisesfromgalveston.net" className="hover:text-primary-blue">
+                  Contact
+                </a>
+              </div>
               <div className="flex flex-wrap items-center gap-3 text-text-secondary">
+                <Link href="/cruises-from-galveston/founders-welcome" className="font-semibold text-primary-blue">
+                  About
+                </Link>
+                <Link href="/cruises-from-galveston/guest-help" className="font-semibold text-primary-blue">
+                  Guest Help Desk
+                </Link>
+                <Link href="/cruises-from-galveston/parking-and-transportation" className="font-semibold text-primary-blue">
+                  Parking & Transportation
+                </Link>
+                <Link href="/cruises-from-galveston/private-islands" className="font-semibold text-primary-blue">
+                  Destinations
+                </Link>
+                <Link href="/cruises-from-galveston/how-to-plan" className="font-semibold text-primary-blue">
+                  Contact
+                </Link>
                 <a
                   href="https://www.facebook.com/cruisesfromgalveston"
                   className="font-semibold text-primary-blue hover:underline"

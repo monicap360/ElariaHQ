@@ -91,6 +91,49 @@ export default function FoundersWelcomePage() {
       </section>
 
       <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
+        <h2 className="text-xl font-semibold text-slate-900">About Monica Peña</h2>
+        <p className="mt-3 text-sm text-slate-600">Real hospitality experience behind Cruises From Galveston.</p>
+        <p className="mt-3 text-sm text-slate-600">
+          Cruises From Galveston is guided by real hospitality and operations experience, not just online bookings.
+          Monica Peña is a Certified Director of Marketing &amp; Sales with IHG, with hands-on experience serving both
+          transient and extended-stay travelers — the same types of guests who cruise from Galveston every week.
+        </p>
+        <p className="mt-3 text-sm text-slate-600">
+          Her background includes managing and marketing hotel properties in Abilene, Texas:
+        </p>
+        <ul className="mt-2 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+          <li>La Quinta Inn &amp; Suites Abilene — 3018 Catclaw Drive, Abilene, Texas</li>
+          <li>Candlewood Suites Abilene — 3050 Catclaw Drive, Abilene, Texas</li>
+        </ul>
+        <p className="mt-3 text-sm text-slate-600">Through these roles, Monica worked directly with:</p>
+        <ul className="mt-2 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+          <li>First-time travelers</li>
+          <li>Families planning milestone trips</li>
+          <li>Long-stay guests with complex logistics</li>
+          <li>Guests arriving tired, anxious, or unsure — and needing clarity and reassurance</li>
+        </ul>
+        <p className="mt-3 text-sm text-slate-600">
+          This experience shaped her understanding of arrival and departure stress, parking and transportation
+          confusion, luggage, timing and documentation concerns, and the difference between selling travel and
+          supporting travelers.
+        </p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
+        <h2 className="text-xl font-semibold text-slate-900">Why this matters for cruisers</h2>
+        <p className="mt-3 text-sm text-slate-600">
+          Cruise guests are not just customers — they are travelers in motion. Monica&apos;s hospitality background means
+          this site is built with a visitor &amp; convention bureau mindset, a hotel operations understanding, and a
+          real-world flow of arrival, stay, and departure — plus a service-first approach, even for guests who have
+          already booked elsewhere.
+        </p>
+        <p className="mt-3 text-sm text-slate-600">
+          Whether you&apos;re cruising for the first time, driving in from out of town, staying overnight before sailing,
+          or simply needing reassurance, this platform exists to serve, not just sell.
+        </p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="text-xl font-semibold text-slate-900">A personal note to first-time cruisers</h2>
         <p className="mt-3 text-sm text-slate-600">
           If this is your first cruise, I want you to know something: you don&apos;t need to know everything. You don&apos;t
@@ -112,6 +155,10 @@ export default function FoundersWelcomePage() {
         <p className="mt-3 text-sm text-slate-600">
           Welcome to Galveston. Welcome to Cruises From Galveston. And I hope your journey begins with confidence and
           ease.
+        </p>
+        <p className="mt-4 text-sm text-slate-600">
+          Cruising from Galveston isn&apos;t just a business to me — it&apos;s home. This site was created so travelers feel
+          welcomed, informed, and supported from the moment they arrive, whether they booked with us or not.
         </p>
         <p className="mt-6 text-sm font-semibold text-slate-800">Warm regards,</p>
         <p className="text-sm font-semibold text-slate-800">Monica Peña</p>

@@ -536,10 +536,10 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="mt-6 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
-                Cruises From Galveston
+                Welcome to Cruises From Galveston
               </h1>
               <p className="mt-4 max-w-2xl text-base text-text-secondary md:text-lg">
-                Your trusted guide to sailing from our home port.
+                Your trusted guide to cruising from Galveston Island — built on real local experience, not marketing.
               </p>
               <p className="mt-4 max-w-2xl text-sm text-text-secondary md:text-base">
                 Real local guidance for first-time cruisers, returning guests, and anyone sailing from our home port.
@@ -727,33 +727,26 @@ export default function Home() {
           </aside>
         </motion.section>
 
-        {deskItems.length > 0 && (
-          <section className="mt-14" id="desk">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-semibold font-accent">From the Cruises From Galveston Desk</h2>
-                <p className="text-sm text-text-secondary">Live advisories and context from our editors.</p>
+        <section className="mt-10" id="trust-anchor">
+          <div className="grid gap-4 rounded-2xl border border-slate-200 bg-background-panel px-6 py-6 md:grid-cols-4">
+            {[
+              "Founded & operating since 2017",
+              "Based on real Galveston cruise operations",
+              "Hospitality & guest service experience",
+              "Supporting cruisers before & after booking",
+            ].map((item) => (
+              <div key={item} className="text-sm font-semibold text-text-primary">
+                {item}
               </div>
-              <Link href="/cruises-from-galveston/desk" className="text-sm font-semibold text-primary-blue">
-                View the Desk {"->"}
-              </Link>
-            </div>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {deskItems.map((card) => (
-                <div key={card.id} className="rounded-2xl border border-slate-200 bg-background-card p-6">
-                  <div className="text-base font-semibold text-text-primary">{card.title}</div>
-                  {card.summary && <p className="mt-3 text-sm text-text-secondary">{card.summary}</p>}
-                  {card.kind === "signal" && card.source && (
-                    <div className="mt-3 text-xs text-text-muted">Source: {card.source}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-text-muted">
+            The Real Cruises From Galveston Experience™ by Monica Peña
+          </p>
+        </section>
 
         <section className="mt-16" id="arrival-selector">
-          <h2 className="text-2xl font-semibold font-accent">How are you arriving?</h2>
+          <h2 className="text-2xl font-semibold font-accent">How Are You Arriving in Galveston?</h2>
           <p className="mt-2 text-sm text-text-secondary">
             Choose the route that matches your starting point for calm, local guidance.
           </p>
@@ -787,6 +780,32 @@ export default function Home() {
               >
                 <div className="text-base">{item.title}</div>
                 <div className="mt-2 text-xs text-text-muted">{item.desc}</div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-16" id="guest-help">
+          <h2 className="text-2xl font-semibold font-accent">Already Booked? We&apos;re Still Here for You.</h2>
+          <p className="mt-2 text-sm text-text-secondary">
+            Most cruise sites stop helping once you book. Cruises From Galveston exists to answer the questions that
+            actually come up before sailing day.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { label: "Embarkation Day", href: "/cruises-from-galveston/embarkation-day" },
+              { label: "Passports & Documents", href: "/cruises-from-galveston/guest-help" },
+              { label: "Parking & Transportation", href: "/cruises-from-galveston/parking-and-transportation" },
+              { label: "What to Wear", href: "/cruises-from-galveston/first-time-cruisers" },
+              { label: "Luggage & Packing", href: "/cruises-from-galveston/guest-help" },
+              { label: "First-Time Cruisers", href: "/cruises-from-galveston/first-time-cruisers" },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="rounded-2xl border border-slate-200 bg-background-card px-5 py-4 text-sm font-semibold text-text-primary hover:border-primary-blue/50"
+              >
+                {item.label}
               </Link>
             ))}
           </div>
@@ -1032,9 +1051,30 @@ export default function Home() {
           </section>
         )}
 
+        <section className="mt-16" id="destinations">
+          <h2 className="text-2xl font-semibold font-accent">Where You Can Cruise From Galveston</h2>
+          <p className="mt-2 text-sm text-text-secondary">Explore destinations without pressure.</p>
+          <div className="mt-6 grid gap-4 md:grid-cols-4">
+            {[
+              { label: "Caribbean", href: "/cruises-from-galveston/western-caribbean" },
+              { label: "Bahamas", href: "/cruises-from-galveston/bahamas" },
+              { label: "Panama & Central America", href: "/cruises-from-galveston/panama" },
+              { label: "Private Islands", href: "/cruises-from-galveston/private-islands" },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="rounded-2xl border border-slate-200 bg-background-card px-6 py-5 text-sm font-semibold text-text-primary hover:border-primary-blue/50"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </section>
+
         {ports.length > 0 && (
           <section className="mt-16" id="ports">
-            <h2 className="text-2xl font-semibold font-accent">Where Cruises From Galveston go</h2>
+            <h2 className="text-2xl font-semibold font-accent">Featured ports from Galveston</h2>
             <p className="mt-2 text-sm text-text-secondary">Based on live Galveston sailings and recent itineraries.</p>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {ports.map((port) => {
@@ -1069,121 +1109,89 @@ export default function Home() {
           </section>
         )}
 
-        <section className="mt-16" id="trust-statement">
-          <h2 className="text-2xl font-semibold font-accent">The Real Cruises From Galveston Experience™</h2>
-          <p className="mt-2 text-sm text-text-secondary">By Monica Peña</p>
-          <p className="mt-4 text-sm text-text-secondary">
-            Cruises From Galveston was created to serve travelers who want more than marketing — they want accurate,
-            local, human guidance. This site is shaped by years of hands-on hospitality experience on Galveston Island,
-            real embarkation-day operations, guest meet-and-greet service, cruise shuttle and terminal coordination,
-            hotel and visitor service experience, and ongoing work as a local travel agency owner.
-          </p>
-          <p className="mt-3 text-sm text-text-secondary">
-            This isn&apos;t a generic cruise site. It&apos;s a Galveston-based visitor resource, designed to help you feel
-            prepared, welcomed, and supported.
-          </p>
-        </section>
-
-        <section className="mt-16" id="who-for">
-          <h2 className="text-2xl font-semibold font-accent">You&apos;re welcome here if…</h2>
+        <section className="mt-16" id="private-islands">
+          <h2 className="text-2xl font-semibold font-accent">Private Island Experiences From Galveston</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {[
-              "It’s your first cruise and you don’t know what to expect.",
-              "You’ve already booked, but still have questions.",
-              "Your agent can’t answer practical, day-of questions.",
-              "You’re unsure about passports, luggage, or what to wear.",
-              "You’re wondering where to park, stay, or arrive.",
-              "You just want to make sure you’re doing things right.",
+              {
+                title: "RelaxAway, Half Moon Cay",
+                operator: "Carnival",
+                note: "Classic private island beach day with shoreline cabanas and guided rides.",
+                href: "/cruises-from-galveston/relaxaway-half-moon-cay",
+              },
+              {
+                title: "Great Stirrup Cay",
+                operator: "Norwegian",
+                note: "Private island day with beach zones, water activities, and cabana options.",
+                href: "/cruises-from-galveston/great-stirrup-cay",
+              },
             ].map((item) => (
-              <div key={item} className="rounded-2xl border border-slate-200 bg-background-panel px-6 py-4 text-sm">
-                {item}
-              </div>
-            ))}
-          </div>
-          <p className="mt-4 text-sm text-text-secondary">
-            You don&apos;t need to be a planner. You don&apos;t need to be an expert. You just need honest information — and
-            that&apos;s what we provide.
-          </p>
-        </section>
-
-        <section className="mt-16" id="galveston-different">
-          <h2 className="text-2xl font-semibold font-accent">What makes cruising from Galveston different</h2>
-          <p className="mt-2 text-sm text-text-secondary">
-            Cruising from Galveston is not the same as Miami, Port Canaveral, or Fort Lauderdale. Here, timing matters.
-            Location matters. Local knowledge matters.
-          </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {[
-              "The difference between Galveston cruise terminals.",
-              "What embarkation day really looks like.",
-              "How early to arrive (and when not to).",
-              "Where to park safely.",
-              "How traffic actually flows on sailing days.",
-              "What to expect before you ever step on the ship.",
-            ].map((item) => (
-              <div key={item} className="rounded-2xl border border-slate-200 bg-background-panel px-6 py-4 text-sm">
-                {item}
-              </div>
+              <Link
+                key={item.title}
+                href={item.href}
+                className="rounded-2xl border border-slate-200 bg-background-card px-6 py-5 text-sm hover:border-primary-blue/50"
+              >
+                <div className="text-base font-semibold text-text-primary">{item.title}</div>
+                <div className="mt-1 text-xs uppercase tracking-[0.2em] text-text-muted">{item.operator}</div>
+                <p className="mt-3 text-sm text-text-secondary">{item.note}</p>
+              </Link>
             ))}
           </div>
         </section>
 
-        <section className="mt-16" id="guest-help">
-          <h2 className="text-2xl font-semibold font-accent">Already Booked? We&apos;re Still Here for You.</h2>
-          <p className="mt-3 text-sm text-text-secondary">
-            One of the most common things we hear is: “I’ve already booked… but I still have questions.” That’s exactly
-            why the Guest Help Desk exists.
-          </p>
-          <ul className="mt-4 grid gap-2 text-sm text-text-secondary sm:grid-cols-2">
-            <li>Do I really need a passport?</li>
-            <li>Is the drink package worth it?</li>
-            <li>How much luggage can I bring?</li>
-            <li>Can I take shampoo and toiletries?</li>
-            <li>What can I do in port without an excursion?</li>
-            <li>What should I wear on embarkation day?</li>
-            <li>Where should I park in Galveston?</li>
-            <li>What time should I arrive at the terminal?</li>
-          </ul>
-          <p className="mt-3 text-sm text-text-secondary">No pressure. No upselling. Just help.</p>
+        <section className="mt-16" id="parking-preview">
+          <h2 className="text-2xl font-semibold font-accent">Parking & Transportation — Plan Before You Arrive</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-4">
+            {[
+              "Port Parking",
+              "Private Cruise Parking",
+              "Park-and-Ride (Houston Side)",
+              "Hotel + Transportation",
+            ].map((item) => (
+              <div key={item} className="rounded-2xl border border-slate-200 bg-background-panel px-5 py-4 text-sm">
+                {item}
+              </div>
+            ))}
+          </div>
           <div className="mt-4">
-            <Link href="/cruises-from-galveston/guest-help" className="text-sm font-semibold text-primary-blue">
-              Visit the Guest Help Desk →
+            <Link
+              href="/cruises-from-galveston/parking-and-transportation"
+              className="text-sm font-semibold text-primary-blue"
+            >
+              View Parking & Transportation Guide →
             </Link>
           </div>
-        </section>
-
-        <section className="mt-16" id="private-islands">
-          <h2 className="text-2xl font-semibold font-accent">Private islands, ports & experiences</h2>
-          <p className="mt-3 text-sm text-text-secondary">
-            Cruises from Galveston visit the Caribbean, Central America, Panama, the Bahamas, and exclusive private
-            islands. We explain what makes each destination different, which cruise lines dock where, and what
-            experiences are worth your time.
-          </p>
-          <p className="mt-3 text-sm text-text-secondary">
-            You&apos;ll also find dedicated guidance for private island destinations like RelaxAway, Half Moon Cay
-            (Carnival) and Great Stirrup Cay (Norwegian). Because not all “private islands” are the same — and you
-            deserve to know the difference.
-          </p>
         </section>
 
         <section className="mt-16" id="community">
           <h2 className="text-2xl font-semibold font-accent">Sea You On Deck®</h2>
           <p className="mt-3 text-sm text-text-secondary">
-            Cruising is better when you don&apos;t feel alone. Sea You On Deck® is our cruise community — a place for
-            first-time cruisers, returning guests, and shared experiences. It&apos;s not about hype. It&apos;s about support.
+            Cruising is better when you don&apos;t feel alone. Sea You On Deck® connects cruisers sailing from Galveston —
+            before and after they set sail. It&apos;s not about hype. It&apos;s about support.
+          </p>
+          <div className="mt-4">
+            <Link href="/cruises-from-galveston/guest-help" className="text-sm font-semibold text-primary-blue">
+              Join the Community →
+            </Link>
+          </div>
+        </section>
+
+        <section className="mt-16" id="founder-anchor">
+          <h2 className="text-2xl font-semibold font-accent">Founder & hospitality anchor</h2>
+          <p className="mt-3 text-sm text-text-secondary">
+            Built on real Galveston hospitality experience — from hotels and shuttles to terminals and guest
+            meet-and-greets — Cruises From Galveston exists to help travelers feel welcomed, prepared, and cared for.
+          </p>
+          <p className="mt-3 text-sm text-text-secondary">
+            Monica Peña — Founder • Galveston-Based Travel Professional
           </p>
         </section>
 
         <section className="mt-16" id="welcome">
           <h2 className="text-2xl font-semibold font-accent">From our home port to yours</h2>
           <p className="mt-3 text-sm text-text-secondary">
-            Galveston isn&apos;t just where cruises depart — it&apos;s a community that welcomes travelers from all over the
-            world. This site was built with that same spirit: respectful, informative, calm, honest, and always
-            guest-focused.
-          </p>
-          <p className="mt-3 text-sm text-text-secondary">
-            Whether you sail with us or simply use this site to prepare, we&apos;re glad you found your way here. Welcome
-            to Cruises From Galveston. We can&apos;t wait to see you on the island — and on deck.
+            Galveston is more than a departure port — it&apos;s a place that welcomes travelers from everywhere. Whether
+            you&apos;re sailing for the first time or returning again, we&apos;re glad you&apos;re here.
           </p>
         </section>
 
