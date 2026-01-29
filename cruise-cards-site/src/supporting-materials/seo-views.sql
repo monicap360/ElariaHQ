@@ -22,7 +22,25 @@ insert into public.destination_aliases (alias, canonical_name) values
   ('bimini', 'Bimini'),
   ('nassau', 'Nassau'),
   ('celebration key', 'Celebration Key')
+  ,
+  -- Mahogany Bay / Roatan
+  ('mahogany bay', 'Roatán'),
+  ('mahogany bay roatan', 'Roatán'),
+  ('mahogany bay, roatan', 'Roatán'),
+  ('roatan', 'Roatán'),
+  ('roatán', 'Roatán')
 on conflict (alias) do nothing;
+
+-- Destination group mapping (optional taxonomy).
+create table if not exists public.destination_group_members (
+  destination_name text not null,
+  group_slug text not null,
+  primary key (destination_name, group_slug)
+);
+
+insert into public.destination_group_members (destination_name, group_slug) values
+  ('Roatán', 'western-caribbean')
+on conflict do nothing;
 
 -- Future sailings list (Galveston only).
 create or replace view public.future_sailings_list as
