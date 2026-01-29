@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { formatDurationLabel } from "@/lib/formatDuration";
 
+export const revalidate = 3600;
+
 type DurationSeoRow = {
   duration_slug: string;
   seo_title: string;

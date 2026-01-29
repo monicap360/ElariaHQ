@@ -234,8 +234,9 @@ export default function RootLayout({
                 <a
                   href="tel:14096322106"
                   className="rounded-full border border-white/10 bg-background-card px-4 py-2 text-xs font-semibold text-text-primary"
+                  title="Local Galveston Cruise Help Desk - Real people. Real Galveston experience."
                 >
-                  (409) 632-2106
+                  📞 (409) 632-2106
                 </a>
               </nav>
             </div>
@@ -260,6 +261,16 @@ export default function RootLayout({
                     Even if you already booked, we&apos;re here.
                   </Link>
                 </p>
+                <div style={{ marginTop: 12 }}>
+                  <div className="text-sm font-semibold text-text-primary">Local Galveston Cruise Help Desk</div>
+                  <div className="text-xs text-text-secondary">Real people. Real Galveston experience.</div>
+                  <a
+                    href="tel:14096322106"
+                    className="mt-2 inline-block text-sm font-semibold text-primary-blue hover:underline"
+                  >
+                    📞 (409) 632-2106
+                  </a>
+                </div>
               </div>
               <div className="grid gap-2 text-xs font-semibold text-text-secondary">
                 <Link href="/cruises-from-galveston/founders-welcome" className="hover:text-primary-blue">

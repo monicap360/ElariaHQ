@@ -49,7 +49,7 @@ export default function DeskPage() {
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <a
-              href="mailto:hello@cruisesfromgalveston.net"
+              href="mailto:bookings@cruisesfromgalveston.net"
               className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary"
             >
               Ask an Advisor

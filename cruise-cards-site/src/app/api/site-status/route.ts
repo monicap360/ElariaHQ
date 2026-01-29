@@ -41,12 +41,25 @@ export async function GET() {
   }
 
   try {
-    const { count } = await supabase
-      .from("upcoming_sailings")
-      .select("*", { count: "exact", head: true });
-    status.upcomingSailings = count || 0;
+    // Use inventory_health_check view for accurate count
+    const { data: health } = await supabase
+      .from("inventory_health_check")
+      .select("upcoming_sailings, status, next_sailing")
+      .maybeSingle();
+    status.upcomingSailings = health?.upcoming_sailings || 0;
   } catch {
-    status.upcomingSailings = 0;
+    // Fallback to direct query if view doesn't exist yet
+    try {
+      const { count } = await supabase
+        .from("sailings")
+        .select("*", { count: "exact", head: true })
+        .eq("departure_port", "Galveston")
+        .gte("depart_date", new Date().toISOString().slice(0, 10))
+        .eq("is_active", true);
+      status.upcomingSailings = count || 0;
+    } catch {
+      status.upcomingSailings = 0;
+    }
   }
 
   return NextResponse.json(status);

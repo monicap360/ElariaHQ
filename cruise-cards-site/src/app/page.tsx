@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { formatDurationLabel } from "@/lib/formatDuration";
 import { useEffect, useMemo, useState } from "react";
+import { NextSailingBadge } from "@/components/NextSailingBadge";
 
 type CruiseMatrixRow = {
   id: string;
@@ -526,11 +527,14 @@ export default function Home() {
             />
             <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(11,14,20,0.92),rgba(11,14,20,0.55))]" />
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
-                <div>
-                  <div className="text-[11px] uppercase tracking-[0.25em] text-text-muted">Cruises From Galveston</div>
-                  <div className="text-sm font-semibold text-text-primary">Your trusted guide since 2017</div>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
+                  <div>
+                    <div className="text-[11px] uppercase tracking-[0.25em] text-text-muted">Cruises From Galveston</div>
+                    <div className="text-sm font-semibold text-text-primary">Your trusted guide since 2017</div>
+                  </div>
                 </div>
+                <NextSailingBadge />
               </div>
               <h1 className="mt-6 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
                 Welcome to Cruises From Galveston
@@ -1198,6 +1202,8 @@ export default function Home() {
             <p className="mt-3 text-sm text-text-secondary">
               The Cruises From Galveston Desk answers complex questions and confirms the best fit before you book.
             </p>
+            <p className="mt-2 text-sm font-semibold text-text-primary">Local Galveston Cruise Help Desk</p>
+            <p className="mt-1 text-xs text-text-secondary">Real people. Real Galveston experience.</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <a
                 href="mailto:hello@cruisesfromgalveston.net"
@@ -1209,7 +1215,7 @@ export default function Home() {
                 href="tel:14096322106"
                 className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white"
               >
-                Call (409) 632-2106
+                📞 Call (409) 632-2106
               </a>
             </div>
           </div>

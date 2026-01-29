@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
 
+export const revalidate = 3600;
+
 type GuestHelpQuestion = {
   question: string;
   answer: string;
@@ -336,6 +338,26 @@ export default async function GuestHelpPage() {
         <p className="mt-2 text-sm text-slate-600">
           If you have questions that are not answered here, we are happy to help point you in the right direction.
         </p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-primary-blue/20 bg-primary-blue/5 p-6">
+        <h2 className="text-lg font-semibold text-slate-900">Need to talk to someone?</h2>
+        <p className="mt-2 text-sm font-semibold text-slate-800">Local Galveston Cruise Help Desk</p>
+        <p className="mt-1 text-sm text-slate-600">Real people. Real Galveston experience.</p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <a
+            href="tel:14096322106"
+            className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white hover:bg-primary-blue/90"
+          >
+            📞 Call (409) 632-2106
+          </a>
+          <a
+            href="mailto:help@cruisesfromgalveston.net"
+            className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:border-primary-blue/50"
+          >
+            ✉️ Email help@cruisesfromgalveston.net
+          </a>
+        </div>
       </section>
     </main>
   );

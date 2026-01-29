@@ -114,12 +114,32 @@ export default function FirstTimeCruisersPage() {
         <h2 className="text-xl font-semibold text-slate-900">A final word for first-time cruisers</h2>
         <p className="mt-3 text-sm text-slate-600">
           Cruising should feel exciting — not intimidating. Galveston is one of the most welcoming cruise ports in the
-          country, and first-time cruisers thrive here because it’s grounded, accessible, and built around real
+          country, and first-time cruisers thrive here because it's grounded, accessible, and built around real
           hospitality.
         </p>
         <p className="mt-3 text-sm text-slate-600">
-          You’re not expected to know everything. You’re expected to enjoy the journey. And we’re here to help.
+          You're not expected to know everything. You're expected to enjoy the journey. And we're here to help.
         </p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-primary-blue/20 bg-primary-blue/5 p-6">
+        <h2 className="text-lg font-semibold text-slate-900">First-time cruiser questions?</h2>
+        <p className="mt-2 text-sm font-semibold text-slate-800">Local Galveston Cruise Help Desk</p>
+        <p className="mt-1 text-sm text-slate-600">Real people. Real Galveston experience.</p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <a
+            href="tel:14096322106"
+            className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white hover:bg-primary-blue/90"
+          >
+            📞 Call (409) 632-2106
+          </a>
+          <a
+            href="mailto:hello@cruisesfromgalveston.net"
+            className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:border-primary-blue/50"
+          >
+            ✉️ Email hello@cruisesfromgalveston.net
+          </a>
+        </div>
       </section>
     </main>
   );
