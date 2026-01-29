@@ -63,6 +63,18 @@ type DestinationDurationRow = {
   seo_h1: string;
 };
 
+type ShipDestinationDurationRow = {
+  ship_id: string;
+  ship_name: string;
+  ship_slug: string;
+  destination_slug: string;
+  destination_name: string;
+  duration_slug: string;
+  seo_title: string;
+  seo_h1: string;
+  seo_description: string;
+};
+
 type DestinationFaqRow = {
   destination_slug: string;
   destination_name: string;
@@ -478,6 +490,81 @@ async function loadDestinationDurationPage(
   };
 }
 
+async function loadShipDestinationDurationPage(
+  client: SupabaseClientType,
+  shipSlug: string,
+  destinationSlug: string,
+  durationSlug: string,
+) {
+  const { data } = await client
+    .from("ship_destination_duration_seo_pages")
+    .select(
+      "ship_id, ship_name, ship_slug, destination_slug, destination_name, duration_slug, seo_title, seo_h1, seo_description",
+    )
+    .eq("ship_slug", shipSlug)
+    .eq("destination_slug", destinationSlug)
+    .eq("duration_slug", durationSlug)
+    .maybeSingle();
+
+  if (!data) return null;
+  const row = data as ShipDestinationDurationRow;
+
+  const aliasesResult = await client
+    .from("destination_aliases")
+    .select("alias")
+    .eq("canonical_name", row.destination_name);
+  const aliases = (aliasesResult.data ?? []).map((item) => (item as { alias: string }).alias);
+  const tokens = Array.from(new Set([row.destination_name.toLowerCase(), ...aliases]));
+  const orFilters = tokens
+    .map((token) => `ports_summary.ilike.%${token}%`)
+    .join(",");
+
+  const duration = parseDurationSlug(durationSlug);
+  let sailingsQuery = client
+    .from("sailings")
+    .select("id, sail_date, return_date, duration, itinerary_code, ship:ships(name, cruise_line)")
+    .eq("departure_port", "Galveston")
+    .gte("sail_date", new Date().toISOString().slice(0, 10))
+    .order("sail_date", { ascending: true });
+
+  if (duration && "exact" in duration && typeof duration.exact === "number") {
+    sailingsQuery = sailingsQuery.eq("duration", duration.exact);
+  } else if (duration && "min" in duration) {
+    sailingsQuery = sailingsQuery.gte("duration", duration.min);
+  }
+
+  sailingsQuery = sailingsQuery.or(orFilters);
+  const sailingsResult = await sailingsQuery;
+
+  const sailings = (sailingsResult.data ?? [])
+    .map((item) => {
+      const record = item as {
+        id: string;
+        sail_date: string | null;
+        return_date: string | null;
+        duration: number | null;
+        itinerary_code: string | null;
+        ship: { name: string | null; cruise_line: string | null } | null;
+      };
+      return {
+        sailing_id: record.id,
+        sail_date: record.sail_date,
+        return_date: record.return_date,
+        duration: record.duration,
+        itinerary_code: record.itinerary_code,
+        ship_name: record.ship?.name ?? null,
+        cruise_line: record.ship?.cruise_line ?? null,
+      } satisfies FutureSailingRow;
+    })
+    .filter((item) => slugify(item.ship_name ?? "") === shipSlug);
+
+  return {
+    seo: row,
+    sailings,
+    subtitle: row.seo_description,
+  };
+}
+
 export async function generateMetadata({ params }: { params: { slug: string[] } }) {
   const server = createServerClient();
   if (!server) return { title: "Cruises from Galveston" };
@@ -505,6 +592,22 @@ export async function generateMetadata({ params }: { params: { slug: string[] } 
     if (lineDuration) return { title: lineDuration.seo.seo_title, description: lineDuration.seo.seo_h1 };
     const destinationDuration = await loadDestinationDurationPage(server.client, shipSlug, durationSlug);
     if (destinationDuration) return { title: destinationDuration.seo.seo_title, description: destinationDuration.seo.seo_h1 };
+  }
+
+  if (slug.length === 3) {
+    const [shipSlug, destinationSlug, durationSlug] = slug;
+    const shipDestinationDuration = await loadShipDestinationDurationPage(
+      server.client,
+      shipSlug,
+      destinationSlug,
+      durationSlug,
+    );
+    if (shipDestinationDuration) {
+      return {
+        title: shipDestinationDuration.seo.seo_title,
+        description: shipDestinationDuration.seo.seo_description,
+      };
+    }
   }
 
   return { title: "Cruises from Galveston" };
@@ -701,6 +804,26 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
           <h1 className="text-3xl font-semibold">{destinationDuration.seo.seo_h1}</h1>
           <p className="mt-3 text-gray-600">{destinationDuration.subtitle}</p>
           <SailingsTable sailings={destinationDuration.sailings} />
+        </main>
+      );
+    }
+  }
+
+  if (slug.length === 3) {
+    const [shipSlug, destinationSlug, durationSlug] = slug;
+    const shipDestinationDuration = await loadShipDestinationDurationPage(
+      server.client,
+      shipSlug,
+      destinationSlug,
+      durationSlug,
+    );
+    if (shipDestinationDuration) {
+      if (!shipDestinationDuration.sailings.length) notFound();
+      return (
+        <main className="mx-auto max-w-6xl px-6 py-10">
+          <h1 className="text-3xl font-semibold">{shipDestinationDuration.seo.seo_h1}</h1>
+          <p className="mt-3 text-gray-600">{shipDestinationDuration.subtitle}</p>
+          <SailingsTable sailings={shipDestinationDuration.sailings} />
         </main>
       );
     }

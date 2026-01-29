@@ -315,6 +315,56 @@ select
   case when max_duration >= 8 then '8+ Day' else max_duration || ' Day' end || ' sailings.' as answer_2
 from canonical_ports;
 
+-- Ship x destination x duration pages (ports_summary text + alias map).
+create or replace view public.ship_destination_duration_seo_pages as
+with raw_ports as (
+  select
+    s.id as sailing_id,
+    s.duration,
+    sh.id as ship_id,
+    sh.name as ship_name,
+    lower(regexp_replace(sh.name, '[^a-zA-Z0-9]+', '-', 'g')) as ship_slug,
+    trim(lower(port)) as raw_port
+  from public.sailings s
+  join public.ships sh on sh.id = s.ship_id
+  cross join lateral regexp_split_to_table(coalesce(s.ports_summary, ''), '[,;]') as port
+  where
+    s.sail_date >= (now() at time zone 'UTC')::date
+    and sh.home_port = 'Galveston'
+    and trim(port) <> ''
+),
+canonical_ports as (
+  select
+    ship_id,
+    ship_name,
+    ship_slug,
+    duration,
+    coalesce(a.canonical_name, initcap(raw_port)) as destination_name
+  from raw_ports rp
+  left join public.destination_aliases a
+    on rp.raw_port = a.alias
+)
+select distinct
+  ship_id,
+  ship_name,
+  ship_slug,
+  regexp_replace(lower(destination_name), '[^a-z0-9]+', '-', 'g') as destination_slug,
+  destination_name,
+  case when duration >= 8 then '8-day' else duration || '-day' end as duration_slug,
+  ship_name || ' ' ||
+  destination_name || ' ' ||
+  case when duration >= 8 then '8+ Day' else duration || ' Day' end ||
+  ' Cruises from Galveston' as seo_title,
+  ship_name || ' ' ||
+  destination_name || ' ' ||
+  case when duration >= 8 then '8+ Day' else duration || ' Day' end ||
+  ' cruises departing Galveston' as seo_h1,
+  'Browse ' || ship_name || ' cruises from Galveston visiting ' || destination_name ||
+  ' on ' ||
+  case when duration >= 8 then '8+ Day' else duration || ' Day' end ||
+  ' itineraries.' as seo_description
+from canonical_ports;
+
 -- Public read access (views only).
 grant select on
   public.future_sailings_list,
@@ -329,5 +379,6 @@ grant select on
   public.destination_aliases,
   public.port_destination_seo_pages,
   public.destination_duration_seo_pages,
-  public.destination_faqs
+  public.destination_faqs,
+  public.ship_destination_duration_seo_pages
 to anon;
