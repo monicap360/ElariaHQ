@@ -76,6 +76,19 @@ insert into public.destination_aliases (alias, canonical_name) values
   ('montego bay', 'Montego Bay'),
   ('ocho rios', 'Ocho Rios'),
   ('jamaica', 'Jamaica')
+  ,
+  -- RelaxAway / Half Moon Cay
+  ('half moon cay', 'RelaxAway, Half Moon Cay'),
+  ('half-moon-cay', 'RelaxAway, Half Moon Cay'),
+  ('relaxaway half moon cay', 'RelaxAway, Half Moon Cay'),
+  ('relaxaway, half moon cay', 'RelaxAway, Half Moon Cay'),
+  ('carnival half moon cay', 'RelaxAway, Half Moon Cay')
+  ,
+  -- Great Stirrup Cay
+  ('great stirrup cay', 'Great Stirrup Cay'),
+  ('great-stirrup-cay', 'Great Stirrup Cay'),
+  ('norwegian great stirrup cay', 'Great Stirrup Cay'),
+  ('ncl great stirrup cay', 'Great Stirrup Cay')
 on conflict (alias) do nothing;
 
 -- Destination group mapping (optional taxonomy).
@@ -140,6 +153,14 @@ insert into public.destination_group_members (destination_name, group_slug) valu
   ('Port Canaveral', 'atlantic-crossings')
 on conflict do nothing;
 
+insert into public.destination_group_members (destination_name, group_slug) values
+  ('RelaxAway, Half Moon Cay', 'bahamas')
+on conflict do nothing;
+
+insert into public.destination_group_members (destination_name, group_slug) values
+  ('Great Stirrup Cay', 'bahamas')
+on conflict do nothing;
+
 -- Destination docking rules (control data).
 create table if not exists public.destination_docking_rules (
   destination_name text not null,
@@ -151,8 +172,118 @@ insert into public.destination_docking_rules (destination_name, cruise_line) val
   ('Falmouth', 'Royal Caribbean'),
   ('Montego Bay', 'Carnival'),
   ('Ocho Rios', 'Carnival'),
-  ('Ocho Rios', 'Norwegian')
+  ('Ocho Rios', 'Norwegian'),
+  ('RelaxAway, Half Moon Cay', 'Carnival'),
+  ('Great Stirrup Cay', 'Norwegian')
 on conflict do nothing;
+
+create table if not exists public.destination_metadata (
+  destination_name text primary key,
+  destination_type text,
+  is_private_island boolean,
+  operator text,
+  notes text
+);
+
+insert into public.destination_metadata
+(destination_name, destination_type, is_private_island, operator, notes)
+values
+(
+  'RelaxAway, Half Moon Cay',
+  'private-island',
+  true,
+  'Carnival',
+  'Renamed from Half Moon Cay to RelaxAway, Half Moon Cay starting 2026'
+)
+on conflict (destination_name) do nothing;
+
+insert into public.destination_metadata
+(destination_name, destination_type, is_private_island, operator, notes)
+values
+(
+  'Great Stirrup Cay',
+  'private-island',
+  true,
+  'Norwegian',
+  'Norwegian Cruise Line private island in The Bahamas; featured on longer Caribbean itineraries from Galveston'
+)
+on conflict (destination_name) do nothing;
+
+-- Private island experiences (control data).
+create table if not exists public.destination_experiences (
+  destination_name text not null,
+  experience_slug text not null,
+  experience_name text not null,
+  description text,
+  operator text,
+  is_active boolean default true,
+  primary key (destination_name, experience_slug)
+);
+
+insert into public.destination_experiences
+(destination_name, experience_slug, experience_name, description, operator)
+values
+(
+  'RelaxAway, Half Moon Cay',
+  'horseback-riding',
+  'Horseback Riding',
+  'Ride trained quarter horses along scenic island trails and the back bay to Pegasus Ranch.',
+  'Carnival'
+),
+(
+  'RelaxAway, Half Moon Cay',
+  'jet-skis',
+  'Guided Jet Ski Adventure',
+  'Explore the inner saltwater lagoon and coastal inlets on a guided jet ski excursion.',
+  'Carnival'
+),
+(
+  'RelaxAway, Half Moon Cay',
+  'beach-club',
+  'Private Beach Club',
+  'Relax at the expanded beachfront with cabanas, loungers, island bars, and complimentary lunch.',
+  'Carnival'
+)
+on conflict do nothing;
+
+insert into public.destination_experiences
+(destination_name, experience_slug, experience_name, description, operator)
+values
+(
+  'Great Stirrup Cay',
+  'water-park',
+  'Island Water Park',
+  'Race down towering water slides and enjoy one of the largest pools at sea on a private island.',
+  'Norwegian'
+),
+(
+  'Great Stirrup Cay',
+  'jet-skis',
+  'Jet Ski Adventures',
+  'Ride jet skis along the coast with guided tours around reefs and island coves.',
+  'Norwegian'
+),
+(
+  'Great Stirrup Cay',
+  'cabanas',
+  'Private Cabanas',
+  'Reserve a private cabana for shaded relaxation, ocean views, and premium service.',
+  'Norwegian'
+)
+on conflict do nothing;
+
+create or replace view public.private_island_experience_seo_pages as
+select
+  de.destination_name,
+  lower(regexp_replace(de.destination_name, '[^a-zA-Z0-9]+', '-', 'g')) as destination_slug,
+  de.experience_slug,
+  de.experience_name,
+  de.operator,
+  de.experience_name || ' at ' || de.destination_name || ' from Galveston' as seo_title,
+  de.experience_name || ' at ' || de.destination_name as seo_h1,
+  de.description as seo_description
+from public.destination_experiences de
+where de.is_active = true;
 
 create or replace view public.destination_docking_summary as
 select
@@ -668,6 +799,76 @@ select distinct
   '. View sailing dates and itinerary details.' as seo_description
 from grouped;
 
+-- Private islands hub SEO page.
+create or replace view public.private_islands_hub_seo_page as
+with private_islands as (
+  select
+    dm.destination_name,
+    lower(regexp_replace(dm.destination_name, '[^a-zA-Z0-9]+', '-', 'g')) as destination_slug,
+    dm.operator,
+    dm.notes
+  from public.destination_metadata dm
+  where dm.is_private_island = true
+),
+inventory_check as (
+  select distinct
+    pi.destination_name,
+    pi.destination_slug,
+    pi.operator,
+    pi.notes
+  from private_islands pi
+  join public.ship_destination_duration_seo_pages sdds
+    on sdds.destination_name = pi.destination_name
+)
+select
+  'private-islands' as hub_slug,
+  'Private Island Cruises from Galveston' as seo_title,
+  'Private island cruises departing from Galveston' as seo_h1,
+  'Explore private island cruises from Galveston, including exclusive destinations like RelaxAway, Half Moon Cay and Great Stirrup Cay. Compare cruise lines, durations, and departure dates.' as seo_description,
+  jsonb_agg(
+    jsonb_build_object(
+      'destination_name', destination_name,
+      'destination_slug', destination_slug,
+      'operator', operator,
+      'notes', notes
+    )
+    order by destination_name
+  ) as private_islands
+from inventory_check;
+
+-- Private island x cruise line pages.
+create or replace view public.private_island_cruise_line_seo_pages as
+with private_islands as (
+  select
+    dm.destination_name,
+    lower(regexp_replace(dm.destination_name, '[^a-zA-Z0-9]+', '-', 'g')) as destination_slug,
+    dm.operator
+  from public.destination_metadata dm
+  where dm.is_private_island = true
+),
+inventory_check as (
+  select distinct
+    pi.destination_name,
+    pi.destination_slug,
+    pi.operator as cruise_line,
+    lower(regexp_replace(pi.operator, '[^a-zA-Z0-9]+', '-', 'g')) as cruise_line_slug
+  from private_islands pi
+  join public.ship_destination_duration_seo_pages sdds
+    on sdds.destination_name = pi.destination_name
+   and sdds.cruise_line = pi.operator
+)
+select
+  destination_name,
+  destination_slug,
+  cruise_line,
+  cruise_line_slug,
+  destination_name || ' Cruises from Galveston on ' || cruise_line as seo_title,
+  cruise_line || ' cruises to ' || destination_name || ' from Galveston' as seo_h1,
+  'Explore ' || cruise_line || ' cruises from Galveston to ' || destination_name ||
+  ', an exclusive private island experience. View itineraries, durations, and sailing dates.' as seo_description
+from inventory_check
+order by destination_name, cruise_line;
+
 -- Public read access (views only).
 grant select on
   public.future_sailings_list,
@@ -690,5 +891,10 @@ grant select on
   public.destination_docking_summary,
   public.jamaica_hub_seo_page,
   public.jamaica_duration_seo_pages,
-  public.jamaica_cruise_line_duration_seo_pages
+  public.jamaica_cruise_line_duration_seo_pages,
+  public.destination_metadata,
+  public.private_islands_hub_seo_page,
+  public.private_island_cruise_line_seo_pages,
+  public.destination_experiences,
+  public.private_island_experience_seo_pages
 to anon;

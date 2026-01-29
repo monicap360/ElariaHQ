@@ -75,6 +75,82 @@ type ShipDestinationDurationRow = {
   seo_description: string;
 };
 
+type ShipGroupDurationRow = {
+  ship_id: string;
+  ship_name: string;
+  ship_slug: string;
+  group_slug: string;
+  group_name: string;
+  duration_days: number;
+  duration_slug: string;
+  seo_title: string;
+  seo_h1: string;
+  seo_description: string;
+};
+
+type JamaicaHubRow = {
+  hub_slug: string;
+  seo_title: string;
+  seo_h1: string;
+  seo_description: string;
+  jamaica_ports: string[] | null;
+  docking_by_port: Record<string, string[]>;
+};
+
+type JamaicaDurationRow = {
+  duration_days: number;
+  duration_slug: string;
+  seo_title: string;
+  seo_h1: string;
+  seo_description: string;
+  sailing_count: number;
+};
+
+type JamaicaLineDurationRow = {
+  cruise_line: string;
+  cruise_line_slug: string;
+  duration_days: number;
+  duration_slug: string;
+  seo_title: string;
+  seo_h1: string;
+  seo_description: string;
+  sailing_count: number;
+};
+
+type PrivateIslandHubRow = {
+  hub_slug: string;
+  seo_title: string;
+  seo_h1: string;
+  seo_description: string;
+  private_islands: Array<{
+    destination_name: string;
+    destination_slug: string;
+    operator: string | null;
+    notes: string | null;
+  }>;
+};
+
+type PrivateIslandLineRow = {
+  destination_name: string;
+  destination_slug: string;
+  cruise_line: string;
+  cruise_line_slug: string;
+  seo_title: string;
+  seo_h1: string;
+  seo_description: string;
+};
+
+type PrivateIslandExperienceRow = {
+  destination_name: string;
+  destination_slug: string;
+  experience_slug: string;
+  experience_name: string;
+  operator: string | null;
+  seo_title: string;
+  seo_h1: string;
+  seo_description: string | null;
+};
+
 type DestinationFaqRow = {
   destination_slug: string;
   destination_name: string;
@@ -121,6 +197,14 @@ function parseDurationSlug(slug: string) {
     return { min: 8, label: "8+ Day" };
   }
   return { exact: nights, label: `${nights} Day` };
+}
+
+function parseExactDurationSlug(slug: string) {
+  const match = slug.match(/^(\d+)-day$/);
+  if (!match) return null;
+  const days = Number(match[1]);
+  if (!Number.isFinite(days)) return null;
+  return days;
 }
 
 async function loadDurationPage(client: SupabaseClientType, slug: string) {
@@ -565,6 +649,394 @@ async function loadShipDestinationDurationPage(
   };
 }
 
+async function loadShipGroupDurationPage(
+  client: SupabaseClientType,
+  shipSlug: string,
+  groupSlug: string,
+  durationSlug: string,
+) {
+  const { data } = await client
+    .from("ship_group_duration_seo_pages")
+    .select(
+      "ship_id, ship_name, ship_slug, group_slug, group_name, duration_days, duration_slug, seo_title, seo_h1, seo_description",
+    )
+    .eq("ship_slug", shipSlug)
+    .eq("group_slug", groupSlug)
+    .eq("duration_slug", durationSlug)
+    .maybeSingle();
+
+  if (!data) return null;
+  const row = data as ShipGroupDurationRow;
+
+  const durationDays = parseExactDurationSlug(durationSlug);
+  if (!durationDays) return null;
+
+  const groupMembersResult = await client
+    .from("destination_group_members")
+    .select("destination_name")
+    .eq("group_slug", groupSlug);
+  const destinations = (groupMembersResult.data ?? []).map(
+    (item) => (item as { destination_name: string }).destination_name,
+  );
+
+  const aliasesResult = await client
+    .from("destination_aliases")
+    .select("alias, canonical_name")
+    .in("canonical_name", destinations);
+  const aliases = (aliasesResult.data ?? []).map((item) => item as { alias: string; canonical_name: string });
+
+  const tokens = Array.from(
+    new Set([
+      ...destinations.map((name) => name.toLowerCase()),
+      ...aliases.map((alias) => alias.alias),
+    ]),
+  );
+  const orFilters = tokens.map((token) => `ports_summary.ilike.%${token}%`).join(",");
+
+  let sailingsQuery = client
+    .from("sailings")
+    .select("id, sail_date, return_date, duration, itinerary_code, ship:ships(name, cruise_line)")
+    .eq("ship_id", row.ship_id)
+    .eq("departure_port", "Galveston")
+    .gte("sail_date", new Date().toISOString().slice(0, 10))
+    .eq("duration", durationDays)
+    .order("sail_date", { ascending: true });
+
+  if (orFilters) {
+    sailingsQuery = sailingsQuery.or(orFilters);
+  }
+
+  const sailingsResult = await sailingsQuery;
+  const sailings = (sailingsResult.data ?? []).map((item) => {
+    const record = item as {
+      id: string;
+      sail_date: string | null;
+      return_date: string | null;
+      duration: number | null;
+      itinerary_code: string | null;
+      ship: { name: string | null; cruise_line: string | null } | null;
+    };
+    return {
+      sailing_id: record.id,
+      sail_date: record.sail_date,
+      return_date: record.return_date,
+      duration: record.duration,
+      itinerary_code: record.itinerary_code,
+      ship_name: record.ship?.name ?? null,
+      cruise_line: record.ship?.cruise_line ?? null,
+    } satisfies FutureSailingRow;
+  });
+
+  return {
+    seo: row,
+    sailings,
+    subtitle: row.seo_description,
+  };
+}
+
+async function loadJamaicaHubPage(client: SupabaseClientType) {
+  const { data } = await client
+    .from("jamaica_hub_seo_page")
+    .select("hub_slug, seo_title, seo_h1, seo_description, jamaica_ports, docking_by_port")
+    .maybeSingle();
+
+  if (!data) return null;
+  const row = data as JamaicaHubRow;
+
+  const ports = row.jamaica_ports ?? [];
+  const tokens = ports.map((port) => port.toLowerCase());
+  const orFilters = tokens.map((token) => `ports_summary.ilike.%${token}%`).join(",");
+
+  let sailingsQuery = client
+    .from("sailings")
+    .select("id, sail_date, return_date, duration, itinerary_code, ship:ships(name, cruise_line)")
+    .eq("departure_port", "Galveston")
+    .gte("sail_date", new Date().toISOString().slice(0, 10))
+    .order("sail_date", { ascending: true });
+
+  if (orFilters) {
+    sailingsQuery = sailingsQuery.or(orFilters);
+  }
+
+  const sailingsResult = await sailingsQuery;
+  const sailings = (sailingsResult.data ?? []).map((item) => {
+    const record = item as {
+      id: string;
+      sail_date: string | null;
+      return_date: string | null;
+      duration: number | null;
+      itinerary_code: string | null;
+      ship: { name: string | null; cruise_line: string | null } | null;
+    };
+    return {
+      sailing_id: record.id,
+      sail_date: record.sail_date,
+      return_date: record.return_date,
+      duration: record.duration,
+      itinerary_code: record.itinerary_code,
+      ship_name: record.ship?.name ?? null,
+      cruise_line: record.ship?.cruise_line ?? null,
+    } satisfies FutureSailingRow;
+  });
+
+  return { seo: row, ports, sailings };
+}
+
+async function loadJamaicaLinePage(client: SupabaseClientType, lineSlug: string) {
+  const lineResult = await client
+    .from("cruise_line_seo_pages")
+    .select("cruise_line_slug, cruise_line_name")
+    .eq("cruise_line_slug", lineSlug)
+    .maybeSingle();
+
+  if (!lineResult.data) return null;
+  const lineName = (lineResult.data as { cruise_line_name: string }).cruise_line_name;
+
+  const hub = await loadJamaicaHubPage(client);
+  if (!hub) return null;
+
+  const tokens = hub.ports.map((port) => port.toLowerCase());
+  const orFilters = tokens.map((token) => `ports_summary.ilike.%${token}%`).join(",");
+
+  let sailingsQuery = client
+    .from("sailings")
+    .select("id, sail_date, return_date, duration, itinerary_code, ship:ships(name, cruise_line)")
+    .eq("departure_port", "Galveston")
+    .gte("sail_date", new Date().toISOString().slice(0, 10))
+    .order("sail_date", { ascending: true });
+
+  if (orFilters) {
+    sailingsQuery = sailingsQuery.or(orFilters);
+  }
+
+  const sailingsResult = await sailingsQuery;
+  const sailings = (sailingsResult.data ?? [])
+    .map((item) => {
+      const record = item as {
+        id: string;
+        sail_date: string | null;
+        return_date: string | null;
+        duration: number | null;
+        itinerary_code: string | null;
+        ship: { name: string | null; cruise_line: string | null } | null;
+      };
+      return {
+        sailing_id: record.id,
+        sail_date: record.sail_date,
+        return_date: record.return_date,
+        duration: record.duration,
+        itinerary_code: record.itinerary_code,
+        ship_name: record.ship?.name ?? null,
+        cruise_line: record.ship?.cruise_line ?? null,
+      } satisfies FutureSailingRow;
+    })
+    .filter((item) => item.cruise_line === lineName);
+
+  return {
+    seo: {
+      seo_title: `${lineName} Jamaica Cruises from Galveston`,
+      seo_h1: `${lineName} Jamaica cruises departing from Galveston`,
+      seo_description: `Browse ${lineName} cruises from Galveston to Jamaica, including Falmouth, Montego Bay, and Ocho Rios.`,
+    },
+    sailings,
+  };
+}
+
+async function loadJamaicaDurationPage(client: SupabaseClientType, durationSlug: string) {
+  const durationDays = parseExactDurationSlug(durationSlug);
+  if (!durationDays) return null;
+
+  const { data } = await client
+    .from("jamaica_duration_seo_pages")
+    .select("duration_days, duration_slug, seo_title, seo_h1, seo_description, sailing_count")
+    .eq("duration_slug", durationSlug)
+    .maybeSingle();
+
+  if (!data) return null;
+  const row = data as JamaicaDurationRow;
+
+  const hub = await loadJamaicaHubPage(client);
+  if (!hub) return null;
+
+  const tokens = hub.ports.map((port) => port.toLowerCase());
+  const orFilters = tokens.map((token) => `ports_summary.ilike.%${token}%`).join(",");
+
+  let sailingsQuery = client
+    .from("sailings")
+    .select("id, sail_date, return_date, duration, itinerary_code, ship:ships(name, cruise_line)")
+    .eq("departure_port", "Galveston")
+    .gte("sail_date", new Date().toISOString().slice(0, 10))
+    .eq("duration", durationDays)
+    .order("sail_date", { ascending: true });
+
+  if (orFilters) {
+    sailingsQuery = sailingsQuery.or(orFilters);
+  }
+
+  const sailingsResult = await sailingsQuery;
+  const sailings = (sailingsResult.data ?? []).map((item) => {
+    const record = item as {
+      id: string;
+      sail_date: string | null;
+      return_date: string | null;
+      duration: number | null;
+      itinerary_code: string | null;
+      ship: { name: string | null; cruise_line: string | null } | null;
+    };
+    return {
+      sailing_id: record.id,
+      sail_date: record.sail_date,
+      return_date: record.return_date,
+      duration: record.duration,
+      itinerary_code: record.itinerary_code,
+      ship_name: record.ship?.name ?? null,
+      cruise_line: record.ship?.cruise_line ?? null,
+    } satisfies FutureSailingRow;
+  });
+
+  return { seo: row, sailings };
+}
+
+async function loadJamaicaLineDurationPage(
+  client: SupabaseClientType,
+  lineSlug: string,
+  durationSlug: string,
+) {
+  const { data } = await client
+    .from("jamaica_cruise_line_duration_seo_pages")
+    .select(
+      "cruise_line, cruise_line_slug, duration_days, duration_slug, seo_title, seo_h1, seo_description, sailing_count",
+    )
+    .eq("cruise_line_slug", lineSlug)
+    .eq("duration_slug", durationSlug)
+    .maybeSingle();
+
+  if (!data) return null;
+  const row = data as JamaicaLineDurationRow;
+
+  const hub = await loadJamaicaHubPage(client);
+  if (!hub) return null;
+
+  const tokens = hub.ports.map((port) => port.toLowerCase());
+  const orFilters = tokens.map((token) => `ports_summary.ilike.%${token}%`).join(",");
+
+  let sailingsQuery = client
+    .from("sailings")
+    .select("id, sail_date, return_date, duration, itinerary_code, ship:ships(name, cruise_line)")
+    .eq("departure_port", "Galveston")
+    .gte("sail_date", new Date().toISOString().slice(0, 10))
+    .eq("duration", row.duration_days)
+    .order("sail_date", { ascending: true });
+
+  if (orFilters) {
+    sailingsQuery = sailingsQuery.or(orFilters);
+  }
+
+  const sailingsResult = await sailingsQuery;
+  const sailings = (sailingsResult.data ?? [])
+    .map((item) => {
+      const record = item as {
+        id: string;
+        sail_date: string | null;
+        return_date: string | null;
+        duration: number | null;
+        itinerary_code: string | null;
+        ship: { name: string | null; cruise_line: string | null } | null;
+      };
+      return {
+        sailing_id: record.id,
+        sail_date: record.sail_date,
+        return_date: record.return_date,
+        duration: record.duration,
+        itinerary_code: record.itinerary_code,
+        ship_name: record.ship?.name ?? null,
+        cruise_line: record.ship?.cruise_line ?? null,
+      } satisfies FutureSailingRow;
+    })
+    .filter((item) => item.cruise_line === row.cruise_line);
+
+  return { seo: row, sailings };
+}
+
+async function loadPrivateIslandsHubPage(client: SupabaseClientType) {
+  const { data } = await client
+    .from("private_islands_hub_seo_page")
+    .select("hub_slug, seo_title, seo_h1, seo_description, private_islands")
+    .maybeSingle();
+
+  if (!data) return null;
+  return data as PrivateIslandHubRow;
+}
+
+async function loadPrivateIslandLinePage(
+  client: SupabaseClientType,
+  islandSlug: string,
+  lineSlug: string,
+) {
+  const { data } = await client
+    .from("private_island_cruise_line_seo_pages")
+    .select(
+      "destination_name, destination_slug, cruise_line, cruise_line_slug, seo_title, seo_h1, seo_description",
+    )
+    .eq("destination_slug", islandSlug)
+    .eq("cruise_line_slug", lineSlug)
+    .maybeSingle();
+
+  if (!data) return null;
+  const row = data as PrivateIslandLineRow;
+
+  const sailingsQuery = client
+    .from("sailings")
+    .select("id, sail_date, return_date, duration, itinerary_code, ship:ships(name, cruise_line)")
+    .eq("departure_port", "Galveston")
+    .gte("sail_date", new Date().toISOString().slice(0, 10))
+    .ilike("ports_summary", `%${row.destination_name}%`)
+    .order("sail_date", { ascending: true });
+
+  const sailingsResult = await sailingsQuery;
+  const sailings = (sailingsResult.data ?? [])
+    .map((item) => {
+      const record = item as {
+        id: string;
+        sail_date: string | null;
+        return_date: string | null;
+        duration: number | null;
+        itinerary_code: string | null;
+        ship: { name: string | null; cruise_line: string | null } | null;
+      };
+      return {
+        sailing_id: record.id,
+        sail_date: record.sail_date,
+        return_date: record.return_date,
+        duration: record.duration,
+        itinerary_code: record.itinerary_code,
+        ship_name: record.ship?.name ?? null,
+        cruise_line: record.ship?.cruise_line ?? null,
+      } satisfies FutureSailingRow;
+    })
+    .filter((item) => item.cruise_line === row.cruise_line);
+
+  return { seo: row, sailings };
+}
+
+async function loadPrivateIslandExperiencePage(
+  client: SupabaseClientType,
+  islandSlug: string,
+  experienceSlug: string,
+) {
+  const { data } = await client
+    .from("private_island_experience_seo_pages")
+    .select(
+      "destination_name, destination_slug, experience_slug, experience_name, operator, seo_title, seo_h1, seo_description",
+    )
+    .eq("destination_slug", islandSlug)
+    .eq("experience_slug", experienceSlug)
+    .maybeSingle();
+
+  if (!data) return null;
+  return data as PrivateIslandExperienceRow;
+}
+
 export async function generateMetadata({ params }: { params: { slug: string[] } }) {
   const server = createServerClient();
   if (!server) return { title: "Cruises from Galveston" };
@@ -572,6 +1044,14 @@ export async function generateMetadata({ params }: { params: { slug: string[] } 
   const slug = params.slug ?? [];
   if (slug.length === 1) {
     const [one] = slug;
+    if (one === "private-islands") {
+      const hub = await loadPrivateIslandsHubPage(server.client);
+      if (hub) return { title: hub.seo_title, description: hub.seo_description };
+    }
+    if (one === "jamaica") {
+      const hub = await loadJamaicaHubPage(server.client);
+      if (hub) return { title: hub.seo.seo_title, description: hub.seo.seo_description };
+    }
     const durationPage = await loadDurationPage(server.client, one);
     if (durationPage) return { title: durationPage.seo.seo_title, description: durationPage.seo.seo_h1 };
     const shipPage = await loadShipPage(server.client, one);
@@ -584,6 +1064,19 @@ export async function generateMetadata({ params }: { params: { slug: string[] } 
 
   if (slug.length === 2) {
     const [shipSlug, durationSlug] = slug;
+    const privateIslandLine = await loadPrivateIslandLinePage(server.client, shipSlug, durationSlug);
+    if (privateIslandLine) {
+      return {
+        title: privateIslandLine.seo.seo_title,
+        description: privateIslandLine.seo.seo_description,
+      };
+    }
+    if (shipSlug === "jamaica") {
+      const durationPage = await loadJamaicaDurationPage(server.client, durationSlug);
+      if (durationPage) return { title: durationPage.seo.seo_title, description: durationPage.seo.seo_description };
+      const linePage = await loadJamaicaLinePage(server.client, durationSlug);
+      if (linePage) return { title: linePage.seo.seo_title, description: linePage.seo.seo_description };
+    }
     const shipDuration = await loadShipDurationPage(server.client, shipSlug, durationSlug);
     if (shipDuration) return { title: shipDuration.seo.seo_title, description: shipDuration.seo.seo_h1 };
     const lineShip = await loadCruiseLineShipPage(server.client, shipSlug, durationSlug);
@@ -596,6 +1089,31 @@ export async function generateMetadata({ params }: { params: { slug: string[] } 
 
   if (slug.length === 3) {
     const [shipSlug, destinationSlug, durationSlug] = slug;
+    if (destinationSlug === "experiences") {
+      const experiencePage = await loadPrivateIslandExperiencePage(server.client, shipSlug, durationSlug);
+      if (experiencePage) {
+        return {
+          title: experiencePage.seo_title,
+          description: experiencePage.seo_description ?? experiencePage.seo_h1,
+        };
+      }
+    }
+    if (shipSlug === "jamaica") {
+      const lineDuration = await loadJamaicaLineDurationPage(server.client, destinationSlug, durationSlug);
+      if (lineDuration) {
+        return {
+          title: lineDuration.seo.seo_title,
+          description: lineDuration.seo.seo_description,
+        };
+      }
+    }
+    const shipGroupDuration = await loadShipGroupDurationPage(server.client, shipSlug, destinationSlug, durationSlug);
+    if (shipGroupDuration) {
+      return {
+        title: shipGroupDuration.seo.seo_title,
+        description: shipGroupDuration.seo.seo_description,
+      };
+    }
     const shipDestinationDuration = await loadShipDestinationDurationPage(
       server.client,
       shipSlug,
@@ -627,6 +1145,100 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
   const slug = params.slug ?? [];
   if (slug.length === 1) {
     const [one] = slug;
+    if (one === "private-islands") {
+      const hub = await loadPrivateIslandsHubPage(server.client);
+      if (hub) {
+        if (!hub.private_islands?.length) notFound();
+        return (
+          <main className="mx-auto max-w-6xl px-6 py-10">
+            <h1 className="text-3xl font-semibold">{hub.seo_h1}</h1>
+            <p className="mt-3 text-gray-600">{hub.seo_description}</p>
+            <section className="mt-8 grid gap-4 md:grid-cols-2">
+              {hub.private_islands.map((island) => (
+                <div key={island.destination_slug} className="rounded-2xl border border-slate-200 bg-white p-6">
+                  <div className="text-lg font-semibold text-slate-800">{island.destination_name}</div>
+                  {island.operator && (
+                    <div className="mt-1 text-sm text-slate-600">{island.operator} private island</div>
+                  )}
+                  {island.notes && <p className="mt-2 text-sm text-slate-600">{island.notes}</p>}
+                  <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
+                    <Link
+                      href={`/cruises-from-galveston/${island.destination_slug}`}
+                      className="text-primary-blue"
+                    >
+                      Destination page
+                    </Link>
+                    {island.operator ? (
+                      <Link
+                        href={`/cruises-from-galveston/${slugify(island.operator)}`}
+                        className="text-slate-700"
+                      >
+                        {island.operator} sailings
+                      </Link>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </section>
+          </main>
+        );
+      }
+    }
+    if (one === "jamaica") {
+      const hub = await loadJamaicaHubPage(server.client);
+      if (hub) {
+        if (!hub.sailings.length) notFound();
+        return (
+          <main className="mx-auto max-w-6xl px-6 py-10">
+            <h1 className="text-3xl font-semibold">{hub.seo.seo_h1}</h1>
+            <p className="mt-3 text-gray-600">{hub.seo.seo_description}</p>
+            <SailingsTable sailings={hub.sailings} />
+            <section className="mt-8">
+              <h2 className="text-lg font-semibold">Jamaica ports from Galveston</h2>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {hub.ports.map((port) => (
+                  <Link
+                    key={port}
+                    href={`/cruises-from-galveston/${slugify(port)}`}
+                    className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700"
+                  >
+                    {port}
+                  </Link>
+                ))}
+              </div>
+            </section>
+            <section className="mt-6">
+              <h2 className="text-lg font-semibold">Cruise lines docking in Jamaica</h2>
+              <div className="mt-4 space-y-2 text-sm text-slate-700">
+                {hub.ports.map((port) => {
+                  const lines = hub.seo.docking_by_port?.[port] ?? [];
+                  if (!lines.length) return null;
+                  return (
+                    <div key={port}>
+                      <strong>{port}:</strong> {lines.join(", ")}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+            <section className="mt-6">
+              <h2 className="text-lg font-semibold">Jamaica cruises by line</h2>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {["carnival", "royal-caribbean", "norwegian"].map((line) => (
+                  <Link
+                    key={line}
+                    href={`/cruises-from-galveston/jamaica/${line}`}
+                    className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700"
+                  >
+                    {line.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </main>
+        );
+      }
+    }
     const durationPage = await loadDurationPage(server.client, one);
     if (durationPage) {
       if (!durationPage.sailings.length) notFound();
@@ -763,6 +1375,41 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
 
   if (slug.length === 2) {
     const [shipSlug, durationSlug] = slug;
+    const privateIslandLine = await loadPrivateIslandLinePage(server.client, shipSlug, durationSlug);
+    if (privateIslandLine) {
+      if (!privateIslandLine.sailings.length) notFound();
+      return (
+        <main className="mx-auto max-w-6xl px-6 py-10">
+          <h1 className="text-3xl font-semibold">{privateIslandLine.seo.seo_h1}</h1>
+          <p className="mt-3 text-gray-600">{privateIslandLine.seo.seo_description}</p>
+          <SailingsTable sailings={privateIslandLine.sailings} />
+        </main>
+      );
+    }
+    if (shipSlug === "jamaica") {
+      const durationPage = await loadJamaicaDurationPage(server.client, durationSlug);
+      if (durationPage) {
+        if (!durationPage.sailings.length) notFound();
+        return (
+          <main className="mx-auto max-w-6xl px-6 py-10">
+            <h1 className="text-3xl font-semibold">{durationPage.seo.seo_h1}</h1>
+            <p className="mt-3 text-gray-600">{durationPage.seo.seo_description}</p>
+            <SailingsTable sailings={durationPage.sailings} />
+          </main>
+        );
+      }
+      const linePage = await loadJamaicaLinePage(server.client, durationSlug);
+      if (linePage) {
+        if (!linePage.sailings.length) notFound();
+        return (
+          <main className="mx-auto max-w-6xl px-6 py-10">
+            <h1 className="text-3xl font-semibold">{linePage.seo.seo_h1}</h1>
+            <p className="mt-3 text-gray-600">{linePage.seo.seo_description}</p>
+            <SailingsTable sailings={linePage.sailings} />
+          </main>
+        );
+      }
+    }
     const shipDuration = await loadShipDurationPage(server.client, shipSlug, durationSlug);
     if (shipDuration) {
       if (!shipDuration.sailings.length) notFound();
@@ -811,6 +1458,66 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
 
   if (slug.length === 3) {
     const [shipSlug, destinationSlug, durationSlug] = slug;
+    if (destinationSlug === "experiences") {
+      const experiencePage = await loadPrivateIslandExperiencePage(server.client, shipSlug, durationSlug);
+      if (experiencePage) {
+        return (
+          <main className="mx-auto max-w-6xl px-6 py-10">
+            <h1 className="text-3xl font-semibold">{experiencePage.seo_h1}</h1>
+            {experiencePage.seo_description ? (
+              <p className="mt-3 text-gray-600">{experiencePage.seo_description}</p>
+            ) : null}
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
+              <div className="text-sm uppercase tracking-wide text-slate-500">Private island experience</div>
+              <div className="mt-2 text-lg font-semibold text-slate-800">{experiencePage.experience_name}</div>
+              {experiencePage.operator ? (
+                <div className="mt-2 text-sm text-slate-600">{experiencePage.operator} exclusive</div>
+              ) : null}
+              <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
+                <Link
+                  href={`/cruises-from-galveston/${experiencePage.destination_slug}`}
+                  className="text-primary-blue"
+                >
+                  Destination page
+                </Link>
+                {experiencePage.operator ? (
+                  <Link
+                    href={`/cruises-from-galveston/${slugify(experiencePage.operator)}`}
+                    className="text-slate-700"
+                  >
+                    {experiencePage.operator} sailings
+                  </Link>
+                ) : null}
+              </div>
+            </div>
+          </main>
+        );
+      }
+    }
+    if (shipSlug === "jamaica") {
+      const lineDuration = await loadJamaicaLineDurationPage(server.client, destinationSlug, durationSlug);
+      if (lineDuration) {
+        if (!lineDuration.sailings.length) notFound();
+        return (
+          <main className="mx-auto max-w-6xl px-6 py-10">
+            <h1 className="text-3xl font-semibold">{lineDuration.seo.seo_h1}</h1>
+            <p className="mt-3 text-gray-600">{lineDuration.seo.seo_description}</p>
+            <SailingsTable sailings={lineDuration.sailings} />
+          </main>
+        );
+      }
+    }
+    const shipGroupDuration = await loadShipGroupDurationPage(server.client, shipSlug, destinationSlug, durationSlug);
+    if (shipGroupDuration) {
+      if (!shipGroupDuration.sailings.length) notFound();
+      return (
+        <main className="mx-auto max-w-6xl px-6 py-10">
+          <h1 className="text-3xl font-semibold">{shipGroupDuration.seo.seo_h1}</h1>
+          <p className="mt-3 text-gray-600">{shipGroupDuration.subtitle}</p>
+          <SailingsTable sailings={shipGroupDuration.sailings} />
+        </main>
+      );
+    }
     const shipDestinationDuration = await loadShipDestinationDurationPage(
       server.client,
       shipSlug,
