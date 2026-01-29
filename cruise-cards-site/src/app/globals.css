@@ -114,6 +114,33 @@ body {
   background: var(--color-background-base);
   color: var(--color-text-primary);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-merriweather), var(--font-inter), Arial, Helvetica, sans-serif;
+  color: var(--navy);
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+}
+
+h1 {
+  font-size: 2.25rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.375rem;
+}
+
+.section-light {
+  background: var(--sand);
 }
 
 .font-accent {
