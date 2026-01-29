@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "../../../cruises-from-galveston/visitor-info/visitor-info.css";
 import CvbSailingsSnapshot from "@/components/CvbSailingsSnapshot";
 
 export const metadata: Metadata = {
-  title: "Driving to Galveston for a Cruise | Visitor Guide",
+  title: "Driving to Galveston: Routes, Parking & Park-and-Ride",
   description:
-    "A visitor-style guide to driving to Galveston for your cruise, including drive times, parking, and planning tips from major cities and states.",
+    "A hospitality-forward guide to driving to Galveston with routes, parking, and park-and-ride strategies that reduce stress on embarkation day.",
 };
 
 export default function DrivingToGalvestonPage() {
@@ -29,20 +30,20 @@ export default function DrivingToGalvestonPage() {
               },
               {
                 "@type": "Question",
-                name: "How far in advance should I arrive when driving to Galveston for a cruise?",
+                name: "Should I use park-and-ride when driving to Galveston?",
                 acceptedAnswer: {
                   "@type": "Answer",
                   text:
-                    "Most travelers are advised to arrive in Galveston at least one day before their cruise departure, especially when driving more than 4-5 hours or traveling through major metro areas.",
+                    "Park-and-ride is often the easiest option for travelers arriving from the I-10 East corridor or East Texas because it avoids island congestion and speeds up the return trip.",
                 },
               },
               {
                 "@type": "Question",
-                name: "Where do cruise passengers park when driving to Galveston?",
+                name: "What are the main parking options in Galveston?",
                 acceptedAnswer: {
                   "@type": "Answer",
                   text:
-                    "Cruise passengers may park at official Port of Galveston facilities or nearby private parking lots. Reserving parking in advance is strongly recommended during peak sailing dates.",
+                    "Cruise passengers typically choose terminal-adjacent parking, off-site lots, or hotel-based parking with a shuttle. Each option trades off cost, convenience, and timing.",
                 },
               },
               {
@@ -51,7 +52,7 @@ export default function DrivingToGalvestonPage() {
                 acceptedAnswer: {
                   "@type": "Answer",
                   text:
-                    "Same-day driving is possible for travelers within close range, such as Houston or nearby cities. However, overnight arrival is recommended to reduce stress and avoid traffic delays.",
+                    "Same-day driving is possible for travelers within close range, but arriving the night before is often more relaxed, especially if you are driving more than 5–6 hours.",
                 },
               },
               {
@@ -70,10 +71,9 @@ export default function DrivingToGalvestonPage() {
       <section className="hero">
         <div className="wrap">
           <div className="kicker">Visitor Planning</div>
-          <h1 className="heroTitle">Driving to Galveston for Your Cruise</h1>
+          <h1 className="heroTitle">Driving to Galveston: Routes, Parking & Park-and-Ride (What Actually Works)</h1>
           <p className="sectionDesc">
-            Driving to Galveston is one of the most popular ways to begin a cruise, particularly for travelers from
-            Texas, the central United States, and northern Mexico.
+            The Real Cruises From Galveston Experience™ by Monica Peña
           </p>
         </div>
       </section>
@@ -81,16 +81,14 @@ export default function DrivingToGalvestonPage() {
       <section className="section">
         <div className="wrap">
           <p>
-            Many cruise guests choose Galveston because it allows them to travel on their own schedule, manage luggage
-            easily, and arrive close to the terminal on embarkation day.
+            For most cruisers sailing from Galveston, the journey starts behind the wheel. Whether you’re coming from
+            Houston, East Texas, Louisiana, or farther east along I-10, Galveston is one of the most accessible cruise
+            ports in the country — if you plan it correctly.
           </p>
 
           <div className="card" style={{ marginTop: 20 }}>
             <div className="cardBody">
-              <p>
-                Based on observed travel patterns, most drive-to cruise travelers aim to arrive in Galveston either the
-                night before sailing or early on embarkation morning.
-              </p>
+              <p>This page explains what locals and cruise staff already know.</p>
             </div>
           </div>
         </div>
@@ -98,61 +96,175 @@ export default function DrivingToGalvestonPage() {
 
       <section className="section">
         <div className="wrap">
-          <h2 className="sectionTitle">Common drive-to regions</h2>
+          <h2 className="sectionTitle">Most cruisers arrive one of three ways</h2>
+          <ul className="linkList">
+            <li>Direct drive to the terminal (same day)</li>
+            <li>Hotel + park nearby</li>
+            <li>Park-and-ride from the Houston side</li>
+          </ul>
+          <p className="sectionDesc">
+            All three can work. The right choice depends on where you’re coming from and how you want embarkation day to
+            feel.
+          </p>
+        </div>
+      </section>
 
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">Coming from I-10 East? Park-and-ride is often the smartest option</h2>
+          <p>
+            If you’re driving in from East Houston, Baytown, Beaumont / Port Arthur, Lake Charles, Louisiana, or anywhere
+            along I-10 East, stopping before Galveston and riding in can remove a lot of stress.
+          </p>
+          <p className="sectionDesc" style={{ marginTop: 12 }}>
+            Why locals recommend it: avoids island traffic on embarkation morning, no terminal congestion, easier
+            luggage handling, and faster exit when you return.
+          </p>
+          <div className="card" style={{ marginTop: 20 }}>
+            <div className="cardBody">
+              <p className="kicker">Suggested park-and-ride</p>
+              <p className="sectionTitle" style={{ marginBottom: 6 }}>
+                Houston Cruise Shuttle
+              </p>
+              <p>11221 Market Street, Jacinto City, TX 77029</p>
+              <a href="https://houstoncruisehuttle.com" target="_blank" rel="noreferrer">
+                houstoncruisehuttle.com
+              </a>
+            </div>
+          </div>
+          <p className="sectionDesc" style={{ marginTop: 12 }}>
+            This option works especially well for families, groups, and first-time cruisers who don’t want to navigate
+            terminal traffic.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">Driving directly to the port: what to expect</h2>
+          <ul className="linkList">
+            <li>Plan to arrive no earlier than your assigned boarding time.</li>
+            <li>Expect congestion near terminals between 10:30 AM – 1:30 PM.</li>
+            <li>Be prepared to unload luggage curbside.</li>
+            <li>Parking is close, but not always quick.</li>
+          </ul>
+          <p className="sectionDesc">
+            This option works best for experienced cruisers, guests arriving very early, and travelers staying on the
+            island the night before.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">Hotel + parking: a good middle ground</h2>
+          <p>
+            Many guests choose to stay one night in Galveston, park at or near their hotel, and take a shuttle or short
+            drive to the terminal.
+          </p>
+          <ul className="linkList">
+            <li>Wake up already on island time.</li>
+            <li>Avoid early-morning highway stress.</li>
+            <li>Start your cruise rested.</li>
+          </ul>
+          <p className="sectionDesc">It’s especially helpful if you’re driving more than 5–6 hours.</p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">Understanding Galveston traffic (the honest truth)</h2>
+          <p>
+            Galveston is a working island, not just a cruise port. On embarkation mornings, local traffic continues,
+            beach access traffic overlaps, and events and weekends increase congestion.
+          </p>
+          <p className="sectionDesc">That’s why arrival strategy matters more than speed. Rushing rarely helps. Planning does.</p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">Returning home: don’t forget the exit strategy</h2>
+          <p>
+            Disembarkation morning is busy too. Park-and-ride often shines here because buses are staged and ready, you
+            avoid island bottlenecks, and you’re already positioned near I-10.
+          </p>
+          <p className="sectionDesc">
+            For guests heading east, this can shave significant time off the return drive.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">The Galveston way: hospitality first</h2>
+          <p>
+            As someone who has managed hotels, driven cruise shuttles, personally greeted cruise guests, and helped
+            travelers navigate arrival and departure for years, I can tell you this: the best embarkation days are calm,
+            unhurried, and predictable.
+          </p>
+          <p className="sectionDesc">
+            Choose the option that lets you start your cruise feeling welcomed — not rushed. That’s the Galveston way.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <h2 className="sectionTitle">Common drive-to regions</h2>
           <ul className="linkList">
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-corpus-christi">Driving from Corpus Christi</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-corpus-christi">Driving from Corpus Christi</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-kingsville">Driving from Kingsville</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-kingsville">Driving from Kingsville</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-mission">Driving from Mission, TX</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-mission">Driving from Mission, TX</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-palmview">Driving from Palmview, TX</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-palmview">Driving from Palmview, TX</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-houston">Driving from Houston</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-houston">Driving from Houston</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth">
+              <Link href="/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth">
                 Driving from Dallas-Fort Worth
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-austin">Driving from Austin</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-austin">Driving from Austin</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-san-antonio">Driving from San Antonio</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-san-antonio">Driving from San Antonio</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-oklahoma-city">Driving from Oklahoma City</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-oklahoma-city">Driving from Oklahoma City</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-tulsa">Driving from Tulsa</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-tulsa">Driving from Tulsa</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-baton-rouge">Driving from Baton Rouge</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-baton-rouge">Driving from Baton Rouge</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-lafayette">Driving from Lafayette</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-lafayette">Driving from Lafayette</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-lake-charles">Driving from Lake Charles</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-lake-charles">Driving from Lake Charles</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-shreveport">Driving from Shreveport</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-shreveport">Driving from Shreveport</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-little-rock">Driving from Little Rock</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-little-rock">Driving from Little Rock</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-missouri">Driving from Missouri</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-missouri">Driving from Missouri</Link>
             </li>
             <li>
-              <a href="/plan-your-cruise/driving-to-galveston/from-colorado">Driving from Colorado</a>
+              <Link href="/plan-your-cruise/driving-to-galveston/from-colorado">Driving from Colorado</Link>
             </li>
           </ul>
         </div>
