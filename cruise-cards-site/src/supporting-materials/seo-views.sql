@@ -161,6 +161,131 @@ select
 from public.destination_docking_rules
 group by destination_name;
 
+-- Jamaica hub SEO page.
+create or replace view public.jamaica_hub_seo_page as
+with jamaica_ports as (
+  select distinct
+    dgm.destination_name
+  from public.destination_group_members dgm
+  where dgm.group_slug = 'western-caribbean'
+    and dgm.destination_name in ('Falmouth', 'Montego Bay', 'Ocho Rios')
+),
+jamaica_docking as (
+  select
+    dds.destination_name,
+    dds.cruise_lines
+  from public.destination_docking_summary dds
+  where dds.destination_name in ('Falmouth', 'Montego Bay', 'Ocho Rios')
+)
+select
+  'jamaica' as hub_slug,
+  'Jamaica Cruises from Galveston' as seo_title,
+  'Jamaica cruises departing from Galveston' as seo_h1,
+  'Explore cruises from Galveston to Jamaica, with port calls in Montego Bay, Falmouth, and Ocho Rios. Compare cruise lines, itineraries, and departure dates.' as seo_description,
+  array_agg(jp.destination_name order by jp.destination_name) as jamaica_ports,
+  jsonb_object_agg(
+    jd.destination_name,
+    jd.cruise_lines
+  ) as docking_by_port
+from jamaica_ports jp
+left join jamaica_docking jd
+  on jd.destination_name = jp.destination_name;
+
+-- Jamaica x duration pages (ports_summary text + alias map).
+create or replace view public.jamaica_duration_seo_pages as
+with jamaica_sailings as (
+  select distinct
+    s.id as sailing_id,
+    ((s.return_date - s.sail_date) + 1) as duration_days,
+    coalesce(a.canonical_name, initcap(trim(lower(port)))) as destination_name
+  from public.sailings s
+  join public.ships sh on sh.id = s.ship_id
+  cross join lateral regexp_split_to_table(
+    coalesce(s.ports_summary, ''),
+    '[,;]'
+  ) as port
+  left join public.destination_aliases a
+    on trim(lower(port)) = a.alias
+  where
+    sh.home_port = 'Galveston'
+    and s.sail_date >= (now() at time zone 'UTC')::date
+),
+jamaica_only as (
+  select
+    sailing_id,
+    duration_days
+  from jamaica_sailings
+  where destination_name in ('Montego Bay', 'Falmouth', 'Ocho Rios')
+    and duration_days <> 5
+)
+select
+  duration_days,
+  duration_days || '-day' as duration_slug,
+  'Jamaica ' || duration_days || ' Day Cruises from Galveston' as seo_title,
+  'Jamaica ' || duration_days || ' Day cruises departing from Galveston' as seo_h1,
+  'Browse ' || duration_days || ' day cruises from Galveston to Jamaica, ' ||
+  'including visits to Montego Bay, Falmouth, and Ocho Rios.' as seo_description,
+  count(distinct sailing_id) as sailing_count
+from jamaica_only
+group by duration_days
+order by duration_days;
+
+-- Jamaica x cruise line x duration pages (docking rules enforced).
+create or replace view public.jamaica_cruise_line_duration_seo_pages as
+with jamaica_sailings as (
+  select distinct
+    s.id as sailing_id,
+    sh.cruise_line,
+    lower(regexp_replace(sh.cruise_line, '[^a-zA-Z0-9]+', '-', 'g')) as cruise_line_slug,
+    ((s.return_date - s.sail_date) + 1) as duration_days,
+    coalesce(a.canonical_name, initcap(trim(lower(port)))) as destination_name
+  from public.sailings s
+  join public.ships sh on sh.id = s.ship_id
+  cross join lateral regexp_split_to_table(
+    coalesce(s.ports_summary, ''),
+    '[,;]'
+  ) as port
+  left join public.destination_aliases a
+    on trim(lower(port)) = a.alias
+  where
+    sh.home_port = 'Galveston'
+    and s.sail_date >= (now() at time zone 'UTC')::date
+),
+jamaica_only as (
+  select
+    sailing_id,
+    cruise_line,
+    cruise_line_slug,
+    duration_days,
+    destination_name
+  from jamaica_sailings
+  where destination_name in ('Montego Bay', 'Falmouth', 'Ocho Rios')
+),
+validated as (
+  select distinct
+    jo.sailing_id,
+    jo.cruise_line,
+    jo.cruise_line_slug,
+    jo.duration_days
+  from jamaica_only jo
+  join public.destination_docking_rules ddr
+    on ddr.cruise_line = jo.cruise_line
+   and ddr.destination_name = jo.destination_name
+)
+select
+  cruise_line,
+  cruise_line_slug,
+  duration_days,
+  duration_days || '-day' as duration_slug,
+  'Jamaica ' || duration_days || ' Day ' || cruise_line || ' Cruises from Galveston' as seo_title,
+  'Jamaica ' || duration_days || ' Day ' || cruise_line || ' cruises departing from Galveston' as seo_h1,
+  'Browse ' || duration_days || ' day Jamaica cruises from Galveston with ' ||
+  cruise_line ||
+  ', including port calls in Montego Bay, Falmouth, and Ocho Rios.' as seo_description,
+  count(distinct sailing_id) as sailing_count
+from validated
+group by cruise_line, cruise_line_slug, duration_days
+order by cruise_line, duration_days;
 -- Future sailings list (Galveston only).
 create or replace view public.future_sailings_list as
 select
@@ -555,9 +680,15 @@ grant select on
   public.cruise_line_ship_pages,
   public.cruise_line_duration_seo_pages,
   public.destination_aliases,
+  public.destination_groups,
+  public.destination_group_members,
   public.port_destination_seo_pages,
   public.destination_duration_seo_pages,
   public.destination_faqs,
   public.ship_destination_duration_seo_pages,
-  public.ship_group_duration_seo_pages
+  public.ship_group_duration_seo_pages,
+  public.destination_docking_summary,
+  public.jamaica_hub_seo_page,
+  public.jamaica_duration_seo_pages,
+  public.jamaica_cruise_line_duration_seo_pages
 to anon;
