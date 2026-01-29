@@ -1153,6 +1153,11 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
           <main className="mx-auto max-w-6xl px-6 py-10">
             <h1 className="text-3xl font-semibold">{hub.seo_h1}</h1>
             <p className="mt-3 text-gray-600">{hub.seo_description}</p>
+            <p className="mt-3 text-sm text-slate-600">
+              Good to know: private island days are organized by the cruise line, with straightforward pier access and a
+              full-day return to the ship. If this is your first private island visit, expect a relaxed beach-forward
+              stop with optional experiences you can add onboard.
+            </p>
             <section className="mt-8 grid gap-4 md:grid-cols-2">
               {hub.private_islands.map((island) => (
                 <div key={island.destination_slug} className="rounded-2xl border border-slate-200 bg-white p-6">
@@ -1180,6 +1185,7 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
                 </div>
               ))}
             </section>
+            <GuestHelpCallout message="Already booked and have questions about private island logistics? We are happy to help." />
           </main>
         );
       }
@@ -1235,6 +1241,7 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
                 ))}
               </div>
             </section>
+            <GuestHelpCallout message="Already booked and have questions about Jamaica ports or getting around on shore? We are happy to help." />
           </main>
         );
       }
@@ -1368,6 +1375,7 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
           <h1 className="text-3xl font-semibold">{destinationPage.seo.seo_h1}</h1>
           <p className="mt-3 text-gray-600">{destinationPage.subtitle}</p>
           <SailingsTable sailings={destinationPage.sailings} />
+          <GuestHelpCallout message="Already booked and have questions about this destination? We are happy to help." />
         </main>
       );
     }
@@ -1383,6 +1391,7 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
           <h1 className="text-3xl font-semibold">{privateIslandLine.seo.seo_h1}</h1>
           <p className="mt-3 text-gray-600">{privateIslandLine.seo.seo_description}</p>
           <SailingsTable sailings={privateIslandLine.sailings} />
+          <GuestHelpCallout message="Already booked and have questions about this private island day? We are happy to help." />
         </main>
       );
     }
@@ -1467,6 +1476,10 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
             {experiencePage.seo_description ? (
               <p className="mt-3 text-gray-600">{experiencePage.seo_description}</p>
             ) : null}
+            <p className="mt-3 text-sm text-slate-600">
+              What you can expect: experiences are managed by the cruise line and may include age limits, waiver
+              requirements, or reservation windows. Details are confirmed onboard so you can plan with confidence.
+            </p>
             <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
               <div className="text-sm uppercase tracking-wide text-slate-500">Private island experience</div>
               <div className="mt-2 text-lg font-semibold text-slate-800">{experiencePage.experience_name}</div>
@@ -1490,6 +1503,7 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
                 ) : null}
               </div>
             </div>
+            <GuestHelpCallout message="Already booked and wondering about availability, timing, or what to bring? We are happy to help." />
           </main>
         );
       }
@@ -1537,6 +1551,18 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
   }
 
   notFound();
+}
+
+function GuestHelpCallout({ message }: { message: string }) {
+  return (
+    <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
+      <h2 className="text-lg font-semibold text-slate-900">Already booked? We&apos;re still here to help.</h2>
+      <p className="mt-2 text-sm text-slate-600">{message}</p>
+      <Link href="/cruises-from-galveston/guest-help" className="mt-3 inline-flex text-sm font-semibold text-primary-blue">
+        Visit the Guest Help Desk
+      </Link>
+    </section>
+  );
 }
 
 function SailingsTable({ sailings }: { sailings: FutureSailingRow[] }) {

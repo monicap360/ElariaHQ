@@ -232,7 +232,11 @@ export default function RootLayout({
             <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-text-muted md:flex-row md:items-center md:justify-between">
               <span>
                 Cruises From Galveston provides planning guidance and operational support. Pricing and official terms
-                remain with cruise lines.
+                remain with cruise lines. Locally operated in Galveston, Texas — serving cruise guests before and after
+                sailing. Questions before you sail?{" "}
+                <Link href="/cruises-from-galveston/guest-help" className="font-semibold text-primary-blue">
+                  Even if you already booked, we&apos;re here.
+                </Link>
               </span>
               <div className="flex flex-wrap items-center gap-3 text-text-secondary">
                 <a

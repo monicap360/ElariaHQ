@@ -209,6 +209,207 @@ values
 )
 on conflict (destination_name) do nothing;
 
+-- Guest help desk questions (central knowledge base).
+create table if not exists public.guest_help_questions (
+  question text not null,
+  answer text not null,
+  category text not null,
+  cruise_line text,
+  destination text,
+  last_reviewed_date date,
+  primary key (question)
+);
+
+delete from public.guest_help_questions;
+
+insert into public.guest_help_questions
+(question, answer, category, cruise_line, destination, last_reviewed_date)
+values
+(
+  'Do I need a passport to cruise from Galveston?',
+  'For most closed-loop cruises (departing and returning to Galveston), U.S. citizens may sail with a government-issued photo ID and an original birth certificate or certified copy. We strongly recommend traveling with a valid passport whenever possible, especially if you need to fly home from another country.',
+  'documents',
+  null,
+  null,
+  current_date
+),
+(
+  'Are passports required for Jamaica or The Bahamas?',
+  'For closed-loop cruises, a passport is not always required, but it is highly recommended. Some ports may require a passport for certain activities, and a passport is required if you miss the ship and need to travel independently.',
+  'documents',
+  null,
+  null,
+  current_date
+),
+(
+  'What if my passport expires soon?',
+  'Most cruise lines recommend your passport be valid for at least six months beyond your sail date, especially for longer or international itineraries. Always check your cruise line’s specific policy.',
+  'documents',
+  null,
+  null,
+  current_date
+),
+(
+  'Do children need passports?',
+  'Children may cruise on a closed-loop sailing with a birth certificate, but a passport is recommended for the same reasons as adults.',
+  'documents',
+  null,
+  null,
+  current_date
+),
+(
+  'Is the drink package worth it?',
+  'It depends on cruise length, cruise line, and how often you drink alcoholic or specialty beverages. If you typically enjoy multiple cocktails, specialty coffees, bottled water, or sodas daily, the package can offer good value. If you drink occasionally, paying per drink may make more sense.',
+  'drink-packages',
+  null,
+  null,
+  current_date
+),
+(
+  'What drinks are included without a package?',
+  'Most cruise fares include water, iced tea, lemonade, basic coffee, and tea. Alcoholic drinks, soda, bottled water, and specialty coffees usually cost extra unless you purchase a package.',
+  'drink-packages',
+  null,
+  null,
+  current_date
+),
+(
+  'Can I bring alcohol onboard?',
+  'Most cruise lines allow one bottle of wine per adult (750ml) in carry-on luggage. Hard liquor and beer are typically not allowed. Policies vary slightly by cruise line.',
+  'drink-packages',
+  null,
+  null,
+  current_date
+),
+(
+  'How much luggage can I bring?',
+  'There is no strict limit on the number of bags, but guests are encouraged to pack reasonably. Airline rules do not apply to cruises.',
+  'luggage-packing',
+  null,
+  null,
+  current_date
+),
+(
+  'Is there a weight limit?',
+  'Individual bags should generally weigh 50 lbs or less for safe handling by port staff.',
+  'luggage-packing',
+  null,
+  null,
+  current_date
+),
+(
+  'Can I carry a bag onboard?',
+  'Yes. Many guests carry a small bag with documents, medications, swimwear, and sunscreen. Cabins may not be ready until early afternoon.',
+  'luggage-packing',
+  null,
+  null,
+  current_date
+),
+(
+  'Can I bring shampoo and toiletries?',
+  'Yes. Toiletries are allowed, and most cabins provide basic shampoo and soap. Many guests prefer bringing their own brands.',
+  'luggage-packing',
+  null,
+  null,
+  current_date
+),
+(
+  'Where can I park in Galveston?',
+  'Galveston offers official port parking, covered and uncovered private lots, and valet services near all cruise terminals. Parking availability and pricing vary by pier and sailing date.',
+  'parking-port',
+  null,
+  'galveston',
+  current_date
+),
+(
+  'Is parking safe?',
+  'Yes. Galveston cruise parking facilities are designed specifically for cruise guests and operate during sailings.',
+  'parking-port',
+  null,
+  'galveston',
+  current_date
+),
+(
+  'What time should I arrive at the port?',
+  'Your cruise line will assign an arrival window, usually between late morning and early afternoon. Arriving too early may result in waiting outside the terminal.',
+  'parking-port',
+  null,
+  'galveston',
+  current_date
+),
+(
+  'Which terminal does my ship use?',
+  'Galveston has multiple cruise terminals, and ships are assigned to specific piers. Terminal assignments are provided by your cruise line and may change.',
+  'parking-port',
+  null,
+  'galveston',
+  current_date
+),
+(
+  'Do I need a shore excursion to enjoy port day?',
+  'Many ports offer walkable shopping and dining, beaches close to the port, and local transportation. You are not required to book a ship excursion to enjoy your day ashore.',
+  'port-days',
+  null,
+  null,
+  current_date
+),
+(
+  'Is it safe to explore on my own?',
+  'In most ports, staying in well-traveled areas during daylight hours is safe. Always allow plenty of time to return to the ship before departure.',
+  'port-days',
+  null,
+  null,
+  current_date
+),
+(
+  'What time do I need to be back onboard?',
+  'The ship will list an “all aboard” time, usually 30–60 minutes before departure. The ship will not wait for late guests unless you are on a ship-sponsored excursion.',
+  'port-days',
+  null,
+  null,
+  current_date
+),
+(
+  'What happens on embarkation day?',
+  'You will check in at the terminal, pass through security and immigration, then board the ship and begin your vacation. Lunch venues typically open shortly after boarding.',
+  'onboard-life',
+  null,
+  null,
+  current_date
+),
+(
+  'When do cabins open?',
+  'Cabins are usually available by early afternoon. Your luggage may arrive later in the day.',
+  'onboard-life',
+  null,
+  null,
+  current_date
+),
+(
+  'Are there dress codes?',
+  'Most evenings are casual. Some sailings include optional formal nights, but dressing up is never required.',
+  'onboard-life',
+  null,
+  null,
+  current_date
+),
+(
+  'How does tipping work?',
+  'Many cruise lines automatically add daily gratuities to your onboard account. You can adjust them onboard if needed.',
+  'onboard-life',
+  null,
+  null,
+  current_date
+),
+(
+  'Can the cruise accommodate mobility or medical needs?',
+  'Yes. Cruise lines can assist with wheelchair-accessible cabins, dietary restrictions, refrigerators for medication, and mobility assistance. These requests should be made in advance when possible.',
+  'accessibility',
+  null,
+  null,
+  current_date
+);
+
 -- Private island experiences (control data).
 create table if not exists public.destination_experiences (
   destination_name text not null,
@@ -824,7 +1025,7 @@ select
   'private-islands' as hub_slug,
   'Private Island Cruises from Galveston' as seo_title,
   'Private island cruises departing from Galveston' as seo_h1,
-  'Explore private island cruises from Galveston, including exclusive destinations like RelaxAway, Half Moon Cay and Great Stirrup Cay. Compare cruise lines, durations, and departure dates.' as seo_description,
+  'Private island cruises from Galveston offer guests the chance to visit exclusive destinations in The Bahamas, operated by major cruise lines and designed for easy, relaxing beach days. Discover which islands appear on upcoming sailings and what to expect when you arrive.' as seo_description,
   jsonb_agg(
     jsonb_build_object(
       'destination_name', destination_name,
@@ -864,8 +1065,8 @@ select
   cruise_line_slug,
   destination_name || ' Cruises from Galveston on ' || cruise_line as seo_title,
   cruise_line || ' cruises to ' || destination_name || ' from Galveston' as seo_h1,
-  'Explore ' || cruise_line || ' cruises from Galveston to ' || destination_name ||
-  ', an exclusive private island experience. View itineraries, durations, and sailing dates.' as seo_description
+  'Learn about ' || cruise_line || ' cruises from Galveston that visit ' || destination_name ||
+  '. Visitors can review sailing dates, durations, and ships to plan the right private island day.' as seo_description
 from inventory_check
 order by destination_name, cruise_line;
 
@@ -893,6 +1094,7 @@ grant select on
   public.jamaica_duration_seo_pages,
   public.jamaica_cruise_line_duration_seo_pages,
   public.destination_metadata,
+  public.guest_help_questions,
   public.private_islands_hub_seo_page,
   public.private_island_cruise_line_seo_pages,
   public.destination_experiences,
