@@ -29,6 +29,53 @@ insert into public.destination_aliases (alias, canonical_name) values
   ('mahogany bay, roatan', 'Roatán'),
   ('roatan', 'Roatán'),
   ('roatán', 'Roatán')
+  ,
+  -- Curaçao / Aruba
+  ('willemstad', 'Willemstad'),
+  ('willemstad curacao', 'Willemstad'),
+  ('oranjestad', 'Oranjestad'),
+  ('oranjestad aruba', 'Oranjestad'),
+  -- Bonaire
+  ('kralendijk', 'Kralendijk'),
+  ('kralendijk bonaire', 'Kralendijk'),
+  ('bonaire', 'Kralendijk'),
+  -- Sint Eustatius (Statia)
+  ('sint eustatius', 'Sint Eustatius'),
+  ('st eustatius', 'Sint Eustatius'),
+  ('statia', 'Sint Eustatius'),
+  -- Jamaica (new port)
+  ('ocho rios', 'Ocho Rios'),
+  -- Florida / Atlantic crossover
+  ('port canaveral', 'Port Canaveral'),
+  ('miami', 'Miami'),
+  -- Puerto Rico
+  ('san juan', 'San Juan'),
+  -- British Virgin Islands
+  ('tortola', 'Tortola'),
+  ('bvi', 'Tortola'),
+  -- St. Maarten / St. Martin
+  ('philipsburg', 'Philipsburg'),
+  ('st maarten', 'Philipsburg'),
+  ('st martin', 'Philipsburg'),
+  -- St. Barts
+  ('gustavia', 'Gustavia'),
+  ('st barts', 'Gustavia'),
+  ('saint barthelemy', 'Gustavia'),
+  -- Antigua
+  ('st johns', 'St. John’s'),
+  ('st john’s', 'St. John’s'),
+  ('antigua', 'St. John’s'),
+  -- Guatemala
+  ('santo tomas de castilla', 'Santo Tomás de Castilla'),
+  ('puerto santo tomas', 'Santo Tomás de Castilla'),
+  -- Cayman Islands wording
+  ('georgetown', 'Georgetown'),
+  ('georgetown grand cayman', 'Georgetown'),
+  -- Jamaica ports + general
+  ('falmouth', 'Falmouth'),
+  ('montego bay', 'Montego Bay'),
+  ('ocho rios', 'Ocho Rios'),
+  ('jamaica', 'Jamaica')
 on conflict (alias) do nothing;
 
 -- Destination group mapping (optional taxonomy).
@@ -38,13 +85,73 @@ create table if not exists public.destination_group_members (
   primary key (destination_name, group_slug)
 );
 
+-- Destination groups (if missing).
+insert into public.destination_groups
+(group_slug, group_name, seo_title, seo_h1, seo_description)
+values
+  (
+    'eastern-caribbean',
+    'Eastern Caribbean',
+    'Eastern Caribbean Cruises from Galveston',
+    'Eastern Caribbean cruises departing from Galveston',
+    'Explore Eastern Caribbean cruises from Galveston visiting Puerto Rico, the Virgin Islands, St. Maarten, Antigua, and more.'
+  ),
+  (
+    'atlantic-crossings',
+    'Atlantic Crossings',
+    'Atlantic Cruises from Galveston',
+    'Atlantic cruises departing from Galveston',
+    'Browse repositioning and crossover cruises involving Galveston and Atlantic ports.'
+  )
+on conflict (group_slug) do nothing;
+
 insert into public.destination_group_members (destination_name, group_slug) values
   ('Roatán', 'western-caribbean'),
   ('Cozumel', 'western-caribbean'),
   ('Belize City', 'western-caribbean'),
   ('Montego Bay', 'western-caribbean'),
-  ('Grand Cayman', 'western-caribbean')
+  ('Grand Cayman', 'western-caribbean'),
+  -- Southern Caribbean
+  ('Willemstad', 'southern-caribbean'),
+  ('Oranjestad', 'southern-caribbean'),
+  ('Kralendijk', 'southern-caribbean'),
+  -- Eastern Caribbean
+  ('Sint Eustatius', 'eastern-caribbean'),
+  ('Philipsburg', 'eastern-caribbean'),
+  ('Gustavia', 'eastern-caribbean'),
+  ('St. John’s', 'eastern-caribbean'),
+  ('Tortola', 'eastern-caribbean'),
+  ('San Juan', 'eastern-caribbean'),
+  -- Jamaica
+  ('Falmouth', 'western-caribbean'),
+  ('Ocho Rios', 'western-caribbean'),
+  -- Central America
+  ('Santo Tomás de Castilla', 'central-america'),
+  -- Florida / Atlantic
+  ('Miami', 'atlantic-crossings'),
+  ('Port Canaveral', 'atlantic-crossings')
 on conflict do nothing;
+
+-- Destination docking rules (control data).
+create table if not exists public.destination_docking_rules (
+  destination_name text not null,
+  cruise_line text not null,
+  primary key (destination_name, cruise_line)
+);
+
+insert into public.destination_docking_rules (destination_name, cruise_line) values
+  ('Falmouth', 'Royal Caribbean'),
+  ('Montego Bay', 'Carnival'),
+  ('Ocho Rios', 'Carnival'),
+  ('Ocho Rios', 'Norwegian')
+on conflict do nothing;
+
+create or replace view public.destination_docking_summary as
+select
+  destination_name,
+  array_agg(cruise_line order by cruise_line) as cruise_lines
+from public.destination_docking_rules
+group by destination_name;
 
 -- Future sailings list (Galveston only).
 create or replace view public.future_sailings_list as
@@ -365,6 +472,69 @@ select distinct
   ' itineraries.' as seo_description
 from canonical_ports;
 
+-- Ship x group x duration pages (ports_summary text + alias map + groups).
+create or replace view public.ship_group_duration_seo_pages as
+with raw_ports as (
+  select
+    s.id as sailing_id,
+    sh.id as ship_id,
+    sh.name as ship_name,
+    lower(regexp_replace(sh.name, '[^a-zA-Z0-9]+', '-', 'g')) as ship_slug,
+    ((s.return_date - s.sail_date) + 1) as duration_days,
+    trim(lower(port)) as raw_port
+  from public.sailings s
+  join public.ships sh on sh.id = s.ship_id
+  cross join lateral regexp_split_to_table(coalesce(s.ports_summary, ''), '[,;]') as port
+  where
+    s.sail_date >= (now() at time zone 'UTC')::date
+    and sh.home_port = 'Galveston'
+    and trim(port) <> ''
+),
+canonical_ports as (
+  select
+    rp.ship_id,
+    rp.ship_name,
+    rp.ship_slug,
+    rp.duration_days,
+    coalesce(a.canonical_name, initcap(rp.raw_port)) as destination_name
+  from raw_ports rp
+  left join public.destination_aliases a
+    on rp.raw_port = a.alias
+),
+grouped as (
+  select
+    cp.ship_id,
+    cp.ship_name,
+    cp.ship_slug,
+    cp.duration_days,
+    dg.group_slug,
+    dg.group_name
+  from canonical_ports cp
+  join public.destination_group_members dgm
+    on dgm.destination_name = cp.destination_name
+  join public.destination_groups dg
+    on dg.group_slug = dgm.group_slug
+)
+select distinct
+  ship_id,
+  ship_name,
+  ship_slug,
+  group_slug,
+  group_name,
+  duration_days,
+  duration_days || '-day' as duration_slug,
+  ship_name || ' ' ||
+  group_name || ' ' ||
+  duration_days || ' Day Cruises from Galveston' as seo_title,
+  ship_name || ' ' ||
+  group_name || ' ' ||
+  duration_days || ' Day cruises departing from Galveston' as seo_h1,
+  'Browse ' || duration_days || ' day ' ||
+  group_name || ' cruises from Galveston aboard ' ||
+  ship_name ||
+  '. View sailing dates and itinerary details.' as seo_description
+from grouped;
+
 -- Public read access (views only).
 grant select on
   public.future_sailings_list,
@@ -380,5 +550,6 @@ grant select on
   public.port_destination_seo_pages,
   public.destination_duration_seo_pages,
   public.destination_faqs,
-  public.ship_destination_duration_seo_pages
+  public.ship_destination_duration_seo_pages,
+  public.ship_group_duration_seo_pages
 to anon;
