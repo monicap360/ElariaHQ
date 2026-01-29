@@ -56,11 +56,10 @@ export async function GET() {
   }
 
   const shipsRes = await supabase
-    .from("ships")
-    .select("id,name,home_port,is_active")
-    .eq("is_active", true)
-    .ilike("home_port", "%Galveston%")
-    .order("name", { ascending: true })
+    .from("ship_future_sailing_counts")
+    .select("ship_id, ship_name, cruise_line, home_port, future_sailing_count, next_sailing_date, last_sailing_date")
+    .order("future_sailing_count", { ascending: false })
+    .order("next_sailing_date", { ascending: true })
     .limit(8);
 
   const portsCount = new Map<string, number>();

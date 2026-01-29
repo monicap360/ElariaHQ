@@ -32,7 +32,7 @@ export default function FromMissouriPage() {
             starting city, route, and stops.
           </p>
           <p>
-            <strong>Primary route:</strong> I-44 -> I-49 -> I-45 South.
+            <strong>Primary route:</strong> I-44 &rarr; I-49 &rarr; I-45 South.
           </p>
           <div className="card" style={{ marginTop: 18 }}>
             <div className="cardBody">

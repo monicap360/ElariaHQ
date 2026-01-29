@@ -32,7 +32,7 @@ export default function FromPalmviewPage() {
             traffic, departure time, and stops.
           </p>
           <p>
-            <strong>Primary route:</strong> I-2 East -> US-77 North -> I-69E North -> I-45 South.
+            <strong>Primary route:</strong> I-2 East &rarr; US-77 North &rarr; I-69E North &rarr; I-45 South.
           </p>
         </div>
       </section>

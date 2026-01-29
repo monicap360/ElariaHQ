@@ -4,10 +4,6 @@ import type { CruiseDecisionInput } from "@/lib/cruiseDecisionEngine/types";
 import { buildCalendarEntries } from "@/lib/calendarEntries";
 
 export async function GET(request: NextRequest) {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    return NextResponse.json({ entries: [] });
-  }
-
   const { searchParams } = new URL(request.url);
   const start = searchParams.get("start") || new Date().toISOString().slice(0, 10);
   const end =
@@ -33,8 +29,12 @@ export async function GET(request: NextRequest) {
     constraints: seapay ? { seaPayEligibleOnly: seapay === "1" || seapay === "true" } : undefined,
   };
 
-  const provider = providerFromSupabase();
-  const entries = await buildCalendarEntries(input, provider);
-
-  return NextResponse.json({ entries });
+  try {
+    const provider = providerFromSupabase();
+    const entries = await buildCalendarEntries(input, provider);
+    return NextResponse.json({ entries });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to load sailings.";
+    return NextResponse.json({ entries: [], error: message }, { status: 500 });
+  }
 }

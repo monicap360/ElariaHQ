@@ -1,6 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
 import { AvailabilitySnapshot, PricingSnapshot, RiskSnapshot, Sailing, Ship } from "./types";
 import { CruiseDataProvider } from "./engine";
+import { createServerClient } from "@/lib/supabase/server";
 
 type SailingRow = {
   id: string;
@@ -42,32 +42,31 @@ type RiskLatestRow = {
   risk_score?: number | null;
 };
 
-function supabaseServer() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  return createClient(url, key, { auth: { persistSession: false } });
-}
-
 export function providerFromSupabase(): CruiseDataProvider {
-  const sb = supabaseServer();
+  const server = createServerClient();
+  if (!server) {
+    throw new Error("Missing Supabase environment variables.");
+  }
+  const sb = server.client;
 
   return {
     async getSailingById(sailingId: string) {
       const { data, error } = await sb.from("sailings").select("*").eq("id", sailingId).single();
       if (error) throw error;
 
+      const row = data as SailingRow;
       return {
-        id: data.id,
+        id: row.id,
         departurePort: "Galveston",
-        departDate: data.depart_date,
-        returnDate: data.return_date,
-        nights: data.nights,
-        cruiseLine: data.cruise_line,
-        shipId: data.ship_id,
-        itineraryTags: data.itinerary_tags ?? [],
-        itineraryLabel: data.itinerary_label ?? null,
-        portsSummary: data.ports_summary ?? null,
-        seaPayEligible: !!data.seapay_eligible,
+        departDate: row.depart_date,
+        returnDate: row.return_date,
+        nights: row.nights,
+        cruiseLine: row.cruise_line,
+        shipId: row.ship_id,
+        itineraryTags: row.itinerary_tags ?? [],
+        itineraryLabel: row.itinerary_label ?? null,
+        portsSummary: row.ports_summary ?? null,
+        seaPayEligible: !!row.seapay_eligible,
       };
     },
     async getSailings({ departurePort, start, end, shipId }) {

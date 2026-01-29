@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { formatDurationLabel } from "@/lib/formatDuration";
 import { useEffect, useMemo, useState } from "react";
@@ -87,10 +88,13 @@ type DeskItem = {
 };
 
 type ShipRow = {
-  id: string;
-  name: string;
+  ship_id: string;
+  ship_name: string;
+  cruise_line?: string | null;
   home_port?: string | null;
-  is_active?: boolean | null;
+  future_sailing_count?: number | null;
+  next_sailing_date?: string | null;
+  last_sailing_date?: string | null;
 };
 
 function normalizeLineKey(value: string) {
@@ -725,9 +729,9 @@ export default function Home() {
                 <h2 className="text-2xl font-semibold font-accent">From the Cruises From Galveston Desk</h2>
                 <p className="text-sm text-text-secondary">Live advisories and context from our editors.</p>
               </div>
-              <a href="/cruises-from-galveston/desk" className="text-sm font-semibold text-primary-blue">
+              <Link href="/cruises-from-galveston/desk" className="text-sm font-semibold text-primary-blue">
                 View the Desk {"->"}
-              </a>
+              </Link>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {deskItems.map((card) => (
@@ -947,26 +951,38 @@ export default function Home() {
             <h2 className="text-2xl font-semibold font-accent">Ships sailing from Galveston</h2>
             <p className="mt-2 text-sm text-text-secondary">Advisor notes and ship profiles from our desk.</p>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              {ships.map((ship) => (
-                <div key={ship.id} className="rounded-2xl border border-slate-200 bg-background-card p-6">
-                  <div className="text-lg font-semibold text-text-primary">{ship.name}</div>
-                  {ship.home_port && (
-                    <p className="mt-2 text-sm text-text-secondary">Home port: {ship.home_port}</p>
-                  )}
-                  <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
-                    <a href="/cruises-from-galveston/ships" className="text-primary-blue">
-                      Advisor overview
-                    </a>
-                    <a
-                      href="#booking-panel"
-                      onClick={() => openBookingPanel({ ship: ship.name })}
-                      className="text-text-primary hover:text-primary-blue"
-                    >
-                      View sailings
-                    </a>
+              {ships.map((ship) => {
+                const shipSlug = normalizeLineKey(ship.ship_name);
+                const countLabel =
+                  typeof ship.future_sailing_count === "number"
+                    ? `${ship.future_sailing_count} upcoming sailings`
+                    : "Upcoming sailings";
+                const nextDate = ship.next_sailing_date ? formatDate(ship.next_sailing_date) : null;
+                return (
+                  <div key={ship.ship_id} className="rounded-2xl border border-slate-200 bg-background-card p-6">
+                    <div className="text-lg font-semibold text-text-primary">{ship.ship_name}</div>
+                    {ship.home_port && (
+                      <p className="mt-2 text-sm text-text-secondary">Home port: {ship.home_port}</p>
+                    )}
+                    <p className="mt-2 text-sm text-text-secondary">
+                      {countLabel}
+                      {nextDate ? ` · Next sail date ${nextDate}` : ""}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold">
+                    <a href={`/cruises-from-galveston/${shipSlug}`} className="text-primary-blue">
+                        Ship overview
+                      </a>
+                      <a
+                        href="#booking-panel"
+                        onClick={() => openBookingPanel({ ship: ship.ship_name })}
+                        className="text-text-primary hover:text-primary-blue"
+                      >
+                        View sailings
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
@@ -978,8 +994,13 @@ export default function Home() {
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {ports.map((port) => {
                 const portImage = portImageFor(port);
+                const portSlug = normalizeLineKey(port);
                 return (
-                  <div key={port} className="overflow-hidden rounded-2xl border border-slate-200 bg-background-card">
+                  <Link
+                    key={port}
+                    href={`/cruises-from-galveston/${portSlug}`}
+                    className="overflow-hidden rounded-2xl border border-slate-200 bg-background-card transition hover:border-slate-300"
+                  >
                     {portImage && (
                       <Image
                         src={portImage}
@@ -996,7 +1017,7 @@ export default function Home() {
                         Common Galveston itinerary stop with day-visit timing and curated excursions.
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>

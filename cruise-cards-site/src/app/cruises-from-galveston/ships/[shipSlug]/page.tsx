@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function ShipCalendarRedirect({ params }: { params: { shipSlug: string } }) {
+export default function ShipRedirectPage({ params }: { params: { shipSlug: string } }) {
   redirect(`/cruises-from-galveston/${params.shipSlug}`);
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { getSupabaseClient } from "@/lib/supabaseClient";
+import { useEffect, useState } from "react";
 
 type SearchRow = {
   id?: string;
@@ -39,7 +38,6 @@ function fmtMoney(value?: number | null) {
 }
 
 export default function VisitorSearch() {
-  const supabase = useMemo(() => getSupabaseClient(), []);
   const [rows, setRows] = useState<SearchRow[]>([]);
   const [status, setStatus] = useState<string>("Ready");
   const [loading, setLoading] = useState(false);
@@ -51,30 +49,21 @@ export default function VisitorSearch() {
   });
 
   async function runSearch(nextFilters: Filters, label: string) {
-    if (!supabase) {
-      setRows([]);
-      setStatus("Missing Supabase env");
-      return;
-    }
-
     setLoading(true);
     setStatus(label);
 
     try {
-      let query = supabase.from("searchable_cruises").select("*").order("departure_date", { ascending: true });
+      const params = new URLSearchParams();
+      if (nextFilters.destination?.trim()) params.set("destination", nextFilters.destination.trim());
+      if (nextFilters.startDate) params.set("startDate", nextFilters.startDate);
+      if (nextFilters.endDate) params.set("endDate", nextFilters.endDate);
+      if (typeof nextFilters.minDuration === "number") params.set("minDuration", String(nextFilters.minDuration));
+      if (typeof nextFilters.maxDuration === "number") params.set("maxDuration", String(nextFilters.maxDuration));
 
-      if (nextFilters.destination?.trim()) {
-        query = query.ilike("destination", `%${nextFilters.destination.trim()}%`);
-      }
-      if (nextFilters.startDate) query = query.gte("departure_date", nextFilters.startDate);
-      if (nextFilters.endDate) query = query.lte("departure_date", nextFilters.endDate);
-      if (typeof nextFilters.minDuration === "number") query = query.gte("duration_days", nextFilters.minDuration);
-      if (typeof nextFilters.maxDuration === "number") query = query.lte("duration_days", nextFilters.maxDuration);
-
-      const { data, error } = await query;
-      if (error) throw error;
-
-      setRows((data as SearchRow[]) ?? []);
+      const res = await fetch(`/api/visitor-sailings?${params.toString()}`);
+      if (!res.ok) throw new Error("Visitor sailings request failed");
+      const json = await res.json();
+      setRows((json.sailings as SearchRow[]) ?? []);
       setStatus("Updated");
       setErrorMessage(null);
     } catch (err) {
@@ -89,17 +78,15 @@ export default function VisitorSearch() {
 
   useEffect(() => {
     const today = new Date();
-    const sixMonths = new Date();
-    sixMonths.setMonth(sixMonths.getMonth() + 6);
     const next = {
       ...filters,
       startDate: today.toISOString().slice(0, 10),
-      endDate: sixMonths.toISOString().slice(0, 10),
+      endDate: "",
     };
     setFilters(next);
     runSearch(next, "Loading…");
     // eslint-disable-next-line react-hooks/exhaustive-deps -- initial load only
-  }, [supabase]);
+  }, []);
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();

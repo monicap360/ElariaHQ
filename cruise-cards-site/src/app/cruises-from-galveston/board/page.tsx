@@ -19,25 +19,38 @@ function formatDate(value: string | null) {
 }
 
 function formatPrice(value: number | null) {
-  if (value === null || value === undefined || value === "") return "Call";
-  const numeric = typeof value === "number" ? value : Number(value);
-  if (!Number.isFinite(numeric)) return "Call";
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(numeric);
+  if (value == null) return "Call";
+  if (!Number.isFinite(value)) return "Call";
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 }
 
 export default function CruiseBoardPage() {
   const [sailings, setSailings] = useState<Sailing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
     (async () => {
       setLoading(true);
-      const res = await fetch("/api/board-sailings");
-      const json = await res.json();
-      if (active) {
-        setSailings((json.sailings as Sailing[]) || []);
-        setLoading(false);
+      setError(null);
+      try {
+        const res = await fetch("/api/board-sailings");
+        if (!res.ok) {
+          throw new Error("Board sailings request failed");
+        }
+        const json = await res.json();
+        if (active) {
+          setSailings((json.sailings as Sailing[]) || []);
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error(err);
+        if (active) {
+          setSailings([]);
+          setError("Unable to load sailings right now.");
+          setLoading(false);
+        }
       }
     })();
     return () => {
@@ -88,7 +101,14 @@ export default function CruiseBoardPage() {
                     </td>
                   </tr>
                 )}
-                {!loading && sailings.length === 0 && (
+                {!loading && error && (
+                  <tr>
+                    <td className="px-5 py-6 text-slate-400" colSpan={6}>
+                      {error}
+                    </td>
+                  </tr>
+                )}
+                {!loading && !error && sailings.length === 0 && (
                   <tr>
                     <td className="px-5 py-6 text-slate-400" colSpan={6}>
                       No upcoming sailings are available at this time.
