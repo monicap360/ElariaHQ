@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { formatDurationLabel } from "@/lib/formatDuration";
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 type DurationSeoRow = {
   duration_slug: string;
