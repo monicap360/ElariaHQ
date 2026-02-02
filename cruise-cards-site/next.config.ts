@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
   experimental: {
     turbo: undefined,
   },
+  // Optimize build performance
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
 };
 
 export default nextConfig;
