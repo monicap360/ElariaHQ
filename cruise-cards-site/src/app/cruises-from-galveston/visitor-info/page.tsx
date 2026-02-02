@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import VisitorSearch from "./VisitorSearch";
 import "./visitor-info.css";
 import { CvbFooter } from "@/components/cvb/CvbFooter";
@@ -151,18 +152,18 @@ export default function VisitorInfoPage() {
           Connect with fellow cruisers, ask questions, share tips, and sail with confidence.
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
-          <a
+          <Link
             href="/cruises-from-galveston/guest-help"
             className="rounded bg-seaglass px-6 py-3 text-sm font-semibold text-white"
           >
             Join the Community
-          </a>
-          <a
+          </Link>
+          <Link
             href="/cruises-from-galveston/guest-help"
             className="rounded border border-harbor px-6 py-3 text-sm font-semibold text-harbor"
           >
             Ask a Question
-          </a>
+          </Link>
         </div>
       </section>
 

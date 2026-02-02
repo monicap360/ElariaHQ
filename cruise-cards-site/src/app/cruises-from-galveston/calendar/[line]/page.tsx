@@ -5,7 +5,8 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function LineCalendarPage({ params }: { params: { line: string } }) {
+export default async function LineCalendarPage({ params }: { params: Promise<{ line: string }> }) {
+  const { line } = await params;
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
       <main className="mx-auto max-w-5xl px-6 py-12 text-slate">
@@ -17,7 +18,7 @@ export default async function LineCalendarPage({ params }: { params: { line: str
 
   const start = new Date().toISOString().slice(0, 10);
   const end = new Date(new Date().setMonth(new Date().getMonth() + 12)).toISOString().slice(0, 10);
-  const cruiseLine = titleCase(params.line.replace(/-/g, " "));
+  const cruiseLine = titleCase(line.replace(/-/g, " "));
 
   const input: CruiseDecisionInput = {
     departurePort: "Galveston",

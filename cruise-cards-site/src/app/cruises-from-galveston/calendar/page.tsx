@@ -49,8 +49,9 @@ type CalendarSearchParams = {
 export default async function CalendarPage({
   searchParams,
 }: {
-  searchParams?: CalendarSearchParams;
+  searchParams?: Promise<CalendarSearchParams>;
 }) {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-12 text-slate">
@@ -63,10 +64,10 @@ export default async function CalendarPage({
   const today = new Date();
   const CURRENT_YEAR = today.getUTCFullYear();
   const CURRENT_MONTH = today.getUTCMonth() + 1;
-  const shipId = sParam(searchParams, "shipId");
-  const hasExplicitMonth = sParam(searchParams, "y") !== undefined || sParam(searchParams, "m") !== undefined;
-  let y = Number(searchParams?.y || CURRENT_YEAR);
-  const mInput = Number(searchParams?.m || CURRENT_MONTH);
+  const shipId = sParam(resolvedSearchParams, "shipId");
+  const hasExplicitMonth = sParam(resolvedSearchParams, "y") !== undefined || sParam(resolvedSearchParams, "m") !== undefined;
+  let y = Number(resolvedSearchParams?.y || CURRENT_YEAR);
+  const mInput = Number(resolvedSearchParams?.m || CURRENT_MONTH);
   let m = Number.isFinite(mInput) && mInput >= 1 && mInput <= 12 ? mInput : CURRENT_MONTH;
   let start = new Date(Date.UTC(y, m - 1, 1)).toISOString().slice(0, 10);
   let endExclusive = new Date(Date.UTC(y, m, 1)).toISOString().slice(0, 10);
@@ -74,11 +75,11 @@ export default async function CalendarPage({
     start = new Date(Date.UTC(CURRENT_YEAR, CURRENT_MONTH - 1, 1)).toISOString().slice(0, 10);
     endExclusive = new Date(Date.UTC(CURRENT_YEAR + 1, CURRENT_MONTH - 1, 1)).toISOString().slice(0, 10);
   }
-  const adults = Number(searchParams?.adults || 2);
-  const children = Number(searchParams?.children || 0);
-  const max = searchParams?.max ? Number(searchParams.max) : undefined;
-  const flex = searchParams?.flex === "1" || searchParams?.flex === "true";
-  const line = searchParams?.line;
+  const adults = Number(resolvedSearchParams?.adults || 2);
+  const children = Number(resolvedSearchParams?.children || 0);
+  const max = resolvedSearchParams?.max ? Number(resolvedSearchParams.max) : undefined;
+  const flex = resolvedSearchParams?.flex === "1" || resolvedSearchParams?.flex === "true";
+  const line = resolvedSearchParams?.line;
   const input: CruiseDecisionInput = {
     departurePort: "Galveston",
     dateRange: { start, end: endExclusive },

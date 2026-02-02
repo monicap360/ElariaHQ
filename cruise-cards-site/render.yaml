@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: cruise-cards-site
+    env: node
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production

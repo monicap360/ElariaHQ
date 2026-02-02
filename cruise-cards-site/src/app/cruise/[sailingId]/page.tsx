@@ -10,7 +10,8 @@ import { formatDurationLabel } from "@/lib/formatDuration";
 
 export const dynamic = "force-dynamic";
 
-export default async function CruiseDetailsPage({ params }: { params: { sailingId: string } }) {
+export default async function CruiseDetailsPage({ params }: { params: Promise<{ sailingId: string }> }) {
+  const { sailingId } = await params;
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return (
       <main className="mx-auto max-w-5xl px-6 py-12 text-slate">
@@ -20,7 +21,7 @@ export default async function CruiseDetailsPage({ params }: { params: { sailingI
   }
 
   const provider = providerFromSupabase();
-  const sailing = provider.getSailingById ? await provider.getSailingById(params.sailingId) : null;
+  const sailing = provider.getSailingById ? await provider.getSailingById(sailingId) : null;
 
   if (!sailing) {
     return (

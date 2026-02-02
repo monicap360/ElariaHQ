@@ -193,7 +193,7 @@ export default function Home() {
   const [roomGuests, setRoomGuests] = useState<number[]>([2]);
   const [deckPreference, setDeckPreference] = useState("");
   const [roomTypePreference, setRoomTypePreference] = useState("");
-  const [deskItems, setDeskItems] = useState<DeskItem[]>([]);
+  const [, setDeskItems] = useState<DeskItem[]>([]);
   const [ships, setShips] = useState<ShipRow[]>([]);
   const [ports, setPorts] = useState<string[]>([]);
 

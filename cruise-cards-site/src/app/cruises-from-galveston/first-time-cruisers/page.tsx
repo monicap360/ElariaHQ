@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export default function FirstTimeCruisersPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
@@ -114,11 +112,11 @@ export default function FirstTimeCruisersPage() {
         <h2 className="text-xl font-semibold text-slate-900">A final word for first-time cruisers</h2>
         <p className="mt-3 text-sm text-slate-600">
           Cruising should feel exciting — not intimidating. Galveston is one of the most welcoming cruise ports in the
-          country, and first-time cruisers thrive here because it's grounded, accessible, and built around real
+          country, and first-time cruisers thrive here because it&apos;s grounded, accessible, and built around real
           hospitality.
         </p>
         <p className="mt-3 text-sm text-slate-600">
-          You're not expected to know everything. You're expected to enjoy the journey. And we're here to help.
+          You&apos;re not expected to know everything. You&apos;re expected to enjoy the journey. And we&apos;re here to help.
         </p>
       </section>
 

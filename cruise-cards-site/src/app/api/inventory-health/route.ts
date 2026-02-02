@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 
+type InventoryHealthCheck = {
+  upcoming_sailings: number;
+  next_sailing: string | null;
+  last_loaded_sailing: string | null;
+  status: string;
+};
+
 /**
  * Inventory Health Check Endpoint
  * Returns the status of future sailings inventory
@@ -22,7 +29,7 @@ export async function GET() {
     const { data, error } = await server.client
       .from("inventory_health_check")
       .select("*")
-      .maybeSingle();
+      .maybeSingle<InventoryHealthCheck>();
 
     if (error) {
       return NextResponse.json(

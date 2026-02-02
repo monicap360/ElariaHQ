@@ -1039,11 +1039,10 @@ async function loadPrivateIslandExperiencePage(
   return data as PrivateIslandExperienceRow;
 }
 
-export async function generateMetadata({ params }: { params: { slug: string[] } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug } = await params;
   const server = createServerClient();
   if (!server) return { title: "Cruises from Galveston" };
-
-  const slug = params.slug ?? [];
   if (slug.length === 1) {
     const [one] = slug;
     if (one === "private-islands") {
@@ -1133,7 +1132,8 @@ export async function generateMetadata({ params }: { params: { slug: string[] } 
   return { title: "Cruises from Galveston" };
 }
 
-export default async function CruisesFromGalvestonSeoPage({ params }: { params: { slug: string[] } }) {
+export default async function CruisesFromGalvestonSeoPage({ params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug: slugParam } = await params;
   const server = createServerClient();
   if (!server) {
     return (
@@ -1144,7 +1144,7 @@ export default async function CruisesFromGalvestonSeoPage({ params }: { params: 
     );
   }
 
-  const slug = params.slug ?? [];
+  const slug = slugParam ?? [];
   if (slug.length === 1) {
     const [one] = slug;
     if (one === "private-islands") {

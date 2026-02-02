@@ -3,7 +3,7 @@ import ScrollButton from "@/components/ScrollButton";
 import SailingDetailsClient from "@/components/SailingDetailsClient";
 import "../../visitor-info/visitor-info.css";
 
-type Props = { params: { id: string } };
+type Props = { params: Promise<{ id: string }> };
 
 export function generateMetadata(): Metadata {
   return {
@@ -13,7 +13,8 @@ export function generateMetadata(): Metadata {
   };
 }
 
-export default function SailingDetailsPage({ params }: Props) {
+export default async function SailingDetailsPage({ params }: Props) {
+  const { id } = await params;
   return (
     <main>
       <header className="hero">
@@ -36,7 +37,7 @@ export default function SailingDetailsPage({ params }: Props) {
               <aside className="heroAside" aria-label="Visitor Notes">
                 <h3>What this page shows</h3>
                 <p>
-                  This summary reflects the public directory view. For final confirmations, follow your cruise line’s
+                  This summary reflects the public directory view. For final confirmations, follow your cruise line&apos;s
                   booking documents.
                 </p>
                 <div className="asideRow">
@@ -51,7 +52,7 @@ export default function SailingDetailsPage({ params }: Props) {
 
       <section id="details" className="section">
         <div className="wrap">
-          <SailingDetailsClient sailingId={params.id} />
+          <SailingDetailsClient sailingId={id} />
         </div>
       </section>
 

@@ -8,10 +8,22 @@ export async function GET() {
       openSignals: 0,
       upcomingSailings: 0,
       hasSupabase: false,
+      error: "Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set",
     });
   }
 
-  const supabase = createAdminClient();
+  let supabase;
+  try {
+    supabase = createAdminClient();
+  } catch (error) {
+    return NextResponse.json({
+      draftsInReview: 0,
+      openSignals: 0,
+      upcomingSailings: 0,
+      hasSupabase: false,
+      error: error instanceof Error ? error.message : "Failed to create Supabase client",
+    });
+  }
 
   const status = {
     draftsInReview: 0,
@@ -45,7 +57,7 @@ export async function GET() {
     const { data: health } = await supabase
       .from("inventory_health_check")
       .select("upcoming_sailings, status, next_sailing")
-      .maybeSingle();
+      .maybeSingle<{ upcoming_sailings: number; status: string; next_sailing: string | null }>();
     status.upcomingSailings = health?.upcoming_sailings || 0;
   } catch {
     // Fallback to direct query if view doesn't exist yet
