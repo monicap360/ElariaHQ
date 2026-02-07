@@ -28,9 +28,10 @@ const nextConfig: NextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
-  // Skip type checking during build (faster, but less safe)
+  // Allow build pipelines to skip type checking for speed.
+  // Set SKIP_TYPECHECK=true in the build environment to enable.
   typescript: {
-    ignoreBuildErrors: false, // Keep false for safety, but can set to true to speed up
+    ignoreBuildErrors: process.env.SKIP_TYPECHECK === 'true',
   },
   eslint: {
     ignoreDuringBuilds: true, // Skip ESLint during build to save time
