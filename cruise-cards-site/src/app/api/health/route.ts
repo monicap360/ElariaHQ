@@ -1,3 +1,8 @@
+import { NextResponse } from "next/server";
+
+export function GET() {
+  return NextResponse.json({ ok: true });
+}
 export async function GET() {
   return Response.json({
     ok: true,
