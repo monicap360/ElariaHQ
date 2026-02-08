@@ -27,6 +27,17 @@ supabase functions deploy topical-ownership
 supabase functions invoke topical-ownership
 ```
 
+## Run migrations and seed data
+
+This repository ships SQL migrations and seed data under `supabase/migrations` and
+`supabase/seed`. Use the helper script to apply them to the correct Supabase
+database.
+
+```bash
+export SUPABASE_DB_URL="postgresql://USER:PASSWORD@HOST:5432/postgres"
+./supabase/run-migrations.sh
+```
+
 ## Notes
 
 - `SUPABASE_URL` is provided by Supabase Edge Functions.
