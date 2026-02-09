@@ -38,6 +38,13 @@ export SUPABASE_DB_URL="postgresql://USER:PASSWORD@HOST:5432/postgres"
 ./supabase/run-migrations.sh
 ```
 
+### Windows PowerShell
+
+```powershell
+$env:SUPABASE_DB_URL="postgresql://USER:PASSWORD@HOST:5432/postgres"
+.\supabase\run-migrations.ps1
+```
+
 ## Notes
 
 - `SUPABASE_URL` is provided by Supabase Edge Functions.
