@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "main": "package.json",
   "license": "UNLICENSED",
+  "packageManager": "npm@10.9.4",
   "scripts": {
     "dev": "sanity dev",
     "start": "sanity start",
