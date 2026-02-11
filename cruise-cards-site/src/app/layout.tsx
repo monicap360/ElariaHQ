@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Inter, Libre_Baskerville } from "next/font/google";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import "./globals.css";
 
 const inter = Inter({
@@ -241,6 +242,7 @@ export default function RootLayout({
               </nav>
             </div>
           </header>
+          <Breadcrumbs />
           {children}
           <footer className="border-t border-slate-200 bg-background-panel/80">
             <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-6 text-xs text-text-muted md:flex-row md:items-start md:justify-between">
