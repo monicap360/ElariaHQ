@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import BookingIntegrationRail from "@/components/BookingIntegrationRail";
+import EmbarkationOperationsCenter from "@/components/EmbarkationOperationsCenter";
 
 type Language = "en" | "es";
 
@@ -620,6 +621,10 @@ export default function PlanningToolsPage() {
             sailingsHref="#live-search"
             requestHref="#request-assist"
           />
+        </section>
+
+        <section className="mt-8">
+          <EmbarkationOperationsCenter language={lang} />
         </section>
 
         <section className="mt-12 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
