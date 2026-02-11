@@ -194,9 +194,9 @@ export default function CruiseSearchTable({ sailings }: Props) {
                 <td className="py-3">
                   <a
                     href={`/booking?sailing=${encodeURIComponent(bookingKey)}`}
-                    className="inline-block rounded bg-primary-blue px-4 py-2 text-sm text-white hover:bg-primary-blue/90"
+                    className="inline-block rounded bg-accent-teal px-4 py-2 text-sm text-white hover:bg-accent-teal/90"
                   >
-                    View / Book
+                    View details
                   </a>
                 </td>
               </tr>

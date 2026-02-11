@@ -188,7 +188,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${libreBaskerville.variable} font-sans antialiased`}>
         <div className="min-h-screen bg-background-base text-text-secondary pb-20 md:pb-0">
-          <div className="border-b border-slate-200 bg-background-panel/80 text-xs text-text-muted">
+          <div className="border-b border-slate-200 bg-background-panel text-xs text-text-muted">
             <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-2 px-6 py-2 text-center">
               <span>Serving Galveston cruisers since 2017</span>
               <span aria-hidden="true">•</span>
@@ -197,7 +197,7 @@ export default function RootLayout({
               <span>We&apos;re here even if you already booked</span>
             </div>
           </div>
-          <header className="border-b border-slate-200 bg-background-panel/80 backdrop-blur">
+          <header className="border-b border-slate-200 bg-background-panel">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link href="/" className="flex items-center gap-4 leading-tight">
                 <Image
@@ -229,14 +229,14 @@ export default function RootLayout({
                   Search
                 </Link>
                 <Link href="/booking" className="hover:text-text-primary">
-                  Book
+                  Booking Help
                 </Link>
                 <a
                   href="tel:14096322106"
                   className="rounded-full border border-white/10 bg-background-card px-4 py-2 text-xs font-semibold text-text-primary"
                   title="Local Galveston Cruise Help Desk - Real people. Real Galveston experience."
                 >
-                  📞 (409) 632-2106
+                  Call (409) 632-2106
                 </a>
               </nav>
             </div>
@@ -245,15 +245,12 @@ export default function RootLayout({
           <footer className="border-t border-slate-200 bg-background-panel/80">
             <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-6 text-xs text-text-muted md:flex-row md:items-start md:justify-between">
               <div className="max-w-xl">
-                <div style={{ fontWeight: 800 }}>The Original · Since 2017 · Founded by Monica Peña</div>
-                <div style={{ marginTop: 6 }}>Cruises From Galveston®</div>
+                <div style={{ fontWeight: 800 }}>The Real Cruises From Galveston Experience™ by Monica Peña</div>
                 <p style={{ marginTop: 6 }}>
-                  The Real Cruises From Galveston Experience™ by Monica Peña. Original content based on real Galveston
-                  cruise operations and hospitality experience.
+                  Founded 2017. Based on real Galveston cruise operations and hospitality experience.
                 </p>
                 <p style={{ marginTop: 6 }}>
-                  Cruises From Galveston is a trade name in continuous use since 2017. Unauthorized reproduction,
-                  imitation, or use causing consumer confusion is prohibited.
+                  Unauthorized reproduction or use causing consumer confusion is prohibited.
                 </p>
                 <p style={{ marginTop: 6 }}>
                   Questions before you sail?{" "}
@@ -268,7 +265,7 @@ export default function RootLayout({
                     href="tel:14096322106"
                     className="mt-2 inline-block text-sm font-semibold text-primary-blue hover:underline"
                   >
-                    📞 (409) 632-2106
+                    Call (409) 632-2106
                   </a>
                 </div>
               </div>

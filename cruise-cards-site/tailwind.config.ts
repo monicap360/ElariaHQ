@@ -8,6 +8,7 @@ export default {
         navy: "#0E2A3A",
         harbor: "#2F6F8F",
         seaglass: "#3FA9A3",
+        "accent-teal": "#3FA9A3",
         driftwood: "#6E7C87",
         ocean: "#2F6F8F",
         teal: "#3FA9A3",

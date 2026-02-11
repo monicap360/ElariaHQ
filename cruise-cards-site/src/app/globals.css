@@ -102,7 +102,7 @@
   --color-accent-teal: var(--teal);
   --color-text-primary: var(--navy);
   --color-text-secondary: var(--slate);
-  --color-text-muted: #94a3b8;
+  --color-text-muted: var(--slate);
   --color-border: var(--border);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -116,6 +116,15 @@ body {
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   font-size: 18px;
   line-height: 1.6;
+}
+
+a {
+  color: var(--ocean);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--navy);
 }
 
 h1,
@@ -160,7 +169,7 @@ h3 {
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid var(--border);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 20px rgba(14, 42, 58, 0.08);
 }
 
 .cruise-card img {
@@ -205,12 +214,12 @@ h3 {
 }
 
 .reasons .good::before {
-  content: "✔ ";
+  content: "Good: ";
   color: var(--success);
 }
 
 .reasons .warn::before {
-  content: "⚠ ";
+  content: "Note: ";
   color: var(--warning);
 }
 

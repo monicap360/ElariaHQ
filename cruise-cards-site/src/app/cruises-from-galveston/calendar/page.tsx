@@ -211,7 +211,7 @@ export default async function CalendarPage({
                 ))}
               </div>
               <Link
-                className="mt-4 inline-flex rounded-lg bg-primary-blue px-4 py-2 text-sm font-semibold text-white hover:bg-primary-blue/90"
+                className="mt-4 inline-flex rounded-lg bg-accent-teal px-4 py-2 text-sm font-semibold text-white hover:bg-accent-teal/90"
                 href={buildTravelerHref(entry.sailingId, {
                   adults,
                   children,

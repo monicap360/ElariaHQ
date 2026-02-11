@@ -36,9 +36,9 @@ export default function MobileActionBar({ sailing, queryString }: Props) {
 
           <Link
             href={`/cruise/${sailing.sailingId}?${queryString}`}
-            className="whitespace-nowrap rounded-lg bg-primary-blue px-4 py-2 text-sm text-white hover:bg-primary-blue/90"
+            className="whitespace-nowrap rounded-lg bg-accent-teal px-4 py-2 text-sm text-white hover:bg-accent-teal/90"
           >
-            View
+            View details
           </Link>
         </div>
       </div>

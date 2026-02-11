@@ -508,7 +508,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.08),transparent_55%)] bg-background-base text-text-secondary">
+    <main className="min-h-screen bg-background-base text-text-secondary">
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
@@ -516,7 +516,7 @@ export default function Home() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
         >
-          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-background-panel/80 px-10 py-12 shadow-[0_0_40px_rgba(76,111,255,0.08)]">
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-background-panel px-10 py-12 shadow-sm">
             <Image
               src="/assets/symphony-of-the-seas.webp"
               alt="Cruise ship at sea"
@@ -525,7 +525,7 @@ export default function Home() {
               className="object-cover opacity-25"
               priority
             />
-            <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(11,14,20,0.92),rgba(11,14,20,0.55))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(14,42,58,0.88),rgba(14,42,58,0.5))]" />
             <div className="relative z-10">
               <div className="flex flex-wrap items-center gap-3">
                 <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
@@ -548,7 +548,7 @@ export default function Home() {
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/cruises-from-galveston/first-time-cruisers"
-                  className="rounded-full bg-primary-blue px-6 py-3 text-center text-sm font-semibold text-white"
+                  className="rounded-full bg-accent-teal px-6 py-3 text-center text-sm font-semibold text-white hover:bg-accent-teal/90"
                 >
                   Start Here
                 </Link>
@@ -572,7 +572,7 @@ export default function Home() {
 
           <aside
             id="booking-panel"
-            className="rounded-3xl border border-slate-200 bg-background-panel/80 px-8 py-10"
+            className="rounded-3xl border border-border bg-background-panel px-8 py-10"
           >
             <h2 className="text-2xl font-semibold font-accent">Search & book with clarity</h2>
             <p className="mt-2 text-sm text-text-secondary">
@@ -710,8 +710,8 @@ export default function Home() {
               </label>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/booking" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
-                Continue to booking
+              <a href="/booking" className="rounded-full bg-accent-teal px-6 py-3 text-sm font-semibold text-white hover:bg-accent-teal/90">
+                Request booking help
               </a>
               <a
                 href="#sailings"
@@ -926,17 +926,17 @@ export default function Home() {
                       <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{board.line}</div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                      <a href="#booking-panel" className="rounded-full border border-primary-blue/40 px-3 py-1 text-primary-blue">
+                      <a
+                        href="#booking-panel"
+                        className="rounded-full border border-primary-blue/40 px-3 py-1 text-primary-blue"
+                      >
                         Request booking
                       </a>
-                      <a href="#booking-panel" className="rounded-full border border-slate-200 px-3 py-1 text-text-secondary">
-                        24 hour hold
-                      </a>
-                      <a href="#booking-panel" className="rounded-full border border-slate-200 px-3 py-1 text-text-secondary">
-                        48 hour hold
-                      </a>
-                      <a href="#booking-panel" className="rounded-full border border-slate-200 px-3 py-1 text-text-secondary">
-                        72 hour hold
+                      <a
+                        href="#booking-panel"
+                        className="rounded-full border border-slate-200 px-3 py-1 text-text-secondary"
+                      >
+                        Ask a question
                       </a>
                     </div>
                   </div>
@@ -1213,9 +1213,9 @@ export default function Home() {
               </a>
               <a
                 href="tel:14096322106"
-                className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white"
+                className="rounded-full bg-accent-teal px-6 py-3 text-sm font-semibold text-white hover:bg-accent-teal/90"
               >
-                📞 Call (409) 632-2106
+                Call (409) 632-2106
               </a>
             </div>
           </div>

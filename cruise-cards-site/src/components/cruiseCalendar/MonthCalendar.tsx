@@ -215,7 +215,7 @@ export default function MonthCalendar({
                   } ${ring}`}
                   type="button"
                 >
-                  {entry.recommended && <div className="mb-2 text-xs font-medium text-teal">★ Recommended date</div>}
+                  {entry.recommended && <div className="mb-2 text-xs font-medium text-teal">Recommended date</div>}
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="text-sm font-semibold text-navy">{entry.shipName}</div>
@@ -240,12 +240,12 @@ export default function MonthCalendar({
                   {entry.reasons?.length ? (
                     <ul className="mt-3 space-y-1">
                       {entry.reasons.slice(0, 2).map((reason) => (
-                        <li key={reason} className="text-xs text-success">
-                          ✔ {reason}
+                        <li key={reason} className="text-xs text-slate">
+                          <span className="font-medium text-navy">Reason:</span> {reason}
                         </li>
                       ))}
                       {entry.flags?.includes("high_demand") ? (
-                        <li className="text-xs text-warning">⚠ Limited availability</li>
+                        <li className="text-xs text-warning">Limited availability</li>
                       ) : null}
                     </ul>
                   ) : null}
@@ -253,7 +253,7 @@ export default function MonthCalendar({
                   <div className="mt-4 flex gap-2">
                     <Link
                       href={href}
-                      className="inline-flex items-center justify-center rounded-lg bg-primary-blue px-4 py-2 text-sm text-white hover:bg-primary-blue/90"
+                      className="inline-flex items-center justify-center rounded-lg bg-accent-teal px-4 py-2 text-sm text-white hover:bg-accent-teal/90"
                     >
                       View Details
                     </Link>

@@ -54,8 +54,8 @@ export default function DeskPage() {
             >
               Ask an Advisor
             </a>
-            <a href="/booking" className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white">
-              Continue to Booking
+            <a href="/booking" className="rounded-full bg-accent-teal px-6 py-3 text-sm font-semibold text-white hover:bg-accent-teal/90">
+              Request booking help
             </a>
           </div>
         </section>

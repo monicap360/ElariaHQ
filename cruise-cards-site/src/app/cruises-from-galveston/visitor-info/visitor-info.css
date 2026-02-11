@@ -45,8 +45,8 @@ button, input, select{ font:inherit; }
 }
 .mark{
   width:40px; height:40px; border-radius:14px;
-  background:conic-gradient(from 210deg, var(--navy), var(--teal), var(--navy));
-  box-shadow:0 10px 24px rgba(15,42,61,.18);
+  background:var(--navy);
+  border:1px solid var(--line);
 }
 .brand h1{
   margin:0;
@@ -101,8 +101,7 @@ button, input, select{ font:inherit; }
   font-size:12px;
   letter-spacing:.08em;
   text-transform:uppercase;
-  box-shadow:0 14px 30px rgba(15,42,61,.18);
-  transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  transition:opacity .15s ease;
   cursor:pointer;
 }
 .btn-primary{
@@ -114,7 +113,7 @@ button, input, select{ font:inherit; }
   border-color:rgba(14,42,58,.35);
   color:var(--navy);
 }
-.btn:hover{ transform:translateY(-1px); box-shadow:0 16px 36px rgba(15,42,61,.22); }
+.btn:hover{ opacity:.92; }
 .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
 
 /* Hero */
@@ -125,12 +124,9 @@ button, input, select{ font:inherit; }
   border-radius:var(--radius2);
   overflow:hidden;
   border:1px solid var(--line);
-  background:
-    radial-gradient(1200px 600px at 10% 0%, rgba(63,169,163,.22), transparent 60%),
-    radial-gradient(900px 520px at 90% 20%, rgba(14,42,58,.18), transparent 55%),
-    linear-gradient(180deg, rgba(14,42,58,.92), rgba(14,42,58,.84));
+  background:linear-gradient(180deg, rgba(14,42,58,.92), rgba(14,42,58,.88));
   color:#fff;
-  box-shadow:var(--shadow);
+  box-shadow:0 16px 36px rgba(14,42,58,.12);
   position:relative;
 }
 .heroInner{

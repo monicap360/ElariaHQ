@@ -132,9 +132,9 @@ finalScore =
             <p className="text-text-primary">Carnival Breeze</p>
             <p>5-Day Western Caribbean</p>
             <ul className="mt-3 grid gap-1">
-              <li>✔ Best value for your dates</li>
-              <li>✔ Balcony upgrade available</li>
-              <li>⚠ Limited availability</li>
+              <li>Best value for your dates</li>
+              <li>Balcony upgrade available</li>
+              <li>Limited availability</li>
             </ul>
           </div>
           <p className="mt-4 text-sm text-text-secondary">

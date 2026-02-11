@@ -21,7 +21,7 @@ export default function CruiseHero({
   reserveHref = "/booking",
 }: CruiseHeroProps) {
   return (
-    <section className="bg-cloud overflow-hidden rounded-2xl shadow-lg">
+    <section className="bg-cloud overflow-hidden rounded-2xl border border-sand shadow-sm">
       <div className="relative h-64 w-full">
         <Image src={ship.image} alt={ship.name} fill sizes="100vw" className="object-cover" />
       </div>
@@ -30,8 +30,8 @@ export default function CruiseHero({
         <p className="mb-3 text-sm text-slate">{dates}</p>
         <ul className="mb-4 space-y-1">
           {highlights.map((highlight) => (
-            <li key={highlight} className="text-sm text-success">
-              ✔ {highlight}
+            <li key={highlight} className="text-sm text-slate">
+              <span className="font-semibold text-navy">Highlight:</span> {highlight}
             </li>
           ))}
         </ul>
@@ -44,8 +44,11 @@ export default function CruiseHero({
             >
               View Cabins
             </a>
-            <a href={reserveHref} className="rounded-lg bg-primary-blue px-5 py-2 text-white hover:bg-primary-blue/90">
-              Reserve with Deposit
+            <a
+              href={reserveHref}
+              className="rounded-lg bg-accent-teal px-5 py-2 text-white hover:bg-accent-teal/90"
+            >
+              Request booking
             </a>
           </div>
         </div>

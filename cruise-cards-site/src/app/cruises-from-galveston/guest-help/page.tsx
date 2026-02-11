@@ -347,15 +347,15 @@ export default async function GuestHelpPage() {
         <div className="mt-4 flex flex-wrap gap-3">
           <a
             href="tel:14096322106"
-            className="rounded-full bg-primary-blue px-6 py-3 text-sm font-semibold text-white hover:bg-primary-blue/90"
+            className="rounded-full bg-accent-teal px-6 py-3 text-sm font-semibold text-white hover:bg-accent-teal/90"
           >
-            📞 Call (409) 632-2106
+            Call (409) 632-2106
           </a>
           <a
             href="mailto:help@cruisesfromgalveston.net"
             className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:border-primary-blue/50"
           >
-            ✉️ Email help@cruisesfromgalveston.net
+            Email help@cruisesfromgalveston.net
           </a>
         </div>
       </section>
