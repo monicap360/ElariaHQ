@@ -7,17 +7,25 @@ Agents:
 - Authority Editor Agent
 - News Desk Agent
 - Journal Agent
+- Passport Priority Agent
 
 Content:
 - "What this means for Galveston cruisers"
 - Ship guides (advisor-grade)
 - Port logic and context
 - News explained, not repeated
+- Passport Priority member planning architecture
+- Priority booking alert framework
+- Concierge hotline and parking discount guidance
 
 No:
 - deals
 - rates
 - urgency
+
+Exception framework:
+- Member savings can be discussed as structured loyalty perks
+- No flash-sale language and no urgency pressure
 
 Supabase inputs:
 - news_signals
