@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Inter, Libre_Baskerville } from "next/font/google";
+import { Inter, Cormorant_Garamond } from "next/font/google";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import "./globals.css";
 
@@ -11,11 +11,11 @@ const inter = Inter({
   display: "swap",
 });
 
-const libreBaskerville = Libre_Baskerville({
+const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-libre",
   display: "swap",
-  weight: ["400", "700"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -187,7 +187,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${libreBaskerville.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${cormorantGaramond.variable} font-sans antialiased`}>
         <div className="min-h-screen bg-background-base text-text-secondary pb-20 md:pb-0">
           <div className="border-b border-slate-200 bg-background-panel text-xs text-text-muted">
             <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-2 px-6 py-2 text-center">

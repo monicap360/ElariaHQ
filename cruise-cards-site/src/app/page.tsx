@@ -546,219 +546,220 @@ export default function Home() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
+          className="relative overflow-hidden rounded-3xl border border-border bg-background-panel px-10 py-12 shadow-sm"
         >
-          <div className="relative overflow-hidden rounded-3xl border border-border bg-background-panel px-10 py-12 shadow-sm">
-            <Image
-              src="/assets/symphony-of-the-seas.webp"
-              alt="Cruise ship at sea"
-              fill
-              sizes="(min-width: 1024px) 60vw, 100vw"
-              className="object-cover opacity-25"
-              priority
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(14,42,58,0.88),rgba(14,42,58,0.5))]" />
-            <div className="relative z-10">
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="inline-flex items-center gap-3 rounded-full border border-primary-blue/30 bg-primary-blue/10 px-4 py-2 text-xs text-text-secondary">
-                  <div>
-                    <div className="text-[11px] uppercase tracking-[0.25em] text-text-muted">Cruises From Galveston</div>
-                    <div className="text-sm font-semibold text-text-primary">Your trusted guide since 2017</div>
-                  </div>
+          <Image
+            src="/assets/symphony-of-the-seas.webp"
+            alt="Cruise ship departing Galveston"
+            fill
+            sizes="(min-width: 1024px) 100vw, 100vw"
+            className="object-cover opacity-20"
+            priority
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(244,239,234,0.95),rgba(248,246,242,0.9))]" />
+          <div className="relative z-10 max-w-3xl">
+            <p className="text-xs uppercase tracking-[0.3em] text-text-muted">Port of Galveston · Visitor Guide</p>
+            <h1 className="mt-4 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
+              Cruises from Galveston, clearly explained.
+            </h1>
+            <p className="mt-4 text-base text-text-secondary md:text-lg">
+              Calm, local guidance for first-time cruisers, returning guests, and anyone who wants to plan with clarity
+              instead of pressure.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/cruises-from-galveston/first-time-cruisers"
+                className="rounded-full bg-accent-teal px-6 py-3 text-center text-sm font-semibold text-white hover:bg-accent-teal/90"
+              >
+                Start here
+              </Link>
+              <Link
+                href="/cruises-from-galveston/how-to-plan"
+                className="rounded-full border border-border px-6 py-3 text-center text-sm font-semibold text-text-primary hover:border-primary-blue/60"
+              >
+                Planning guide
+              </Link>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <span className="rounded-full border border-border px-4 py-2 text-xs text-text-secondary">
+                Serving Galveston cruisers since 2017
+              </span>
+              <NextSailingBadge />
+            </div>
+            <div className="mt-8 grid gap-4 border-t border-border pt-6 sm:grid-cols-3">
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-left">
+                  <div className="text-2xl font-semibold text-text-primary">{stat.value}</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{stat.label}</div>
                 </div>
-                <NextSailingBadge />
-              </div>
-              <h1 className="mt-6 text-4xl font-semibold text-text-primary md:text-5xl font-accent">
-                Welcome to Cruises From Galveston
-              </h1>
-              <p className="mt-4 max-w-2xl text-base text-text-secondary md:text-lg">
-                Your trusted guide to cruising from Galveston Island — built on real local experience, not marketing.
-              </p>
-              <p className="mt-4 max-w-2xl text-sm text-text-secondary md:text-base">
-                Real local guidance for first-time cruisers, returning guests, and anyone sailing from our home port.
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/cruises-from-galveston/first-time-cruisers"
-                  className="rounded-full bg-accent-teal px-6 py-3 text-center text-sm font-semibold text-white hover:bg-accent-teal/90"
-                >
-                  Start Here
-                </Link>
-                <Link
-                  href="/cruises-from-galveston/guest-help"
-                  className="rounded-full border border-white/20 px-6 py-3 text-center text-sm font-semibold text-text-primary hover:border-primary-blue/60"
-                >
-                  Already Booked? Guest Help
-                </Link>
-              </div>
-              <div className="mt-8 grid gap-4 border-t border-slate-200 pt-6 sm:grid-cols-3">
-                {stats.map((stat) => (
-                  <div key={stat.label} className="text-center">
-                    <div className="text-2xl font-semibold text-primary-blue">{stat.value}</div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-text-muted">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
           </div>
+        </motion.section>
 
-          <aside
-            id="booking-panel"
-            className="rounded-3xl border border-border bg-background-panel px-8 py-10"
-          >
-            <h2 className="text-2xl font-semibold font-accent">Search & book with clarity</h2>
-            <p className="mt-2 text-sm text-text-secondary">
-              Filters sync to live sailings. We explain first, then help you book.
-            </p>
-            <div className="mt-6 grid gap-4">
-              <label className="text-sm font-semibold text-text-secondary">
-                Ship
-                <select
-                  value={bookingForm.ship}
-                  onChange={(event) => setBookingForm((prev) => ({ ...prev, ship: event.target.value }))}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
-                >
-                  <option value="">Any ship</option>
-                  {availableShips.map((ship) => (
-                    <option key={ship} value={ship}>
-                      {ship}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="text-sm font-semibold text-text-secondary">
-                Month / Year
-                <select
-                  value={bookingForm.month}
-                  onChange={(event) => setBookingForm((prev) => ({ ...prev, month: event.target.value }))}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
-                >
-                  <option value="">Any month</option>
-                  {availableMonths.map((month) => (
-                    <option key={month} value={month}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="text-sm font-semibold text-text-secondary">
-                Nights
-                <select
-                  value={bookingForm.nights}
-                  onChange={(event) => setBookingForm((prev) => ({ ...prev, nights: event.target.value }))}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
-                >
-                  <option value="">Any length</option>
-                  {bookingNightsOptions.map((night) => (
-                    <option key={night} value={night}>
-                      {night} nights
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="text-sm font-semibold text-text-secondary">
-                Travelers
-                <select
-                  value={bookingForm.travelers}
-                  onChange={(event) => setBookingForm((prev) => ({ ...prev, travelers: event.target.value }))}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
-                    <option key={count} value={count}>
-                      {count}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="text-sm font-semibold text-text-secondary">
-                Rooms needed
-                <select
-                  value={roomsCount}
-                  onChange={(event) => setRoomsCount(Number(event.target.value))}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
-                >
-                  {[1, 2, 3, 4, 5, 6].map((count) => (
-                    <option key={count} value={count}>
-                      {count} room{count > 1 ? "s" : ""}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              {roomGuests.map((guests, index) => (
-                <label key={`room-${index + 1}`} className="text-sm font-semibold text-text-secondary">
-                  Room {index + 1} guests
-                  <select
-                    value={guests}
-                    onChange={(event) => {
-                      const value = Number(event.target.value);
-                      setRoomGuests((prev) => prev.map((item, idx) => (idx === index ? value : item)));
-                    }}
-                    className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
-                  >
-                    {[1, 2, 3, 4].map((count) => (
-                      <option key={count} value={count}>
-                        {count} guest{count > 1 ? "s" : ""}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              ))}
-              <label className="text-sm font-semibold text-text-secondary">
-                Deck preference
-                <select
-                  value={deckPreference}
-                  onChange={(event) => setDeckPreference(event.target.value)}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
-                >
-                  <option value="">No preference</option>
-                  <option value="Lower decks">Lower decks</option>
-                  <option value="Mid decks">Mid decks</option>
-                  <option value="Upper decks">Upper decks</option>
-                  <option value="Spa/quiet">Spa / quiet decks</option>
-                </select>
-              </label>
-              <label className="text-sm font-semibold text-text-secondary">
-                Room type preference
-                <select
-                  value={roomTypePreference}
-                  onChange={(event) => setRoomTypePreference(event.target.value)}
-                  className="mt-2 w-full rounded-xl border border-slate-200 bg-background-card px-4 py-3 text-text-primary"
-                >
-                  <option value="">No preference</option>
-                  <option value="Interior">Interior</option>
-                  <option value="Ocean View">Ocean view</option>
-                  <option value="Balcony">Balcony</option>
-                  <option value="Suite">Suite</option>
-                </select>
-              </label>
-              <label className="flex items-center gap-3 text-sm font-semibold text-text-secondary">
-                <input
-                  type="checkbox"
-                  checked={bookingForm.advisorOnly}
-                  onChange={(event) => setBookingForm((prev) => ({ ...prev, advisorOnly: event.target.checked }))}
-                  className="h-4 w-4 rounded border-slate-200 bg-background-card text-primary-blue"
-                />
-                Show advisor-recommended sailings only
-              </label>
+        <section
+          id="booking-panel"
+          className="mt-10 rounded-3xl border border-border bg-background-panel px-8 py-10"
+        >
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-semibold font-accent text-text-primary">Search & book with clarity</h2>
+              <p className="mt-2 text-sm text-text-secondary">
+                Filters sync to live sailings. We explain first, then help you book.
+              </p>
             </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/booking" className="rounded-full bg-accent-teal px-6 py-3 text-sm font-semibold text-white hover:bg-accent-teal/90">
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="/booking"
+                className="rounded-full bg-accent-teal px-6 py-3 text-sm font-semibold text-white hover:bg-accent-teal/90"
+              >
                 Request booking help
               </a>
               <a
                 href="#sailings"
                 onClick={() => openBookingPanel()}
-                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-text-primary"
+                className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
               >
                 Review sailings
               </a>
             </div>
-            <p className="mt-4 text-xs text-text-muted">
-              Prices shown include port fees and taxes. Gratuities and vacation protection are optional and shown
-              separately before checkout.
-            </p>
-          </aside>
-        </motion.section>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <label className="text-sm font-semibold text-text-secondary">
+              Ship
+              <select
+                value={bookingForm.ship}
+                onChange={(event) => setBookingForm((prev) => ({ ...prev, ship: event.target.value }))}
+                className="mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-text-primary"
+              >
+                <option value="">Any ship</option>
+                {availableShips.map((ship) => (
+                  <option key={ship} value={ship}>
+                    {ship}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm font-semibold text-text-secondary">
+              Month / Year
+              <select
+                value={bookingForm.month}
+                onChange={(event) => setBookingForm((prev) => ({ ...prev, month: event.target.value }))}
+                className="mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-text-primary"
+              >
+                <option value="">Any month</option>
+                {availableMonths.map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm font-semibold text-text-secondary">
+              Nights
+              <select
+                value={bookingForm.nights}
+                onChange={(event) => setBookingForm((prev) => ({ ...prev, nights: event.target.value }))}
+                className="mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-text-primary"
+              >
+                <option value="">Any length</option>
+                {bookingNightsOptions.map((night) => (
+                  <option key={night} value={night}>
+                    {night} nights
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm font-semibold text-text-secondary">
+              Travelers
+              <select
+                value={bookingForm.travelers}
+                onChange={(event) => setBookingForm((prev) => ({ ...prev, travelers: event.target.value }))}
+                className="mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-text-primary"
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
+                  <option key={count} value={count}>
+                    {count}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm font-semibold text-text-secondary">
+              Rooms needed
+              <select
+                value={roomsCount}
+                onChange={(event) => setRoomsCount(Number(event.target.value))}
+                className="mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-text-primary"
+              >
+                {[1, 2, 3, 4, 5, 6].map((count) => (
+                  <option key={count} value={count}>
+                    {count} room{count > 1 ? "s" : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {roomGuests.map((guests, index) => (
+              <label key={`room-${index + 1}`} className="text-sm font-semibold text-text-secondary">
+                Room {index + 1} guests
+                <select
+                  value={guests}
+                  onChange={(event) => {
+                    const value = Number(event.target.value);
+                    setRoomGuests((prev) => prev.map((item, idx) => (idx === index ? value : item)));
+                  }}
+                  className="mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-text-primary"
+                >
+                  {[1, 2, 3, 4].map((count) => (
+                    <option key={count} value={count}>
+                      {count} guest{count > 1 ? "s" : ""}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
+            <label className="text-sm font-semibold text-text-secondary">
+              Deck preference
+              <select
+                value={deckPreference}
+                onChange={(event) => setDeckPreference(event.target.value)}
+                className="mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-text-primary"
+              >
+                <option value="">No preference</option>
+                <option value="Lower decks">Lower decks</option>
+                <option value="Mid decks">Mid decks</option>
+                <option value="Upper decks">Upper decks</option>
+                <option value="Spa/quiet">Spa / quiet decks</option>
+              </select>
+            </label>
+            <label className="text-sm font-semibold text-text-secondary">
+              Room type preference
+              <select
+                value={roomTypePreference}
+                onChange={(event) => setRoomTypePreference(event.target.value)}
+                className="mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-text-primary"
+              >
+                <option value="">No preference</option>
+                <option value="Interior">Interior</option>
+                <option value="Ocean View">Ocean view</option>
+                <option value="Balcony">Balcony</option>
+                <option value="Suite">Suite</option>
+              </select>
+            </label>
+            <label className="flex items-center gap-3 text-sm font-semibold text-text-secondary">
+              <input
+                type="checkbox"
+                checked={bookingForm.advisorOnly}
+                onChange={(event) => setBookingForm((prev) => ({ ...prev, advisorOnly: event.target.checked }))}
+                className="h-4 w-4 rounded border-border bg-background-card text-primary-blue"
+              />
+              Show advisor-recommended sailings only
+            </label>
+          </div>
+          <p className="mt-4 text-xs text-text-muted">
+            Prices shown include port fees and taxes. Gratuities and vacation protection are optional and shown
+            separately before checkout.
+          </p>
+        </section>
 
         <section className="mt-10" id="trust-anchor">
           <div className="grid gap-4 rounded-2xl border border-slate-200 bg-background-panel px-6 py-6 md:grid-cols-4">
