@@ -98,6 +98,33 @@ type ShipRow = {
   last_sailing_date?: string | null;
 };
 
+const FALLBACK_DESK_ITEMS: DeskItem[] = [
+  {
+    id: "desk-embarkation-timing",
+    title: "Embarkation timing that keeps things calm",
+    summary:
+      "Most guests do best arriving 2–3 hours before their check-in window. It leaves room for parking, curbside drop-off, and a calmer start.",
+    created_at: null,
+    kind: "draft",
+  },
+  {
+    id: "desk-driving-buffer",
+    title: "Driving more than 5 hours? Plan the buffer night",
+    summary:
+      "A night on the island reduces morning stress and makes embarkation feel predictable, especially for families or first-time cruisers.",
+    created_at: null,
+    kind: "draft",
+  },
+  {
+    id: "desk-parking-choice",
+    title: "Parking choice matters more than price alone",
+    summary:
+      "Terminal parking is fastest, park-and-ride is simplest for I-10 East, and hotels offer the easiest morning rhythm.",
+    created_at: null,
+    kind: "draft",
+  },
+];
+
 function normalizeLineKey(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
@@ -193,7 +220,7 @@ export default function Home() {
   const [roomGuests, setRoomGuests] = useState<number[]>([2]);
   const [deckPreference, setDeckPreference] = useState("");
   const [roomTypePreference, setRoomTypePreference] = useState("");
-  const [, setDeskItems] = useState<DeskItem[]>([]);
+  const [deskItems, setDeskItems] = useState<DeskItem[]>([]);
   const [ships, setShips] = useState<ShipRow[]>([]);
   const [ports, setPorts] = useState<string[]>([]);
 
@@ -352,6 +379,11 @@ export default function Home() {
     });
     return Array.from(unique.entries()).map(([key, label]) => ({ key, label }));
   }, [cruiseMatrix]);
+
+  const deskHighlights = useMemo(() => {
+    const source = deskItems.length ? deskItems : FALLBACK_DESK_ITEMS;
+    return source.slice(0, 3);
+  }, [deskItems]);
 
   const availableShips = useMemo(() => {
     const unique = new Map<string, string>();
@@ -745,6 +777,45 @@ export default function Home() {
             The Real Cruises From Galveston Experience™ by Monica Peña
           </p>
         </section>
+
+        {deskHighlights.length > 0 && (
+          <section className="mt-16" id="desk-notes">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-text-muted">From Monica&apos;s desk</p>
+                <h2 className="mt-3 text-2xl font-semibold font-accent text-text-primary">
+                  Local desk notes and visitor updates
+                </h2>
+                <p className="mt-2 text-sm text-text-secondary">
+                  Short, practical updates from the Galveston desk. Written to clarify what matters, not to create
+                  urgency.
+                </p>
+              </div>
+              <Link
+                href="/cruises-from-galveston/desk"
+                className="rounded-full border border-border px-5 py-2 text-xs font-semibold text-text-primary hover:border-primary-blue/50"
+              >
+                Visit the desk
+              </Link>
+            </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {deskHighlights.map((item) => (
+                <div key={item.id} className="rounded-2xl border border-slate-200 bg-background-card p-6">
+                  <div className="text-xs uppercase tracking-[0.2em] text-text-muted">
+                    {item.kind === "signal" ? "Signal" : "Desk note"}
+                  </div>
+                  <h3 className="mt-3 text-lg font-semibold text-text-primary">{item.title}</h3>
+                  <p className="mt-2 text-sm text-text-secondary">
+                    {item.summary || "A new desk note is available for Galveston travelers."}
+                  </p>
+                  <p className="mt-3 text-xs text-text-muted">
+                    {item.created_at ? `Updated ${formatDate(item.created_at)}` : "Desk update"}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mt-16" id="arrival-selector">
           <h2 className="text-2xl font-semibold font-accent">How Are You Arriving in Galveston?</h2>
