@@ -19,6 +19,17 @@ export type TerminalGuide = {
   parkingPlanEs: string;
 };
 
+type FeaturedCruiseIntel = {
+  key: "perfect_day_cococay" | "celebration_key" | "disney_magic_galveston";
+  titleEn: string;
+  titleEs: string;
+  summaryEn: string;
+  summaryEs: string;
+  planningPointsEn: string[];
+  planningPointsEs: string[];
+  keywords: string[];
+};
+
 type RouteProfile = {
   key: RouteFocus;
   labelEn: string;
@@ -60,8 +71,8 @@ export const TERMINAL_GUIDES: TerminalGuide[] = [
     key: "terminal_10",
     nameEn: "Terminal 10",
     nameEs: "Terminal 10",
-    primaryLinesEn: "Seasonal and mixed-line departures",
-    primaryLinesEs: "Salidas de temporada y lineas mixtas",
+    primaryLinesEn: "Seasonal departures including Disney Magic and mixed-line sailings",
+    primaryLinesEs: "Salidas de temporada incluyendo Disney Magic y lineas mixtas",
     arrivalNoteEn: "Double-check assignment in final sailing documents; terminal usage can rotate.",
     arrivalNoteEs: "Confirma asignacion en documentos finales; el uso del terminal puede cambiar.",
     parkingPlanEn: "Reserve lot or transfer support in advance for smoother arrival.",
@@ -80,8 +91,8 @@ export const ROUTE_PROFILES: Record<RouteFocus, RouteProfile> = {
       "Compara Bahamas, Caribe Oriental, Caribe Occidental, Canal de Panama y Jamaica desde una sola guia enfocada en Galveston.",
     keywords: ["caribbean", "bahamas", "panama", "jamaica", "galveston"],
     typicalNights: "4-10+ nights depending on route",
-    commonPortsEn: ["Cozumel", "Costa Maya", "Nassau", "Falmouth", "Colon"],
-    commonPortsEs: ["Cozumel", "Costa Maya", "Nassau", "Falmouth", "Colon"],
+    commonPortsEn: ["Cozumel", "Costa Maya", "Nassau", "Perfect Day at CocoCay", "Celebration Key"],
+    commonPortsEs: ["Cozumel", "Costa Maya", "Nassau", "Perfect Day at CocoCay", "Celebration Key"],
     regulationsEn: [
       "Closed-loop U.S. cruises may allow birth certificate + government ID for eligible U.S. citizens.",
       "A valid passport is strongly recommended for all routes and emergency flexibility.",
@@ -101,10 +112,19 @@ export const ROUTE_PROFILES: Record<RouteFocus, RouteProfile> = {
       "Bahamas sailings are strong for first-time cruisers wanting manageable port days and simpler island logistics.",
     overviewEs:
       "Las rutas a Bahamas son ideales para primerizos que buscan dias de puerto manejables y logistica simple.",
-    keywords: ["bahamas", "nassau", "bimini", "coco cay", "half moon cay"],
+    keywords: [
+      "bahamas",
+      "nassau",
+      "bimini",
+      "coco cay",
+      "cococay",
+      "perfect day",
+      "celebration key",
+      "half moon cay",
+    ],
     typicalNights: "4-7 nights",
-    commonPortsEn: ["Nassau", "Bimini", "Perfect Day at CocoCay", "Half Moon Cay"],
-    commonPortsEs: ["Nassau", "Bimini", "Perfect Day at CocoCay", "Half Moon Cay"],
+    commonPortsEn: ["Nassau", "Bimini", "Perfect Day at CocoCay", "Celebration Key", "Half Moon Cay"],
+    commonPortsEs: ["Nassau", "Bimini", "Perfect Day at CocoCay", "Celebration Key", "Half Moon Cay"],
     regulationsEn: [
       "Nassau and private island stops still require valid cruise identity documentation.",
       "Re-entry documents must remain accessible in your carry-on on port days.",
@@ -210,6 +230,69 @@ export const ROUTE_PROFILES: Record<RouteFocus, RouteProfile> = {
   },
 };
 
+const FEATURED_CRUISE_INTEL: FeaturedCruiseIntel[] = [
+  {
+    key: "perfect_day_cococay",
+    titleEn: "Perfect Day at CocoCay",
+    titleEs: "Perfect Day at CocoCay",
+    summaryEn:
+      "Royal Caribbean private-island stop frequently paired with Bahamas-focused sailings that Galveston travelers compare for family activity density.",
+    summaryEs:
+      "Escala de isla privada de Royal Caribbean, comun en rutas a Bahamas que viajeros de Galveston comparan por actividades familiares.",
+    planningPointsEn: [
+      "Plan port-day return timing using ship time, not phone auto-time.",
+      "Book high-demand island activities early when sailing volume is high.",
+      "Carry ship card and photo ID in a waterproof holder for island transitions.",
+    ],
+    planningPointsEs: [
+      "Planea el regreso usando horario del barco, no hora automatica del telefono.",
+      "Reserva actividades de alta demanda con anticipacion en sailings con mucho volumen.",
+      "Lleva tarjeta del barco e identificacion en funda resistente al agua.",
+    ],
+    keywords: ["perfect day", "cococay", "coco cay", "royal", "bahamas"],
+  },
+  {
+    key: "celebration_key",
+    titleEn: "Celebration Key",
+    titleEs: "Celebration Key",
+    summaryEn:
+      "Carnival private-destination expansion that many Galveston guests ask about when comparing newer Bahamas route options and family shore-day style.",
+    summaryEs:
+      "Expansion de destino privado de Carnival que muchos viajeros de Galveston consultan al comparar nuevas opciones de Bahamas.",
+    planningPointsEn: [
+      "Treat this as a high-interest destination and review onboard planning windows early.",
+      "Confirm excursion and beach zone details in the cruise line app before embarkation.",
+      "Pair this stop with realistic terminal and parking timing on embarkation day.",
+    ],
+    planningPointsEs: [
+      "Consideralo destino de alta demanda y revisa ventanas de planificacion con anticipacion.",
+      "Confirma detalles de excursiones y zonas de playa en la app de la linea antes de embarcar.",
+      "Combina esta escala con tiempos realistas de terminal y estacionamiento en embarque.",
+    ],
+    keywords: ["celebration key", "carnival", "bahamas", "private island"],
+  },
+  {
+    key: "disney_magic_galveston",
+    titleEn: "Disney Magic cruises from Galveston",
+    titleEs: "Cruceros Disney Magic desde Galveston",
+    summaryEn:
+      "Disney Magic is a high-demand family-focused ship pattern that appears seasonally from Galveston and benefits from early logistics planning.",
+    summaryEs:
+      "Disney Magic tiene alta demanda familiar y aparece por temporadas desde Galveston, por lo que conviene planificar logistica temprano.",
+    planningPointsEn: [
+      "Seasonal deployment means best-fit sail dates can fill earlier than expected.",
+      "Use terminal assignment checks and parking reservations earlier for peak family sailings.",
+      "Build embarkation-day buffer for luggage flow and document checks with children.",
+    ],
+    planningPointsEs: [
+      "Al ser temporada, las fechas ideales pueden llenarse antes de lo esperado.",
+      "Haz confirmacion de terminal y reserva de estacionamiento mas temprano en salidas familiares.",
+      "Agrega tiempo extra en embarque para equipaje y verificacion de documentos con ninos.",
+    ],
+    keywords: ["disney magic", "disney", "galveston", "family cruise"],
+  },
+];
+
 export function normalizeRouteFocus(value?: string | null): RouteFocus {
   const input = (value || "").toLowerCase().trim();
   if (!input) return "any";
@@ -235,6 +318,7 @@ export function lineToTerminalGuide(cruiseLine?: string | null): TerminalGuide {
   const line = (cruiseLine || "").toLowerCase();
   if (line.includes("royal")) return TERMINAL_GUIDES[0];
   if (line.includes("carnival")) return TERMINAL_GUIDES[1];
+  if (line.includes("disney")) return TERMINAL_GUIDES[2];
   return TERMINAL_GUIDES[2];
 }
 
@@ -261,4 +345,24 @@ export function localizedRouteBrief(profile: RouteProfile, language: AssistantLa
     commonPorts: language === "es" ? profile.commonPortsEs : profile.commonPortsEn,
     regulations: language === "es" ? profile.regulationsEs : profile.regulationsEn,
   };
+}
+
+export function featuredCruiseIntelForQuestion(question: string, language: AssistantLanguage) {
+  const lower = question.toLowerCase();
+  const scored = FEATURED_CRUISE_INTEL.map((item) => {
+    const hits = item.keywords.filter((keyword) => lower.includes(keyword)).length;
+    return { item, hits };
+  });
+
+  const anyMatch = scored.some((entry) => entry.hits > 0);
+  const ordered = anyMatch
+    ? scored.sort((a, b) => b.hits - a.hits).map((entry) => entry.item)
+    : FEATURED_CRUISE_INTEL;
+
+  return ordered.map((item) => ({
+    key: item.key,
+    title: language === "es" ? item.titleEs : item.titleEn,
+    summary: language === "es" ? item.summaryEs : item.summaryEn,
+    planningPoints: language === "es" ? item.planningPointsEs : item.planningPointsEn,
+  }));
 }

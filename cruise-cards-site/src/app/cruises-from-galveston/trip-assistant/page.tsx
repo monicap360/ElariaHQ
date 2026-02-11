@@ -35,6 +35,12 @@ type AssistantResponse = {
       parkingLogistics: string;
     }>;
   };
+  featuredCruiseIntel: Array<{
+    key: string;
+    title: string;
+    summary: string;
+    planningPoints: string[];
+  }>;
   recommendations: Array<{
     sailingId: string;
     shipName: string;
@@ -89,6 +95,7 @@ const COPY = {
     summaryLabel: "Assistant summary",
     routeLabel: "Route guidance",
     terminalsLabel: "Terminal and parking playbook",
+    featuredIntelLabel: "Featured ship and private-island intelligence",
     recommendationsLabel: "Top Galveston sailing matches",
     actionsLabel: "Recommended next steps",
     sourceLabel: "Data source",
@@ -120,6 +127,7 @@ const COPY = {
     summaryLabel: "Resumen del asistente",
     routeLabel: "Guia de ruta",
     terminalsLabel: "Playbook de terminal y estacionamiento",
+    featuredIntelLabel: "Inteligencia destacada de barcos e islas privadas",
     recommendationsLabel: "Mejores salidas desde Galveston",
     actionsLabel: "Siguientes pasos recomendados",
     sourceLabel: "Fuente de datos",
@@ -370,6 +378,25 @@ export default function TripAssistantPage() {
                   ))}
                 </div>
               </article>
+            </section>
+
+            <section className="mt-8 rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+              <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.featuredIntelLabel}</h2>
+              <div className="mt-5 grid gap-4 md:grid-cols-3">
+                {response.featuredCruiseIntel.map((item) => (
+                  <article key={item.key} className="rounded-2xl border border-[#dbe5ea] bg-[#f8fbfd] p-4">
+                    <h3 className="mt-0 text-lg font-semibold text-text-primary">{item.title}</h3>
+                    <p className="mt-2 text-sm text-text-secondary">{item.summary}</p>
+                    <ul className="mt-3 space-y-2 text-xs text-text-secondary">
+                      {item.planningPoints.map((point) => (
+                        <li key={point} className="rounded-lg border border-[#e2ebf0] bg-white px-2.5 py-2">
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
             </section>
 
             <section className="mt-8 rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">

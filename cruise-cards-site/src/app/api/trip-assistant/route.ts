@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import {
   AssistantLanguage,
   RouteFocus,
+  featuredCruiseIntelForQuestion,
   inferRouteFocusFromQuestion,
   lineToTerminalGuide,
   localizedRouteBrief,
@@ -191,6 +192,7 @@ export async function POST(request: NextRequest) {
   const routeFocus: RouteFocus = normalizedFocus === "any" ? inferredFocus : normalizedFocus;
   const routeProfile = routeProfileByFocus(routeFocus);
   const routeBrief = localizedRouteBrief(routeProfile, language);
+  const featuredCruiseIntel = featuredCruiseIntelForQuestion(input.question || "", language);
 
   const preferredNights = parseNumber(input.preferredNights);
   const budgetMax = parseNumber(input.budgetMax);
@@ -320,6 +322,7 @@ export async function POST(request: NextRequest) {
             },
           ],
     },
+    featuredCruiseIntel,
     recommendations,
     nextActions,
   };
