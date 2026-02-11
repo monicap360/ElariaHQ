@@ -3,7 +3,21 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 export type ServerClientMode = "service" | "anon";
 
 function resolveSupabaseUrl() {
-  return process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || null;
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  if (!rawUrl) return null;
+
+  const supabaseUrl = rawUrl.trim();
+  if (!supabaseUrl) return null;
+
+  try {
+    const parsed = new URL(supabaseUrl);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return null;
+    }
+    return supabaseUrl;
+  } catch {
+    return null;
+  }
 }
 
 export function createClient() {
