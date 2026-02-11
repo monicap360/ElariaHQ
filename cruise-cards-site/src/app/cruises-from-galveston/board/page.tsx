@@ -155,12 +155,17 @@ export default function CruiseBoardPage() {
           <div className="relative z-10 max-w-3xl px-8 py-16 md:px-12 md:py-20">
             <p className="text-xs uppercase tracking-[0.32em] text-[#d9eaf2]">Port of Galveston · Live Departures</p>
             <h1 className="mt-4 font-accent text-4xl leading-tight text-white sm:text-5xl md:text-6xl">
-              A welcoming live cruise departure board for Galveston travelers
+              Authority-grade live departure board for Galveston travelers
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-[#e3edf2] md:text-lg">
-              Real upcoming sailings, updated continuously from our live data feed, presented with calm clarity so you
-              can plan with confidence.
+              Real upcoming sailings, updated continuously from our live data feed, presented with hospitality-first
+              clarity so you can plan with confidence.
             </p>
+            <div className="mt-4">
+              <span className="rounded-full bg-white/16 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#e7f2f8]">
+                Galveston departures only
+              </span>
+            </div>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href="#live-board"
@@ -226,6 +231,9 @@ export default function CruiseBoardPage() {
                 Search by ship or itinerary, monitor departure timing, and refresh instantly when you need the latest
                 terminal activity snapshot.
               </p>
+              <span className="mt-2 inline-flex rounded-full bg-[#eef6fb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#537285]">
+                Galveston departures only
+              </span>
             </div>
             <button
               type="button"

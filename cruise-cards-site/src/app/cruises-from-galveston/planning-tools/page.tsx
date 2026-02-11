@@ -216,15 +216,18 @@ const CHECKLIST_60_DAY = [
 
 const COPY = {
   en: {
-    badge: "Official Cruise Planning Toolkit",
-    heading: "Practical planning tools for Galveston cruise departures",
+    badge: "Official Galveston Departure Planning Authority",
+    heading: "Authority-grade planning architecture for Galveston departures",
     intro:
-      "Built for real travelers who want clear steps, live sailings, and calm hospitality support in one place.",
+      "Built for real travelers who want structured guidance, live sailings, and warm hospitality support in one official planning system.",
     subIntro:
-      "Supabase-powered search, real-time pricing signals, SeaPay planning, and parking + transportation requests.",
+      "Galveston departures only: Supabase-powered search, real-time pricing signals, SeaPay planning, and parking + transportation request tools.",
+    architectureTitle: "Structured planning architecture",
+    architectureSubtitle: "Move step-by-step from terminal strategy to confirmed booking support.",
+    galvestonOnlyLabel: "Galveston departures only",
     mapTitle: "Interactive terminal map",
-    mapSubtitle: "Tap a terminal to view activity notes, parking fit, and line focus.",
-    parkingTitle: "Parking price comparison",
+    mapSubtitle: "Tap a terminal to view activity notes, parking fit, and cruise line departure focus.",
+    parkingTitle: "Parking and transport price comparison",
     chartTitle: "Cruise duration comparison",
     chartSubtitle: "Live sailing mix by trip length from current inventory.",
     guideTitle: "Departure guide & 60-day checklist",
@@ -232,9 +235,11 @@ const COPY = {
     feederTitle: "Driving directions from major feeder cities",
     feederSubtitle: "Route guidance for high-volume origin cities.",
     searchTitle: "Supabase-powered dynamic sailing search",
-    searchSubtitle: "Real-time pricing and cabin availability signals with practical filters.",
-    bookingTitle: "Soft booking support",
-    bookingSubtitle: "Helpful actions without pressure.",
+    searchSubtitle:
+      "Real-time pricing, cabin availability signals, and practical filters focused on Galveston departures.",
+    bookingTitle: "Structured booking integration",
+    bookingSubtitle:
+      "View live availability, reserve your cabin, and speak with a cruise specialist in one clear flow.",
     seaPayTitle: "SeaPay deposit plans + request desk",
     seaPaySubtitle: "Scan QR for SeaPay options and request parking/transport support.",
     refreshNow: "Refresh live search",
@@ -247,15 +252,18 @@ const COPY = {
     requestError: "We could not submit your request right now.",
   },
   es: {
-    badge: "Centro Oficial de Planificacion",
-    heading: "Herramientas practicas para salidas de crucero en Galveston",
+    badge: "Autoridad Oficial de Planificacion de Salidas en Galveston",
+    heading: "Arquitectura de planificacion con autoridad para salidas en Galveston",
     intro:
-      "Creado para viajeros reales que buscan pasos claros, salidas en vivo y apoyo de hospitalidad en un solo lugar.",
+      "Creado para viajeros reales que buscan guia estructurada, salidas en vivo y apoyo de hospitalidad en un sistema oficial.",
     subIntro:
-      "Busqueda con Supabase, precios en tiempo real, plan de SeaPay y solicitudes de estacionamiento + transporte.",
+      "Solo salidas desde Galveston: busqueda con Supabase, precios en tiempo real, SeaPay y solicitudes de estacionamiento + transporte.",
+    architectureTitle: "Arquitectura estructurada de planificacion",
+    architectureSubtitle: "Avanza paso a paso desde la terminal hasta la reservacion confirmada.",
+    galvestonOnlyLabel: "Solo salidas desde Galveston",
     mapTitle: "Mapa interactivo de terminales",
-    mapSubtitle: "Selecciona una terminal para ver actividad, estacionamiento y linea principal.",
-    parkingTitle: "Comparacion de precios de estacionamiento",
+    mapSubtitle: "Selecciona una terminal para ver actividad, estacionamiento y linea de salida principal.",
+    parkingTitle: "Comparacion de precios de estacionamiento y transporte",
     chartTitle: "Comparacion por duracion de crucero",
     chartSubtitle: "Mezcla de salidas activas por duracion con inventario actual.",
     guideTitle: "Guia de salida y checklist de 60 dias",
@@ -263,9 +271,11 @@ const COPY = {
     feederTitle: "Direcciones desde ciudades alimentadoras",
     feederSubtitle: "Rutas recomendadas para ciudades de mayor flujo.",
     searchTitle: "Busqueda dinamica con Supabase",
-    searchSubtitle: "Precios en tiempo real y senales de disponibilidad de cabina con filtros utiles.",
-    bookingTitle: "Apoyo de reservacion sin presion",
-    bookingSubtitle: "Acciones utiles y claras.",
+    searchSubtitle:
+      "Precios en tiempo real, senales de disponibilidad de cabina y filtros utiles enfocados en salidas de Galveston.",
+    bookingTitle: "Integracion estructurada de reservacion",
+    bookingSubtitle:
+      "Ve disponibilidad en vivo, reserva tu cabina y habla con especialista en un solo flujo claro.",
     seaPayTitle: "Planes de deposito SeaPay + mesa de solicitudes",
     seaPaySubtitle: "Escanea QR para SeaPay y solicita apoyo de estacionamiento/transporte.",
     refreshNow: "Actualizar busqueda",
@@ -277,6 +287,53 @@ const COPY = {
     requestSuccess: "Solicitud recibida. Nuestro equipo de especialistas te contactara pronto.",
     requestError: "No se pudo enviar la solicitud en este momento.",
   },
+} as const;
+
+const PLANNING_ARCHITECTURE = {
+  en: [
+    {
+      step: "Step 1",
+      title: "Terminal and arrival strategy",
+      detail: "Use the interactive map to pick terminal flow, parking fit, and transfer timing.",
+    },
+    {
+      step: "Step 2",
+      title: "Cost and duration comparison",
+      detail: "Compare parking and trip-length patterns with practical, real-world planning context.",
+    },
+    {
+      step: "Step 3",
+      title: "Live Galveston departures board",
+      detail: "Filter real-time sailings, pricing signals, and cabin availability for your travel window.",
+    },
+    {
+      step: "Step 4",
+      title: "Booking and specialist support",
+      detail: "Move to booking, SeaPay deposit options, and parking/transport request support.",
+    },
+  ],
+  es: [
+    {
+      step: "Paso 1",
+      title: "Estrategia de terminal y llegada",
+      detail: "Usa el mapa interactivo para elegir flujo de terminal, estacionamiento y tiempos de traslado.",
+    },
+    {
+      step: "Paso 2",
+      title: "Comparacion de costo y duracion",
+      detail: "Compara estacionamiento y duracion con contexto practico para decisiones reales.",
+    },
+    {
+      step: "Paso 3",
+      title: "Tablero en vivo de salidas en Galveston",
+      detail: "Filtra salidas en tiempo real, senales de precio y disponibilidad de cabina.",
+    },
+    {
+      step: "Paso 4",
+      title: "Reservacion y apoyo especialista",
+      detail: "Pasa a reservacion, opciones SeaPay y solicitud de estacionamiento/transporte.",
+    },
+  ],
 } as const;
 
 function formatDate(value: string) {
@@ -513,6 +570,11 @@ export default function PlanningToolsPage() {
             <h1 className="mt-6 max-w-4xl font-accent text-4xl leading-tight text-white md:text-5xl">{copy.heading}</h1>
             <p className="mt-4 max-w-3xl text-base text-[#e3edf2] md:text-lg">{copy.intro}</p>
             <p className="mt-2 max-w-3xl text-sm text-[#d4e6ef]">{copy.subIntro}</p>
+            <div className="mt-4">
+              <span className="rounded-full bg-white/16 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#e7f2f8]">
+                {copy.galvestonOnlyLabel}
+              </span>
+            </div>
             <div className="mt-7 flex flex-wrap gap-3">
               <a
                 href="#live-search"
@@ -533,6 +595,20 @@ export default function PlanningToolsPage() {
                 {lang === "es" ? "Habla con especialista" : "Speak with a cruise specialist"}
               </a>
             </div>
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.architectureTitle}</h2>
+          <p className="mt-2 text-sm text-text-secondary">{copy.architectureSubtitle}</p>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            {PLANNING_ARCHITECTURE[lang].map((item) => (
+              <article key={item.step} className="rounded-2xl border border-[#dae5eb] bg-[#f8fbfd] p-4">
+                <p className="text-xs uppercase tracking-[0.16em] text-[#5a7b8d]">{item.step}</p>
+                <h3 className="mt-2 text-lg font-semibold text-text-primary">{item.title}</h3>
+                <p className="mt-2 text-sm text-text-secondary">{item.detail}</p>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -695,6 +771,9 @@ export default function PlanningToolsPage() {
             <div>
               <h2 className="mt-0 text-3xl font-accent text-text-primary">{copy.searchTitle}</h2>
               <p className="mt-2 text-sm text-text-secondary">{copy.searchSubtitle}</p>
+              <span className="mt-2 inline-flex rounded-full bg-[#eef6fb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#537285]">
+                {copy.galvestonOnlyLabel}
+              </span>
               <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#5b7a8c]">
                 {lang === "es" ? "Ultima actualizacion" : "Last updated"}:{" "}
                 {lastUpdated
