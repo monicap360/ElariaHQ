@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
   const url = request.nextUrl.clone();
 
   // Redirect non-www to www for cruisesfromgalveston.net
-  // This handles cases where vercel.json redirects might not catch everything
+  // This handles cases where redirect rules might not catch everything.
   if (hostname === 'cruisesfromgalveston.net') {
     url.host = 'www.cruisesfromgalveston.net';
     url.protocol = 'https:';
