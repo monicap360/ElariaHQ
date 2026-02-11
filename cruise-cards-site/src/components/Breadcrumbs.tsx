@@ -38,7 +38,7 @@ export default function Breadcrumbs() {
                   <span itemProp="name">{crumb.name}</span>
                 </Link>
               )}
-              <meta itemProp="position" content={index + 2} />
+              <meta itemProp="position" content={String(index + 2)} />
               {!crumb.isLast && (
                 <span className="separator" aria-hidden="true">
                   /
