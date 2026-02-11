@@ -818,6 +818,33 @@ export default function Home() {
           </section>
         )}
 
+        <section className="mt-16" id="planning-tools-hub">
+          <div className="rounded-3xl border border-slate-200 bg-background-panel px-8 py-8">
+            <p className="text-xs uppercase tracking-[0.3em] text-text-muted">Planning Toolkit</p>
+            <h2 className="mt-3 text-2xl font-semibold font-accent text-text-primary">
+              Practical tools for departure planning
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm text-text-secondary">
+              Use our interactive terminal map, parking comparison, 60-day checklist, bilingual guide, and
+              Supabase-powered live search in one place.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href="/cruises-from-galveston/planning-tools"
+                className="rounded-full bg-accent-teal px-6 py-3 text-sm font-semibold text-white hover:bg-accent-teal/90"
+              >
+                Open planning tools (EN / ES)
+              </Link>
+              <Link
+                href="/cruises-from-galveston/board"
+                className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
+              >
+                Live departures board
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <section className="mt-16" id="arrival-selector">
           <h2 className="text-2xl font-semibold font-accent">How Are You Arriving in Galveston?</h2>
           <p className="mt-2 text-sm text-text-secondary">
