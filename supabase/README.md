@@ -38,6 +38,16 @@ export SUPABASE_DB_URL="postgresql://USER:PASSWORD@HOST:5432/postgres"
 ./supabase/run-migrations.sh
 ```
 
+The helper script now applies:
+
+1. All SQL files in `supabase/migrations`
+2. All SQL files in `supabase/seed`
+3. Ship and sail-date seed data from:
+   - `cruise-cards-site/src/supporting-materials/sailings-seed.sql`
+
+It also prints verification counts for `ships`, `sailings`, and future
+Galveston sailings.
+
 ### Windows PowerShell
 
 ```powershell

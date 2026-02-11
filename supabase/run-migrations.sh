@@ -18,6 +18,7 @@ fi
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MIGRATIONS_DIR="${ROOT_DIR}/migrations"
 SEED_DIR="${ROOT_DIR}/seed"
+SAILINGS_SEED_FILE="${ROOT_DIR}/../cruise-cards-site/src/supporting-materials/sailings-seed.sql"
 
 echo "Running migrations from ${MIGRATIONS_DIR}"
 for file in "${MIGRATIONS_DIR}"/*.sql; do
@@ -32,5 +33,20 @@ for file in "${SEED_DIR}"/*.sql; do
   echo "Seeding $(basename "${file}")"
   psql "${DB_URL}" -v ON_ERROR_STOP=1 -f "${file}"
 done
+
+if [[ -f "${SAILINGS_SEED_FILE}" ]]; then
+  echo "Seeding ship and sail dates from $(basename "${SAILINGS_SEED_FILE}")"
+  psql "${DB_URL}" -v ON_ERROR_STOP=1 -f "${SAILINGS_SEED_FILE}"
+else
+  echo "Skipping ship/sailings seed: file not found at ${SAILINGS_SEED_FILE}"
+fi
+
+echo "Verifying ships and sailings counts"
+psql "${DB_URL}" -v ON_ERROR_STOP=1 -c \
+  "select count(*) as total_ships from public.ships;"
+psql "${DB_URL}" -v ON_ERROR_STOP=1 -c \
+  "select count(*) as total_sailings from public.sailings;"
+psql "${DB_URL}" -v ON_ERROR_STOP=1 -c \
+  "select count(*) as future_galveston_sailings from public.sailings where departure_port = 'Galveston' and depart_date >= current_date;"
 
 echo "Done."
