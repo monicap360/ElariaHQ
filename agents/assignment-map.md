@@ -7,12 +7,18 @@ Agents:
 - Authority Editor Agent
 - News Desk Agent
 - Journal Agent
+- Experience Studio Agent
 
 Content:
 - "What this means for Galveston cruisers"
 - Ship guides (advisor-grade)
 - Port logic and context
 - News explained, not repeated
+- Video mini docs: ships arriving and terminal flow
+- Hybrid land + sea experience planning
+- AI-customized itinerary frameworks
+- Private island access expansion briefings
+- Sustainable cruise tracking and carbon offset option explainers
 
 No:
 - deals
@@ -27,8 +33,9 @@ Supabase inputs:
 
 Allowed authority_role:
 - explainer
-- journal
+- guide
 - context
+- comparison
 - pr
 
 ## texascruiseport.com

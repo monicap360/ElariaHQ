@@ -4,6 +4,7 @@ import { runTopicalOwnershipAgent } from "../topical-ownership/agent";
 import { runUserIntentAgent } from "../user-intent/agent";
 import { runAiReadabilityAgent } from "../ai-readability/agent";
 import { runTransportationTransfersAgent } from "../transportation-transfers/agent";
+import { runExperienceStudioAgent } from "../experience-studio/agent";
 import { notifyAgentUpdate } from "../notify";
 
 const supabase = createClient(
@@ -49,5 +50,10 @@ export async function orchestrate(goal: string) {
   if (agents.has("TransportationTransfersAgent")) {
     await runTransportationTransfersAgent();
     await notifyAgentUpdate("TransportationTransfersAgent", "Run complete.");
+  }
+
+  if (agents.has("ExperienceStudioAgent")) {
+    await runExperienceStudioAgent();
+    await notifyAgentUpdate("ExperienceStudioAgent", "Run complete.");
   }
 }
