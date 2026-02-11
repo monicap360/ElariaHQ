@@ -1,9 +1,8 @@
 -- Remove Miami-origin sailings unless they start or end in Galveston.
--- Keep any sailing that is Galveston-start, Galveston-end, or attached to a Galveston home-port ship.
+-- Keep only endpoint-linked Galveston sailings (strict mode).
 do $$
 declare
   removed_count integer := 0;
-  has_ships boolean := false;
   has_return_port boolean := false;
   has_arrival_port boolean := false;
   has_end_port boolean := false;
@@ -15,8 +14,6 @@ begin
     raise notice 'Skipping Miami cleanup: public.sailings does not exist.';
     return;
   end if;
-
-  has_ships := to_regclass('public.ships') is not null;
 
   select exists (
     select 1
@@ -56,11 +53,6 @@ begin
 
   from_clause := 'from public.sailings s';
   keep_clause := 's.departure_port = ''Galveston''';
-
-  if has_ships then
-    from_clause := from_clause || ' left join public.ships sh on sh.id = s.ship_id';
-    keep_clause := keep_clause || ' or sh.home_port = ''Galveston''';
-  end if;
 
   if has_return_port then
     keep_clause := keep_clause || ' or s.return_port = ''Galveston''';
@@ -128,5 +120,5 @@ begin
   where s.id = m.id;
 
   get diagnostics removed_count = row_count;
-  raise notice 'Removed % Miami sailings that do not start/end in Galveston.', removed_count;
+  raise notice 'Removed % Miami sailings that are not Galveston endpoint-linked.', removed_count;
 end $$;
