@@ -18,10 +18,6 @@ const nextConfig: NextConfig = {
   },
   // Render compatibility settings
   outputFileTracingRoot: process.cwd(),
-  // Disable Turbopack for production builds (Render compatibility)
-  experimental: {
-    turbo: undefined,
-  },
   // Optimize build performance
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
@@ -39,9 +35,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors:
       process.env.SKIP_TYPECHECK === 'true' || process.env.CI === 'true',
-  },
-  eslint: {
-    ignoreDuringBuilds: true, // Skip ESLint during build to save time
   },
 };
 
