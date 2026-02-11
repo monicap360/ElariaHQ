@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import BookingIntegrationRail from "@/components/BookingIntegrationRail";
 
 type Sailing = {
   id: string;
@@ -222,6 +223,15 @@ export default function CruiseBoardPage() {
           ))}
         </section>
 
+        <section className="mt-8">
+          <BookingIntegrationRail
+            language="en"
+            bookingHref="/booking?source=live-board"
+            sailingsHref="#live-board"
+            requestHref="/cruises-from-galveston/planning-tools#request-assist"
+          />
+        </section>
+
         <section id="live-board" className="mt-12 rounded-[2rem] border border-[#d9d2c8] bg-white px-6 py-8 md:px-8 md:py-10">
           <div className="flex flex-wrap items-end justify-between gap-5">
             <div>
@@ -338,12 +348,20 @@ export default function CruiseBoardPage() {
                       </td>
                       <td className="px-5 py-4 font-semibold text-[#0f4460]">{formatPrice(sailing.min_price)}</td>
                       <td className="px-5 py-4">
-                        <Link
-                          href={`/cruise/${sailing.id}`}
-                          className="inline-flex rounded-full border border-[#88a9bb] px-4 py-2 text-xs font-semibold text-[#0f2f45] transition hover:bg-[#eef5f9]"
-                        >
-                          View sailing
-                        </Link>
+                        <div className="flex flex-wrap gap-2">
+                          <Link
+                            href={`/cruise/${sailing.id}`}
+                            className="inline-flex rounded-full border border-[#88a9bb] px-4 py-2 text-xs font-semibold text-[#0f2f45] transition hover:bg-[#eef5f9]"
+                          >
+                            View sailing
+                          </Link>
+                          <Link
+                            href={`/booking?sailingId=${sailing.id}&source=live-board`}
+                            className="inline-flex rounded-full bg-[#0f2f45] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#123a53]"
+                          >
+                            Reserve cabin
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}

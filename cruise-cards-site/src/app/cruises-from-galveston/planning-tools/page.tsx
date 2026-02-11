@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import BookingIntegrationRail from "@/components/BookingIntegrationRail";
 
 type Language = "en" | "es";
 
@@ -612,6 +613,15 @@ export default function PlanningToolsPage() {
           </div>
         </section>
 
+        <section className="mt-8">
+          <BookingIntegrationRail
+            language={lang}
+            bookingHref="/booking?source=planning-tools"
+            sailingsHref="#live-search"
+            requestHref="#request-assist"
+          />
+        </section>
+
         <section className="mt-12 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
           <div className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
             <h2 className="mt-0 text-3xl font-accent text-text-primary">{copy.mapTitle}</h2>
@@ -919,12 +929,20 @@ export default function PlanningToolsPage() {
                       </td>
                       <td className="px-4 py-3 text-text-secondary">{entry.seaPayEligible ? "Yes" : "No"}</td>
                       <td className="px-4 py-3">
-                        <Link
-                          href={`/cruise/${entry.sailingId}`}
-                          className="inline-flex rounded-full border border-[#88a9bb] px-3 py-1 text-xs font-semibold text-[#0f2f45] hover:bg-[#eef5f9]"
-                        >
-                          {lang === "es" ? "Ver" : "View"}
-                        </Link>
+                        <div className="flex flex-wrap gap-2">
+                          <Link
+                            href={`/cruise/${entry.sailingId}`}
+                            className="inline-flex rounded-full border border-[#88a9bb] px-3 py-1 text-xs font-semibold text-[#0f2f45] hover:bg-[#eef5f9]"
+                          >
+                            {lang === "es" ? "Ver" : "View"}
+                          </Link>
+                          <Link
+                            href={`/booking?sailingId=${entry.sailingId}&source=planning-tools${entry.seaPayEligible ? "&deposit=seapay" : ""}`}
+                            className="inline-flex rounded-full bg-[#0f2f45] px-3 py-1 text-xs font-semibold text-white hover:bg-[#123a53]"
+                          >
+                            {lang === "es" ? "Reservar" : "Reserve"}
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}
