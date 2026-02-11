@@ -14,6 +14,7 @@ Purpose: produce Galveston-localized draft packages for media and planning exper
 - Calm authority tone
 - Galveston operations context is mandatory
 - No pricing/deal urgency language
+- Signature-based dedupe guard prevents duplicate draft generation across repeat tasks
 
 ## Supported Task Types
 - `experience_media_portfolio` (build all tracks)

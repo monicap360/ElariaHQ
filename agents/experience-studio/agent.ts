@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createHash } from "crypto";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -63,6 +64,29 @@ function normalizeSiteTarget(value: string | null | undefined) {
 function appendNotes(existing: string | null, addition: string) {
   if (!existing) return addition;
   return `${existing}\n\n${addition}`;
+}
+
+function normalizeForSignature(value: string | null | undefined) {
+  if (!value) return "";
+  return value.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function buildContentSignature(task: AgentTask, siteTarget: string, blueprint: Blueprint) {
+  const signaturePayload = JSON.stringify({
+    agent: "ExperienceStudioAgent",
+    siteTarget,
+    draftType: blueprint.draftType,
+    blueprintKey: blueprint.key,
+    referenceId: task.reference_id ?? null,
+    parentAssetId: task.parent_asset_id ?? null,
+    normalizedNotes: normalizeForSignature(task.notes).slice(0, 600),
+  });
+  return createHash("sha256").update(signaturePayload).digest("hex");
+}
+
+function buildSourceRef(sourceSignal: string | null | undefined, signature: string) {
+  const base = (sourceSignal || "manual").trim() || "manual";
+  return `${base}|experience_sig:${signature}`;
 }
 
 function inferBlueprintKeys(taskType: string | null, notes: string | null): BlueprintKey[] {
@@ -261,13 +285,41 @@ ${buildLocalizationAnchor(notes)}
   },
 };
 
-async function draftExists(taskId: string, siteTarget: string, draftType: string) {
+async function draftExistsForTask(taskId: string, siteTarget: string, draftType: string) {
   const { data, error } = await supabase
     .from("content_drafts")
     .select("id")
     .eq("task_id", taskId)
     .eq("site_target", siteTarget)
     .eq("draft_type", draftType)
+    .limit(1);
+
+  if (error) throw error;
+  return Boolean(data && data.length > 0);
+}
+
+async function draftExistsBySignature(siteTarget: string, draftType: string, sourceRef: string) {
+  const { data, error } = await supabase
+    .from("content_drafts")
+    .select("id")
+    .eq("site_target", siteTarget)
+    .eq("draft_type", draftType)
+    .eq("created_by", "experience_studio_agent")
+    .eq("source_ref", sourceRef)
+    .limit(1);
+
+  if (error) throw error;
+  return Boolean(data && data.length > 0);
+}
+
+async function draftExistsByLegacyTitle(siteTarget: string, draftType: string, titlePrefix: string) {
+  const { data, error } = await supabase
+    .from("content_drafts")
+    .select("id")
+    .eq("site_target", siteTarget)
+    .eq("draft_type", draftType)
+    .eq("created_by", "experience_studio_agent")
+    .ilike("draft_title", `${titlePrefix}%`)
     .limit(1);
 
   if (error) throw error;
@@ -304,15 +356,27 @@ export async function runExperienceStudioAgent() {
       const siteTarget = normalizeSiteTarget(task.target_site);
       const blueprintKeys = inferBlueprintKeys(task.task_type, task.notes);
       const createdDraftTitles: string[] = [];
+      const skippedDuplicateDraftTypes: string[] = [];
 
       for (const blueprintKey of blueprintKeys) {
         const blueprint = BLUEPRINTS[blueprintKey];
         if (!blueprint) continue;
 
-        const alreadyExists = await draftExists(task.id, siteTarget, blueprint.draftType);
-        if (alreadyExists) continue;
+        const signature = buildContentSignature(task, siteTarget, blueprint);
+        const sourceRef = buildSourceRef(task.source_signal, signature);
+        const title = blueprint.title;
 
-        const title = `${blueprint.title} (${new Date().toISOString().slice(0, 10)})`;
+        const [existsForTask, existsForSignature, existsForLegacyTitle] = await Promise.all([
+          draftExistsForTask(task.id, siteTarget, blueprint.draftType),
+          draftExistsBySignature(siteTarget, blueprint.draftType, sourceRef),
+          draftExistsByLegacyTitle(siteTarget, blueprint.draftType, blueprint.title),
+        ]);
+
+        if (existsForTask || existsForSignature || existsForLegacyTitle) {
+          skippedDuplicateDraftTypes.push(blueprint.draftType);
+          continue;
+        }
+
         const body = blueprint.buildBody(task.notes || "");
 
         const { error: draftError } = await supabase.from("content_drafts").insert({
@@ -325,7 +389,7 @@ export async function runExperienceStudioAgent() {
           authority_role: blueprint.authorityRole,
           status: "drafted",
           routing: task.parent_asset_id ?? null,
-          source_ref: task.source_signal ?? "manual",
+          source_ref: sourceRef,
           created_by: "experience_studio_agent",
         });
 
@@ -336,9 +400,15 @@ export async function runExperienceStudioAgent() {
         createdDraftTitles.push(title);
       }
 
-      const completionNote = createdDraftTitles.length
-        ? `Created drafts:\n- ${createdDraftTitles.join("\n- ")}`
-        : "No new drafts created (existing drafts already present).";
+      let completionNote = "No new drafts created (existing drafts already present).";
+      if (createdDraftTitles.length) {
+        completionNote = `Created drafts:\n- ${createdDraftTitles.join("\n- ")}`;
+      }
+      if (skippedDuplicateDraftTypes.length) {
+        completionNote = `${completionNote}\n\nSkipped duplicate draft types:\n- ${Array.from(
+          new Set(skippedDuplicateDraftTypes)
+        ).join("\n- ")}`;
+      }
 
       await supabase
         .from("agent_tasks")
