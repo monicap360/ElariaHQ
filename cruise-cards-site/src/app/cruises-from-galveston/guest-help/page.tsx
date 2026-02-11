@@ -101,7 +101,7 @@ export default async function GuestHelpPage() {
           2017.
         </p>
         <div className="mt-6 flex flex-wrap gap-3 text-sm font-semibold">
-          <Link href="/cruises-from-galveston/plan-your-cruise" className="text-primary-blue">
+          <Link href="/cruises-from-galveston/how-to-plan" className="text-primary-blue">
             Plan your cruise
           </Link>
           <Link href="/cruises-from-galveston/visitor-info" className="text-slate-700">

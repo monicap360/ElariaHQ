@@ -197,6 +197,55 @@ export default function DrivingToGalvestonPage() {
 
       <section className="section">
         <div className="wrap">
+          <div className="card">
+            <div className="cardBody">
+              <h2 className="sectionTitle" style={{ marginTop: 0 }}>
+                Your next steps
+              </h2>
+              <p>
+                Now that you have a drive plan, take the next step in planning your sailing dates and arrival details.
+              </p>
+              <div className="asideRow" style={{ marginTop: 12 }}>
+                <Link className="btn" href="/cruises-from-galveston/search">
+                  Explore sailings
+                </Link>
+                <Link className="ghost" href="/cruises-from-galveston/parking-and-transportation">
+                  Review parking guide
+                </Link>
+              </div>
+              <p className="sectionDesc" style={{ marginTop: 12 }}>
+                <strong>Planning note:</strong> Use the search filters to align sailings with your travel dates.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <div className="card">
+            <div className="cardBody">
+              <h2 className="sectionTitle" style={{ marginTop: 0 }}>
+                Pre-drive checklist
+              </h2>
+              <ul className="linkList">
+                <li>Vehicle serviced (tires, oil, fluids).</li>
+                <li>Printed parking or shuttle reservation confirmation.</li>
+                <li>Hotel confirmation if staying overnight.</li>
+                <li>Boarding passes and luggage tags printed and accessible.</li>
+                <li>Snacks and water for the road.</li>
+                <li>
+                  Terminal address saved:{" "}
+                  <span className="mono">2502 Harborside Drive, Galveston, TX 77550</span>.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
           <h2 className="sectionTitle">The Galveston way: hospitality first</h2>
           <p>
             As someone who has managed hotels, driven cruise shuttles, personally greeted cruise guests, and helped
