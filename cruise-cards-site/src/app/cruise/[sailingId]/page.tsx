@@ -57,17 +57,13 @@ export default async function CruiseDetailsPage({ params }: { params: Promise<{ 
 
   const price = pricing?.minPerPerson ? formatPrice(Number(pricing.minPerPerson)) : "Call for pricing";
   const fromPrice = price;
-  const componentFactors = mapComponentsToFactors(result?.components);
+  const componentFactors = mapComponentsToFactors(result?.components, flags, availability?.demandPressure);
 
   const itineraryLabel = sailing.itineraryLabel ?? titleCase(sailing.itineraryTags?.[0] ?? "Cruise");
   const portsSummary = sailing.portsSummary ?? (sailing.itineraryTags?.join(", ") ?? "—");
   const dates = `${baseDate} • ${formatDurationLabel(sailing.cruiseLine, sailing.nights)} ${itineraryLabel}`;
 
-  const highlights = [
-    ...reasons.slice(0, 2),
-    ...(flags.includes("high_demand") || (availability?.demandPressure ?? 0) >= 0.7 ? ["Popular sailing"] : []),
-    ...(flags.includes("over_budget") ? ["May be above your target budget"] : []),
-  ].slice(0, 3);
+  const highlights = buildHighlights(reasons, flags, availability?.demandPressure);
 
   const details = [
     { label: "Departure", value: "Galveston, TX" },
@@ -89,12 +85,7 @@ export default async function CruiseDetailsPage({ params }: { params: Promise<{ 
         viewCabinsHref="#cabins"
         reserveHref="/booking"
       />
-      <WhyThisCruise
-        factors={[
-          { label: "Overall fit", value: Math.round((result?.confidence ?? 0.6) * 100) },
-          ...componentFactors,
-        ]}
-      />
+      {componentFactors.length > 0 && <WhyThisCruise factors={componentFactors} />}
       <SailingDetails details={details} />
       <CabinPreview cabins={cabins} />
       <StickyBookBar price={fromPrice} reserveHref="/booking" />
@@ -106,32 +97,50 @@ function formatPrice(value: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 }
 
-function mapComponentsToFactors(c?: {
-  price: number;
-  cabin: number;
-  preference: number;
-  demand: number;
-  risk: number;
-}) {
+function mapComponentsToFactors(
+  c?: {
+    price: number;
+    cabin: number;
+    preference: number;
+    demand: number;
+    risk: number;
+  },
+  flags: string[] = [],
+  demandPressure?: number | null
+) {
   if (!c) return [];
   const pct = (x: number) => Math.round(x * 100);
+  const demandHigh = flags.includes("high_demand") || (demandPressure ?? 0) >= 0.7;
+  const riskHigh = c.risk > 0.7;
+
   return [
     { label: "Overall value", value: pct(c.price) },
     { label: "Cabin availability", value: pct(c.cabin) },
-    { label: "Preference match", value: pct(c.preference) },
+    {
+      label: "Booking flexibility",
+      value: pct(1 - c.risk),
+      warning: riskHigh,
+      note: riskHigh ? "Less flexible" : undefined,
+    },
     {
       label: "Demand",
       value: pct(1 - c.demand),
-      warning: c.demand > 0.7,
-      note: c.demand > 0.7 ? "Limited" : undefined,
-    },
-    {
-      label: "Booking stability",
-      value: pct(1 - c.risk),
-      warning: c.risk > 0.7,
-      note: c.risk > 0.7 ? "Tight" : undefined,
+      warning: demandHigh,
+      note: demandHigh ? "Popular sailing — availability may change" : undefined,
     },
   ];
+}
+
+function buildHighlights(reasons: string[], flags: string[], demandPressure?: number | null) {
+  const base = reasons.slice(0, 2).map((reason) => ({ text: reason, tone: "positive" as const }));
+  const warnings: { text: string; tone: "warning" }[] = [];
+  if (flags.includes("high_demand") || (demandPressure ?? 0) >= 0.7) {
+    warnings.push({ text: "Limited availability may apply", tone: "warning" });
+  }
+  if (flags.includes("over_budget")) {
+    warnings.push({ text: "May be above your target budget", tone: "warning" });
+  }
+  return [...base, ...warnings].slice(0, 3);
 }
 
 function buildCabins(cabins: string[], fromPrice: string) {

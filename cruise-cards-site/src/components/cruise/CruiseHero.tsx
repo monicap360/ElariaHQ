@@ -1,5 +1,10 @@
 import Image from "next/image";
 
+type Highlight = {
+  text: string;
+  tone?: "positive" | "warning";
+};
+
 type CruiseHeroProps = {
   ship: {
     name: string;
@@ -7,7 +12,7 @@ type CruiseHeroProps = {
   };
   dates: string;
   price: string;
-  highlights: string[];
+  highlights: Highlight[];
   viewCabinsHref?: string;
   reserveHref?: string;
 };
@@ -30,8 +35,14 @@ export default function CruiseHero({
         <p className="mb-3 text-sm text-slate">{dates}</p>
         <ul className="mb-4 space-y-1">
           {highlights.map((highlight) => (
-            <li key={highlight} className="text-sm text-slate">
-              <span className="font-semibold text-navy">Highlight:</span> {highlight}
+            <li
+              key={highlight.text}
+              className={`text-sm ${highlight.tone === "warning" ? "text-warning" : "text-slate"}`}
+            >
+              <span className="font-semibold text-navy">
+                {highlight.tone === "warning" ? "Note:" : "Highlight:"}
+              </span>{" "}
+              {highlight.text}
             </li>
           ))}
         </ul>
