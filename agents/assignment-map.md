@@ -8,6 +8,7 @@ Agents:
 - News Desk Agent
 - Journal Agent
 - Passport Priority Agent
+- Experience Studio Agent
 
 Content:
 - "What this means for Galveston cruisers"
@@ -17,6 +18,11 @@ Content:
 - Passport Priority member planning architecture
 - Priority booking alert framework
 - Concierge hotline and parking discount guidance
+- Video mini docs: ships arriving and terminal flow
+- Hybrid land + sea experience planning
+- AI-customized itinerary frameworks
+- Private island access expansion briefings
+- Sustainable cruise tracking and carbon offset option explainers
 
 No:
 - deals
@@ -35,8 +41,9 @@ Supabase inputs:
 
 Allowed authority_role:
 - explainer
-- journal
+- guide
 - context
+- comparison
 - pr
 
 ## texascruiseport.com

@@ -16,18 +16,23 @@ Agents:
 - News Desk Agent (input only)
 - Journal Agent (supporting depth)
 - Passport Priority Agent (member experience content)
+- Experience Studio Agent (media + innovation tracks)
 
 Weekly Output:
 - Monday: News Desk -> Authority Editor (explainer on impact)
 - Wednesday: Journal (evergreen advisory)
 - Thursday: Passport Priority Agent (alerts, loyalty, concierge, parking member guidance)
-- Optional Friday: Authority Editor (seasonal or deployment context)
+- Friday: Experience Studio Agent (video/doc + innovation package draft)
+- Optional weekend: Authority Editor (seasonal or deployment context)
 
 Examples:
 - "Winter Storm Fern: What Galveston cruisers should actually do"
 - "Carnival Breeze vs Jubilee from Galveston — who each ship is really for"
 - "Why Galveston itineraries favor Cozumel & Costa Maya"
 - "Cruises from Galveston Passport Priority: member alerts, concierge, and parking discounts"
+- "Ships arriving this week: mini documentary production brief"
+- "Hybrid land + sea plans from Galveston: 1-night, 2-night, and post-cruise models"
+- "Sustainable cruise tracking from Galveston with practical carbon offset options"
 
 Rules:
 - No deals

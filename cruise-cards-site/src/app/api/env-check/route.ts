@@ -2,13 +2,17 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function GET() {
+  const hasPublicUrl = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const hasLegacyUrl = Boolean(process.env.SUPABASE_URL);
   const env = {
-    NEXT_PUBLIC_SUPABASE_URL: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    NEXT_PUBLIC_SUPABASE_URL: hasPublicUrl,
+    SUPABASE_URL: hasLegacyUrl,
+    SUPABASE_URL_EFFECTIVE: hasPublicUrl || hasLegacyUrl,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
     SUPABASE_SERVICE_ROLE_KEY: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
   };
 
-  if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (!env.SUPABASE_URL_EFFECTIVE || !env.SUPABASE_SERVICE_ROLE_KEY) {
     return NextResponse.json({
       env,
       supabase: {
