@@ -92,4 +92,3 @@ export async function POST(request: Request) {
         : "Request received. We will send embarkation-day updates.",
   });
 }
-

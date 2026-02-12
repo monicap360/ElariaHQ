@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type CruiseLine = { id: string; name: string };
@@ -44,9 +44,24 @@ function money(n: number) {
 
 export default function BookingPage() {
   const agencyId = process.env.NEXT_PUBLIC_AGENCY_ID || "529faa6c-8c38-49ac-828c-4944e4f8e8eb";
+  const pendingPrefillShipIdRef = useRef<string | null>(null);
+  const pendingPrefillSailingIdRef = useRef<string | null>(null);
+  const prefillRequestedRef = useRef(false);
+  const [prefillSailingId, setPrefillSailingId] = useState<string | null>(null);
+  const [prefillSource, setPrefillSource] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [prefillNotice, setPrefillNotice] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const sailingId = params.get("sailingId");
+    const source = params.get("source");
+    setPrefillSailingId(sailingId);
+    setPrefillSource(source);
+  }, []);
 
   // Master data
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -126,6 +141,54 @@ export default function BookingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agencyId]);
 
+  // Prefill from integration links like /booking?sailingId=...&source=live-board.
+  useEffect(() => {
+    if (!prefillSailingId || prefillRequestedRef.current) return;
+    prefillRequestedRef.current = true;
+
+    (async () => {
+      const supabase = getSupabaseClient();
+      if (!supabase) return;
+
+      const res = await supabase
+        .from("sailings")
+        .select("id, ship:ships(id, name, cruise_line_id)")
+        .eq("id", prefillSailingId)
+        .maybeSingle();
+
+      if (res.error || !res.data) {
+        console.error("booking prefill sailing query error", res.error);
+        return;
+      }
+
+      const row = res.data as {
+        id: string;
+        ship:
+          | {
+              id: string;
+              name: string;
+              cruise_line_id: string;
+            }
+          | {
+              id: string;
+              name: string;
+              cruise_line_id: string;
+            }[]
+          | null;
+      };
+
+      const shipRow = Array.isArray(row.ship) ? row.ship[0] : row.ship;
+      if (!shipRow?.id || !shipRow?.cruise_line_id) return;
+
+      pendingPrefillShipIdRef.current = shipRow.id;
+      pendingPrefillSailingIdRef.current = row.id;
+      setCruiseLineId(shipRow.cruise_line_id);
+      setPrefillNotice(
+        `Booking integration active: pre-selecting sailing from ${prefillSource || "site flow"} (${shipRow.name}).`,
+      );
+    })();
+  }, [prefillSailingId, prefillSource]);
+
   // When cruise line changes, load Galveston ships
   useEffect(() => {
     if (!cruiseLineId) {
@@ -162,6 +225,15 @@ export default function BookingPage() {
     })();
   }, [cruiseLineId]);
 
+  // When ships list resolves, apply pending ship prefill.
+  useEffect(() => {
+    const pendingShipId = pendingPrefillShipIdRef.current;
+    if (!pendingShipId || ships.length === 0) return;
+    if (!ships.some((ship) => ship.id === pendingShipId)) return;
+    setShipId(pendingShipId);
+    pendingPrefillShipIdRef.current = null;
+  }, [ships]);
+
   // When ship changes, load sailings
   useEffect(() => {
     if (!shipId) {
@@ -190,6 +262,15 @@ export default function BookingPage() {
       setSailingId("");
     })();
   }, [shipId]);
+
+  // When sailings list resolves, apply pending sailing prefill.
+  useEffect(() => {
+    const pendingSailingId = pendingPrefillSailingIdRef.current;
+    if (!pendingSailingId || sailings.length === 0) return;
+    if (!sailings.some((sailing) => sailing.id === pendingSailingId)) return;
+    setSailingId(pendingSailingId);
+    pendingPrefillSailingIdRef.current = null;
+  }, [sailings]);
 
   function updateRoom(idx: number, patch: Partial<Room>) {
     setRooms((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
@@ -314,6 +395,42 @@ export default function BookingPage() {
 
   return (
     <div style={{ maxWidth: 980, margin: "0 auto", padding: 24, fontFamily: "system-ui" }}>
+      <div
+        style={{
+          marginBottom: 18,
+          borderRadius: 16,
+          border: "1px solid #d7e4ea",
+          background: "linear-gradient(140deg, #f7fbfd, #edf5f9)",
+          padding: 16,
+        }}
+      >
+        <div style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5b7688", fontWeight: 800 }}>
+          Official Galveston Departure Booking Integration
+        </div>
+        <div style={{ marginTop: 6, fontSize: 20, fontWeight: 800, color: "#0f2f45" }}>
+          Strong identity. Clear booking flow.
+        </div>
+        <div style={{ marginTop: 6, fontSize: 13, color: "#4f6270" }}>
+          This booking console is connected directly to live Galveston departures and planning tools.
+        </div>
+        {prefillNotice ? (
+          <div
+            style={{
+              marginTop: 10,
+              display: "inline-flex",
+              borderRadius: 999,
+              padding: "6px 12px",
+              fontSize: 12,
+              fontWeight: 700,
+              background: "#e9f5fb",
+              color: "#0f4460",
+            }}
+          >
+            {prefillNotice}
+          </div>
+        ) : null}
+      </div>
+
       <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6 }}>Galveston Multi-Room Booking</h1>
       <p style={{ opacity: 0.8, marginBottom: 18 }}>
         Real Supabase data - Cruise line {"->"} Ship (Galveston) {"->"} Sailing {"->"} Rooms

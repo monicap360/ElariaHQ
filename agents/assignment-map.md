@@ -7,6 +7,7 @@ Agents:
 - Authority Editor Agent
 - News Desk Agent
 - Journal Agent
+- Passport Priority Agent
 - Experience Studio Agent
 
 Content:
@@ -14,6 +15,9 @@ Content:
 - Ship guides (advisor-grade)
 - Port logic and context
 - News explained, not repeated
+- Passport Priority member planning architecture
+- Priority booking alert framework
+- Concierge hotline and parking discount guidance
 - Video mini docs: ships arriving and terminal flow
 - Hybrid land + sea experience planning
 - AI-customized itinerary frameworks
@@ -24,6 +28,10 @@ No:
 - deals
 - rates
 - urgency
+
+Exception framework:
+- Member savings can be discussed as structured loyalty perks
+- No flash-sale language and no urgency pressure
 
 Supabase inputs:
 - news_signals
