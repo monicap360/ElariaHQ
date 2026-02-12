@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type Language = "en" | "es";
 type ParkingStatus = "open" | "limited" | "full";
@@ -47,12 +47,6 @@ type OperationsPayload = {
   };
 };
 
-type TextAlertForm = {
-  phone: string;
-  sailingDate: string;
-  shipName: string;
-};
-
 const REFRESH_INTERVAL_MS = 60_000;
 
 const COPY = {
@@ -60,19 +54,14 @@ const COPY = {
     badge: "Real-time embarkation technology",
     title: "Embarkation Operations Center",
     subtitle:
-      "Live weather alerts, congestion signals, parking capacity indicators, and text update requests for sailing day.",
+      "Live weather alerts, congestion signals, and parking capacity indicators for sailing day.",
     weather: "Weather alerts",
     traffic: "Traffic congestion",
     parking: "Parking capacity",
-    textUpdates: "Text updates for embarkation day",
     refresh: "Refresh operations feed",
     refreshing: "Refreshing...",
     sailingLoad: "Galveston sailings departing today",
     shipsToday: "Ships in today's departure set",
-    submit: "Request text updates",
-    sending: "Sending...",
-    success: "Text update request received. We will notify your embarkation-day updates.",
-    error: "Unable to save your text update request right now.",
     advisories: "Active advisories",
     source: "Source",
   },
@@ -80,19 +69,14 @@ const COPY = {
     badge: "Tecnologia en tiempo real para embarque",
     title: "Centro de Operaciones de Embarque",
     subtitle:
-      "Alertas de clima, congestion vial, indicador de capacidad de estacionamiento y solicitud de actualizaciones por texto.",
+      "Alertas de clima, congestion vial e indicador de capacidad de estacionamiento para el dia de embarque.",
     weather: "Alertas de clima",
     traffic: "Congestion vial",
     parking: "Capacidad de estacionamiento",
-    textUpdates: "Actualizaciones por texto para dia de embarque",
     refresh: "Actualizar operaciones",
     refreshing: "Actualizando...",
     sailingLoad: "Salidas de Galveston para hoy",
     shipsToday: "Barcos en salidas de hoy",
-    submit: "Solicitar actualizaciones por texto",
-    sending: "Enviando...",
-    success: "Solicitud recibida. Te enviaremos actualizaciones para tu dia de embarque.",
-    error: "No se pudo guardar tu solicitud en este momento.",
     advisories: "Avisos activos",
     source: "Fuente",
   },
@@ -121,14 +105,6 @@ export default function EmbarkationOperationsCenter({ language = "en" }: { langu
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const [textForm, setTextForm] = useState<TextAlertForm>({
-    phone: "",
-    sailingDate: "",
-    shipName: "",
-  });
-  const [textSubmitting, setTextSubmitting] = useState(false);
-  const [textStatus, setTextStatus] = useState<"idle" | "success" | "error">("idle");
 
   const copy = COPY[language];
 
@@ -171,32 +147,6 @@ export default function EmbarkationOperationsCenter({ language = "en" }: { langu
   const sailingsTodayList = useMemo(() => {
     return data?.embarkation.topShips?.join(", ") || "—";
   }, [data?.embarkation.topShips]);
-
-  async function submitTextUpdates(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setTextSubmitting(true);
-    setTextStatus("idle");
-
-    try {
-      const response = await fetch("/api/intake/embarkation-text-alert", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          phone: textForm.phone,
-          sailingDate: textForm.sailingDate,
-          shipName: textForm.shipName,
-          language,
-        }),
-      });
-      if (!response.ok) throw new Error("Embarkation text request failed");
-      setTextStatus("success");
-    } catch (submitError) {
-      console.error(submitError);
-      setTextStatus("error");
-    } finally {
-      setTextSubmitting(false);
-    }
-  }
 
   return (
     <section className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
@@ -308,50 +258,7 @@ export default function EmbarkationOperationsCenter({ language = "en" }: { langu
           </ul>
         </div>
       )}
-
-      <div className="mt-6 rounded-2xl border border-[#dbe4ea] bg-[#f8fbfd] p-4">
-        <h3 className="mt-0 text-xl font-accent text-text-primary">{copy.textUpdates}</h3>
-        <form onSubmit={submitTextUpdates} className="mt-4 grid gap-3 md:grid-cols-3">
-          <label className="text-sm font-semibold text-text-secondary">
-            {language === "es" ? "Telefono" : "Phone"}
-            <input
-              required
-              value={textForm.phone}
-              onChange={(event) => setTextForm((prev) => ({ ...prev, phone: event.target.value }))}
-              className="mt-2 w-full rounded-xl border border-[#d5e0e6] bg-white px-4 py-3 text-sm text-text-primary"
-            />
-          </label>
-          <label className="text-sm font-semibold text-text-secondary">
-            {language === "es" ? "Fecha de salida" : "Sailing date"}
-            <input
-              type="date"
-              value={textForm.sailingDate}
-              onChange={(event) => setTextForm((prev) => ({ ...prev, sailingDate: event.target.value }))}
-              className="mt-2 w-full rounded-xl border border-[#d5e0e6] bg-white px-4 py-3 text-sm text-text-primary"
-            />
-          </label>
-          <label className="text-sm font-semibold text-text-secondary">
-            {language === "es" ? "Barco (opcional)" : "Ship (optional)"}
-            <input
-              value={textForm.shipName}
-              onChange={(event) => setTextForm((prev) => ({ ...prev, shipName: event.target.value }))}
-              className="mt-2 w-full rounded-xl border border-[#d5e0e6] bg-white px-4 py-3 text-sm text-text-primary"
-            />
-          </label>
-          <div className="md:col-span-3 flex flex-wrap items-center gap-3">
-            <button
-              type="submit"
-              disabled={textSubmitting}
-              className="rounded-full bg-[#0f2f45] px-6 py-3 text-sm font-semibold text-white hover:bg-[#123a53] disabled:opacity-60"
-            >
-              {textSubmitting ? copy.sending : copy.submit}
-            </button>
-            {textStatus === "success" && <span className="text-sm text-[#2f7f58]">{copy.success}</span>}
-            {textStatus === "error" && <span className="text-sm text-[#a45135]">{copy.error}</span>}
-            {error && <span className="text-sm text-[#a45135]">{error}</span>}
-          </div>
-        </form>
-      </div>
+      {error && <p className="mt-6 text-sm text-[#a45135]">{error}</p>}
     </section>
   );
 }
