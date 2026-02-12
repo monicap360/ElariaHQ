@@ -12,26 +12,26 @@ type BookingIntegrationRailProps = {
 
 const COPY = {
   en: {
-    badge: "Official Booking Integration",
-    title: "Authority booking flow, with hospitality clarity",
+    badge: "Booking tools",
+    title: "Galveston booking flow with practical steps",
     subtitle:
-      "Move from planning to booking with one consistent path: verify departures, reserve your cabin, and connect with a cruise specialist.",
+      "Move from planning to booking in one place: review departures, reserve your cabin, and reach a cruise specialist when needed.",
     sailings: "View available sailings",
     reserve: "Reserve your cabin",
     specialist: "Speak with a cruise specialist",
     request: "Request parking + transport support",
-    pillars: "Authority • Hospitality • Galveston departures only",
+    pillars: "Galveston departures only • Planning-first support",
   },
   es: {
-    badge: "Integracion Oficial de Reservacion",
-    title: "Flujo de reservacion con autoridad y hospitalidad",
+    badge: "Herramientas de reservacion",
+    title: "Flujo de reservacion en Galveston con pasos practicos",
     subtitle:
-      "Pasa de planificacion a reservacion con un camino claro: verifica salidas, reserva tu cabina y conecta con especialista.",
+      "Pasa de planificacion a reservacion en un solo lugar: revisa salidas, reserva cabina y conecta con especialista cuando lo necesites.",
     sailings: "Ver salidas disponibles",
     reserve: "Reserva tu cabina",
     specialist: "Habla con especialista",
     request: "Solicitar apoyo de estacionamiento y transporte",
-    pillars: "Autoridad • Hospitalidad • Solo salidas desde Galveston",
+    pillars: "Solo salidas desde Galveston • Soporte enfocado en planificacion",
   },
 } as const;
 
@@ -45,39 +45,39 @@ export default function BookingIntegrationRail({
   const copy = COPY[language];
 
   return (
-    <section className="rounded-3xl border border-[#cfddd5] bg-[linear-gradient(145deg,#f7fbfd,#edf5f9)] p-6 shadow-sm md:p-7">
-      <p className="text-xs uppercase tracking-[0.2em] text-[#59788a]">{copy.badge}</p>
+    <section className="rounded-3xl border border-[#d7e2e7] bg-[linear-gradient(145deg,#faf7f1,#eff5f7)] p-6 shadow-sm md:p-7">
+      <p className="text-xs uppercase tracking-[0.2em] text-[#5c7684]">{copy.badge}</p>
       <h2 className="mt-3 text-2xl font-accent text-text-primary md:text-3xl">{copy.title}</h2>
       <p className="mt-2 max-w-3xl text-sm text-text-secondary">{copy.subtitle}</p>
 
       <div className="mt-5 flex flex-wrap gap-3">
         <Link
           href={sailingsHref}
-          className="rounded-full border border-[#88a9bb] bg-white px-5 py-2.5 text-sm font-semibold text-[#0f2f45] hover:bg-[#f5fafc]"
+          className="rounded-full border border-[#8aa8b7] bg-white px-5 py-2.5 text-sm font-semibold text-[#1d4f68] hover:bg-[#f4fafc]"
         >
           {copy.sailings}
         </Link>
         <Link
           href={bookingHref}
-          className="rounded-full bg-[#0f2f45] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#123a53]"
+          className="rounded-full bg-[#1f556f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1a4a61]"
         >
           {copy.reserve}
         </Link>
         <a
           href={phoneHref}
-          className="rounded-full border border-[#88a9bb] bg-white px-5 py-2.5 text-sm font-semibold text-[#0f2f45] hover:bg-[#f5fafc]"
+          className="rounded-full border border-[#8aa8b7] bg-white px-5 py-2.5 text-sm font-semibold text-[#1d4f68] hover:bg-[#f4fafc]"
         >
           {copy.specialist}
         </a>
         <Link
           href={requestHref}
-          className="rounded-full border border-[#88a9bb] bg-white px-5 py-2.5 text-sm font-semibold text-[#0f2f45] hover:bg-[#f5fafc]"
+          className="rounded-full border border-[#8aa8b7] bg-white px-5 py-2.5 text-sm font-semibold text-[#1d4f68] hover:bg-[#f4fafc]"
         >
           {copy.request}
         </Link>
       </div>
 
-      <p className="mt-4 text-xs uppercase tracking-[0.14em] text-[#648293]">{copy.pillars}</p>
+      <p className="mt-4 text-xs uppercase tracking-[0.14em] text-[#698593]">{copy.pillars}</p>
     </section>
   );
 }

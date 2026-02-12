@@ -218,10 +218,10 @@ const CHECKLIST_60_DAY = [
 
 const COPY = {
   en: {
-    badge: "Official Galveston Departure Planning Authority",
-    heading: "Authority-grade planning architecture for Galveston departures",
+    badge: "Galveston Departure Planning Hub",
+    heading: "Structured planning tools for Galveston departures",
     intro:
-      "Built for real travelers who want structured guidance, live sailings, and warm hospitality support in one official planning system.",
+      "Built for real travelers who want structured guidance, live sailings, and warm hospitality support in one practical planning system.",
     subIntro:
       "Galveston departures only: Supabase-powered search, real-time pricing signals, SeaPay planning, and parking + transportation request tools.",
     architectureTitle: "Structured planning architecture",
@@ -254,10 +254,10 @@ const COPY = {
     requestError: "We could not submit your request right now.",
   },
   es: {
-    badge: "Autoridad Oficial de Planificacion de Salidas en Galveston",
-    heading: "Arquitectura de planificacion con autoridad para salidas en Galveston",
+    badge: "Centro de Planificacion de Salidas en Galveston",
+    heading: "Herramientas estructuradas de planificacion para salidas en Galveston",
     intro:
-      "Creado para viajeros reales que buscan guia estructurada, salidas en vivo y apoyo de hospitalidad en un sistema oficial.",
+      "Creado para viajeros reales que buscan guia estructurada, salidas en vivo y apoyo de hospitalidad en un sistema practico.",
     subIntro:
       "Solo salidas desde Galveston: busqueda con Supabase, precios en tiempo real, SeaPay y solicitudes de estacionamiento + transporte.",
     architectureTitle: "Arquitectura estructurada de planificacion",
@@ -543,9 +543,9 @@ export default function PlanningToolsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f4ede4] text-text-secondary">
+    <main className="min-h-screen bg-[#f7f1e8] text-text-secondary">
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-10 md:pt-14">
-        <section className="relative overflow-hidden rounded-[2rem] border border-[#b9ccd7] bg-[#0f2f45] shadow-[0_24px_70px_rgba(15,47,69,0.25)]">
+        <section className="relative overflow-hidden rounded-[2rem] border border-[#c7d9e3] bg-[#24556d] shadow-[0_20px_56px_rgba(29,79,104,0.2)]">
           <Image
             src="/assets/symphony-of-the-seas.webp"
             alt="Port of Galveston cruise departures"
@@ -554,7 +554,7 @@ export default function PlanningToolsPage() {
             sizes="(min-width: 1200px) 1100px, 100vw"
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(8,34,52,0.86)_0%,rgba(20,59,79,0.62)_46%,rgba(244,237,228,0.24)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(15,57,79,0.76)_0%,rgba(33,92,122,0.52)_48%,rgba(247,241,232,0.28)_100%)]" />
 
           <div className="relative z-10 px-8 py-14 md:px-12 md:py-16">
             <div className="flex flex-wrap items-center justify-between gap-4">
@@ -580,7 +580,7 @@ export default function PlanningToolsPage() {
             <div className="mt-7 flex flex-wrap gap-3">
               <a
                 href="#live-search"
-                className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0f2f45] hover:bg-[#f4ede4]"
+                className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#1f556f] hover:bg-[#f7f1e8]"
               >
                 {lang === "es" ? "Ver salidas disponibles" : "View available sailings"}
               </a>
@@ -600,13 +600,13 @@ export default function PlanningToolsPage() {
           </div>
         </section>
 
-        <section className="mt-8 rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+        <section className="mt-8 rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
           <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.architectureTitle}</h2>
           <p className="mt-2 text-sm text-text-secondary">{copy.architectureSubtitle}</p>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             {PLANNING_ARCHITECTURE[lang].map((item) => (
-              <article key={item.step} className="rounded-2xl border border-[#dae5eb] bg-[#f8fbfd] p-4">
-                <p className="text-xs uppercase tracking-[0.16em] text-[#5a7b8d]">{item.step}</p>
+              <article key={item.step} className="rounded-2xl border border-[#dce7ed] bg-[#f9fcfd] p-4">
+                <p className="text-xs uppercase tracking-[0.16em] text-[#617f8f]">{item.step}</p>
                 <h3 className="mt-2 text-lg font-semibold text-text-primary">{item.title}</h3>
                 <p className="mt-2 text-sm text-text-secondary">{item.detail}</p>
               </article>
@@ -628,7 +628,7 @@ export default function PlanningToolsPage() {
         </section>
 
         <section className="mt-12 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-          <div className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <div className="rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
             <h2 className="mt-0 text-3xl font-accent text-text-primary">{copy.mapTitle}</h2>
             <p className="mt-2 text-sm text-text-secondary">{copy.mapSubtitle}</p>
 
@@ -646,8 +646,8 @@ export default function PlanningToolsPage() {
                     }}
                     className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-semibold shadow transition ${
                       selectedTerminalId === terminal.id
-                        ? "bg-[#0f2f45] text-white"
-                        : "bg-white text-[#0f2f45] hover:bg-[#e9f3f8]"
+                        ? "bg-[#1f556f] text-white"
+                        : "bg-white text-[#1f556f] hover:bg-[#ecf5f9]"
                     }`}
                     style={{ left: terminal.left, top: terminal.top }}
                   >
@@ -658,7 +658,7 @@ export default function PlanningToolsPage() {
             </div>
           </div>
 
-          <aside className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <aside className="rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
             <h3 className="mt-0 text-xl font-accent text-text-primary">
               {lang === "es" ? selectedTerminal.nameEs : selectedTerminal.nameEn}
             </h3>
@@ -679,7 +679,7 @@ export default function PlanningToolsPage() {
             </div>
             <a
               href="#request-assist"
-              className="mt-5 inline-flex rounded-full border border-[#7ca2b7] px-4 py-2 text-sm font-semibold text-[#0f2f45] hover:bg-[#eef5f9]"
+              className="mt-5 inline-flex rounded-full border border-[#86a7b7] px-4 py-2 text-sm font-semibold text-[#1f556f] hover:bg-[#ecf5f9]"
             >
               {lang === "es" ? "Solicitar apoyo para esta terminal" : "Request help for this terminal"}
             </a>
@@ -687,7 +687,7 @@ export default function PlanningToolsPage() {
         </section>
 
         <section className="mt-12 grid gap-8 lg:grid-cols-[1.1fr_1fr]">
-          <div className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <div className="rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
             <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.parkingTitle}</h2>
             <div className="mt-5 overflow-x-auto rounded-2xl border border-[#dbe4e8]">
               <table className="min-w-[680px] w-full border-collapse text-sm">
@@ -719,7 +719,7 @@ export default function PlanningToolsPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <div className="rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
             <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.chartTitle}</h2>
             <p className="mt-2 text-sm text-text-secondary">{copy.chartSubtitle}</p>
             <div className="mt-5 space-y-4">
@@ -733,7 +733,7 @@ export default function PlanningToolsPage() {
                   </div>
                   <div className="h-3 overflow-hidden rounded-full bg-[#e8edf0]">
                     <div
-                      className="h-full rounded-full bg-[linear-gradient(90deg,#2f6f8f,#3fa9a3)]"
+                      className="h-full rounded-full bg-[linear-gradient(90deg,#3d7d9d,#4a9a98)]"
                       style={{ width: `${bucket.width}%` }}
                     />
                   </div>
@@ -744,11 +744,11 @@ export default function PlanningToolsPage() {
         </section>
 
         <section className="mt-12 grid gap-8 lg:grid-cols-[1fr_1fr]">
-          <div className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <div className="rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
             <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.guideTitle}</h2>
             <a
               href={`/api/downloads/departure-guide?lang=${lang}`}
-              className="mt-5 inline-flex rounded-full bg-[#0f2f45] px-5 py-3 text-sm font-semibold text-white hover:bg-[#123a53]"
+              className="mt-5 inline-flex rounded-full bg-[#1f556f] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1a4a61]"
             >
               {copy.downloadGuide}
             </a>
@@ -756,14 +756,14 @@ export default function PlanningToolsPage() {
             <div className="mt-6 space-y-3">
               {CHECKLIST_60_DAY.map((item) => (
                 <div key={item.day} className="rounded-xl border border-[#e0e8ed] bg-[#f8fbfd] px-4 py-3 text-sm">
-                  <div className="text-xs font-semibold uppercase tracking-[0.15em] text-[#5b7a8c]">{item.day}</div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.15em] text-[#617f8f]">{item.day}</div>
                   <div className="mt-1 text-text-secondary">{lang === "es" ? item.es : item.en}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <div className="rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
             <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.feederTitle}</h2>
             <p className="mt-2 text-sm text-text-secondary">{copy.feederSubtitle}</p>
             <div className="mt-5 grid gap-3">
@@ -781,15 +781,15 @@ export default function PlanningToolsPage() {
           </div>
         </section>
 
-        <section id="live-search" className="mt-12 rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+        <section id="live-search" className="mt-12 rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 className="mt-0 text-3xl font-accent text-text-primary">{copy.searchTitle}</h2>
               <p className="mt-2 text-sm text-text-secondary">{copy.searchSubtitle}</p>
-              <span className="mt-2 inline-flex rounded-full bg-[#eef6fb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#537285]">
+              <span className="mt-2 inline-flex rounded-full bg-[#edf5f9] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#5f7b8a]">
                 {copy.galvestonOnlyLabel}
               </span>
-              <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#5b7a8c]">
+              <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#617f8f]">
                 {lang === "es" ? "Ultima actualizacion" : "Last updated"}:{" "}
                 {lastUpdated
                   ? lastUpdated.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
@@ -802,7 +802,7 @@ export default function PlanningToolsPage() {
               type="button"
               onClick={() => void loadEntries(true)}
               disabled={refreshing}
-              className="rounded-full border border-[#7ca2b7] px-5 py-2.5 text-sm font-semibold text-[#0f2f45] hover:bg-[#eef5f9] disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-full border border-[#86a7b7] px-5 py-2.5 text-sm font-semibold text-[#1f556f] hover:bg-[#ecf5f9] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {refreshing ? copy.refreshing : copy.refreshNow}
             </button>
@@ -869,7 +869,7 @@ export default function PlanningToolsPage() {
 
           <div className="mt-6 overflow-x-auto rounded-2xl border border-[#dbe5ea]">
             <table className="min-w-[860px] w-full border-collapse text-sm">
-              <thead className="bg-[#eef6fb] text-left text-xs uppercase tracking-[0.16em] text-[#587688]">
+              <thead className="bg-[#edf5f9] text-left text-xs uppercase tracking-[0.16em] text-[#5f7b8a]">
                 <tr>
                   <th className="px-4 py-3">{lang === "es" ? "Barco" : "Ship"}</th>
                   <th className="px-4 py-3">{lang === "es" ? "Salida" : "Departure"}</th>
@@ -914,7 +914,7 @@ export default function PlanningToolsPage() {
                       </td>
                       <td className="px-4 py-3 text-text-secondary">{formatDate(entry.departDate)}</td>
                       <td className="px-4 py-3 text-text-secondary">{entry.durationLabel}</td>
-                      <td className="px-4 py-3 font-semibold text-[#0f4460]">{formatPrice(entry.priceFrom)}</td>
+                      <td className="px-4 py-3 font-semibold text-[#21536c]">{formatPrice(entry.priceFrom)}</td>
                       <td className="px-4 py-3">
                         <span
                           className={`rounded-full px-2 py-1 text-xs ${
@@ -937,13 +937,13 @@ export default function PlanningToolsPage() {
                         <div className="flex flex-wrap gap-2">
                           <Link
                             href={`/cruise/${entry.sailingId}`}
-                            className="inline-flex rounded-full border border-[#88a9bb] px-3 py-1 text-xs font-semibold text-[#0f2f45] hover:bg-[#eef5f9]"
+                            className="inline-flex rounded-full border border-[#8eaab9] px-3 py-1 text-xs font-semibold text-[#1f556f] hover:bg-[#ecf5f9]"
                           >
                             {lang === "es" ? "Ver" : "View"}
                           </Link>
                           <Link
                             href={`/booking?sailingId=${entry.sailingId}&source=planning-tools${entry.seaPayEligible ? "&deposit=seapay" : ""}`}
-                            className="inline-flex rounded-full bg-[#0f2f45] px-3 py-1 text-xs font-semibold text-white hover:bg-[#123a53]"
+                            className="inline-flex rounded-full bg-[#1f556f] px-3 py-1 text-xs font-semibold text-white hover:bg-[#1a4a61]"
                           >
                             {lang === "es" ? "Reservar" : "Reserve"}
                           </Link>
@@ -957,7 +957,7 @@ export default function PlanningToolsPage() {
         </section>
 
         <section className="mt-12 grid gap-8 lg:grid-cols-[1fr_1fr]">
-          <div className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <div className="rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
             <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.bookingTitle}</h2>
             <p className="mt-2 text-sm text-text-secondary">{copy.bookingSubtitle}</p>
             <div className="mt-5 grid gap-3">
@@ -982,7 +982,7 @@ export default function PlanningToolsPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+          <div className="rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
             <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.seaPayTitle}</h2>
             <p className="mt-2 text-sm text-text-secondary">{copy.seaPaySubtitle}</p>
 
@@ -1013,8 +1013,8 @@ export default function PlanningToolsPage() {
               <div className="max-w-sm text-sm text-text-secondary">
                 <p>
                   {lang === "es"
-                    ? "Escanea para revisar opciones de SeaPay y continuar al flujo oficial de deposito."
-                    : "Scan to review SeaPay options and continue to the official deposit flow."}
+                    ? "Escanea para revisar opciones de SeaPay y continuar al flujo de deposito."
+                    : "Scan to review SeaPay options and continue to the deposit flow."}
                 </p>
                 <a href={seaPayQrTarget} className="mt-2 inline-block text-sm font-semibold text-primary-blue">
                   {lang === "es" ? "Abrir enlace SeaPay" : "Open SeaPay link"}
@@ -1024,7 +1024,7 @@ export default function PlanningToolsPage() {
           </div>
         </section>
 
-        <section id="request-assist" className="mt-12 rounded-3xl border border-[#d7cec4] bg-white p-6 md:p-8">
+        <section id="request-assist" className="mt-12 rounded-3xl border border-[#d9e2e7] bg-white p-6 md:p-8">
           <h2 className="mt-0 text-2xl font-accent text-text-primary">{copy.requestHeading}</h2>
 
           <form onSubmit={onSubmitPlanningRequest} className="mt-6 grid gap-4 md:grid-cols-2">
@@ -1129,7 +1129,7 @@ export default function PlanningToolsPage() {
               <button
                 type="submit"
                 disabled={formSubmitting}
-                className="rounded-full bg-[#0f2f45] px-6 py-3 text-sm font-semibold text-white hover:bg-[#123a53] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full bg-[#1f556f] px-6 py-3 text-sm font-semibold text-white hover:bg-[#1a4a61] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {formSubmitting ? copy.requestSending : copy.requestSubmit}
               </button>
