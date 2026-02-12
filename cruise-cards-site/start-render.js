@@ -1,10 +1,55 @@
-const { existsSync } = require("node:fs");
+const { existsSync, readFileSync } = require("node:fs");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
 
 const host = "0.0.0.0";
 const port = process.env.PORT || "10000";
-const heapMb = process.env.RENDER_START_HEAP_MB || "384";
+
+function detectContainerMemoryMb() {
+  const candidates = [
+    "/sys/fs/cgroup/memory.max",
+    "/sys/fs/cgroup/memory/memory.limit_in_bytes",
+  ];
+
+  for (const candidate of candidates) {
+    if (!existsSync(candidate)) continue;
+
+    try {
+      const raw = readFileSync(candidate, "utf8").trim();
+      if (!raw || raw === "max") continue;
+      const bytes = Number(raw);
+      if (!Number.isFinite(bytes) || bytes <= 0) continue;
+
+      // Ignore clearly invalid "no limit" sentinel values.
+      if (bytes > 1024 * 1024 * 1024 * 1024) continue;
+
+      return Math.floor(bytes / (1024 * 1024));
+    } catch {
+      // ignore and continue checking fallbacks
+    }
+  }
+
+  return null;
+}
+
+function resolveHeapMb() {
+  const override = Number(process.env.RENDER_START_HEAP_MB || "");
+  if (Number.isFinite(override) && override > 0) {
+    return Math.floor(override);
+  }
+
+  const containerMemoryMb = detectContainerMemoryMb();
+  if (containerMemoryMb && containerMemoryMb > 0) {
+    // Use ~60% of container memory for V8 old-space,
+    // clamped to practical bounds for Next runtime.
+    const adaptive = Math.floor(containerMemoryMb * 0.6);
+    return Math.max(192, Math.min(1024, adaptive));
+  }
+
+  return 384;
+}
+
+const heapMb = String(resolveHeapMb());
 
 const env = {
   ...process.env,
