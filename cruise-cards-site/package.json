@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "SKIP_TYPECHECK=true node --max-old-space-size=320 ./node_modules/next/dist/bin/next build",
-    "start": "node --max-old-space-size=256 ./node_modules/next/dist/bin/next start",
+    "start": "NEXT_TELEMETRY_DISABLED=1 node --max-old-space-size=224 ./node_modules/next/dist/bin/next start -H 0.0.0.0 -p ${PORT:-10000}",
     "lint": "eslint"
   },
   "dependencies": {
