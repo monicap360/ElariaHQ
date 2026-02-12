@@ -4,6 +4,8 @@ export const metadata = {
   title: "Ships Sailing from Galveston",
 };
 
+export const dynamic = "force-dynamic";
+
 type ShipCountRow = {
   ship_id: string;
   ship_name: string;
