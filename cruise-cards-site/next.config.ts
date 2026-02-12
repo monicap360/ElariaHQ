@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   experimental: {
     // Keep build worker parallelism low for 512 MB build environments.
     cpus: 1,
