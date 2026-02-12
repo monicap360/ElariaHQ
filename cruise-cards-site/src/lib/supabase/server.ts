@@ -28,7 +28,11 @@ export function createClient() {
     return null;
   }
 
-  return createSupabaseClient(supabaseUrl, supabaseAnonKey);
+  try {
+    return createSupabaseClient(supabaseUrl, supabaseAnonKey);
+  } catch {
+    return null;
+  }
 }
 
 export function createServerClient(): { client: ReturnType<typeof createSupabaseClient>; mode: ServerClientMode } | null {
@@ -36,18 +40,26 @@ export function createServerClient(): { client: ReturnType<typeof createSupabase
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (supabaseUrl && serviceRoleKey) {
-    return {
-      client: createSupabaseClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } }),
-      mode: "service",
-    };
+    try {
+      return {
+        client: createSupabaseClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } }),
+        mode: "service",
+      };
+    } catch {
+      return null;
+    }
   }
 
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (supabaseUrl && supabaseAnonKey) {
-    return {
-      client: createSupabaseClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } }),
-      mode: "anon",
-    };
+    try {
+      return {
+        client: createSupabaseClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } }),
+        mode: "anon",
+      };
+    } catch {
+      return null;
+    }
   }
 
   return null;
