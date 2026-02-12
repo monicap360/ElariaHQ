@@ -14,6 +14,17 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
+  // Block unsupported methods on page routes to avoid bot POST floods
+  // against non-API paths like "/" and "/admin".
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new NextResponse('Method Not Allowed', {
+      status: 405,
+      headers: {
+        Allow: 'GET, HEAD',
+      },
+    });
+  }
+
   return NextResponse.next();
 }
 
