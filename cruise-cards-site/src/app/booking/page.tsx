@@ -184,7 +184,7 @@ export default function BookingPage() {
       pendingPrefillSailingIdRef.current = row.id;
       setCruiseLineId(shipRow.cruise_line_id);
       setPrefillNotice(
-        `Booking integration active: pre-selecting sailing from ${prefillSource || "site flow"} (${shipRow.name}).`,
+        `Pre-selected sailing loaded from ${prefillSource || "site flow"} (${shipRow.name}).`,
       );
     })();
   }, [prefillSailingId, prefillSource]);
@@ -394,24 +394,32 @@ export default function BookingPage() {
   }
 
   return (
-    <div style={{ maxWidth: 980, margin: "0 auto", padding: 24, fontFamily: "system-ui" }}>
+    <div
+      style={{
+        maxWidth: 980,
+        margin: "0 auto",
+        padding: 24,
+        fontFamily: "system-ui",
+        background: "#f7f1e8",
+      }}
+    >
       <div
         style={{
           marginBottom: 18,
           borderRadius: 16,
-          border: "1px solid #d7e4ea",
-          background: "linear-gradient(140deg, #f7fbfd, #edf5f9)",
+          border: "1px solid #d6e2e9",
+          background: "linear-gradient(140deg, #fbf7f1, #eef5f8)",
           padding: 16,
         }}
       >
-        <div style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5b7688", fontWeight: 800 }}>
-          Official Galveston Departure Booking Integration
+        <div style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5f7a88", fontWeight: 800 }}>
+          Galveston booking tools
         </div>
-        <div style={{ marginTop: 6, fontSize: 20, fontWeight: 800, color: "#0f2f45" }}>
-          Strong identity. Clear booking flow.
+        <div style={{ marginTop: 6, fontSize: 20, fontWeight: 800, color: "#1d4f68" }}>
+          Multi-room booking console
         </div>
-        <div style={{ marginTop: 6, fontSize: 13, color: "#4f6270" }}>
-          This booking console is connected directly to live Galveston departures and planning tools.
+        <div style={{ marginTop: 6, fontSize: 13, color: "#4e6572" }}>
+          Select your sailing, enter room details, and submit your request in one step-by-step flow.
         </div>
         {prefillNotice ? (
           <div
@@ -422,8 +430,8 @@ export default function BookingPage() {
               padding: "6px 12px",
               fontSize: 12,
               fontWeight: 700,
-              background: "#e9f5fb",
-              color: "#0f4460",
+              background: "#e8f2f7",
+              color: "#1d4f68",
             }}
           >
             {prefillNotice}
@@ -431,18 +439,18 @@ export default function BookingPage() {
         ) : null}
       </div>
 
-      <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6 }}>Galveston Multi-Room Booking</h1>
-      <p style={{ opacity: 0.8, marginBottom: 18 }}>
-        Real Supabase data - Cruise line {"->"} Ship (Galveston) {"->"} Sailing {"->"} Rooms
+      <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6, color: "#1d4f68" }}>Galveston Multi-Room Booking</h1>
+      <p style={{ color: "#5f707b", marginBottom: 18 }}>
+        Live Galveston data: Cruise line {"->"} Ship {"->"} Sailing {"->"} Rooms
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
-        <div style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14 }}>
+        <div style={{ border: "1px solid #d7e2e8", borderRadius: 12, padding: 14, background: "#ffffff" }}>
           <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Agent (approved)</label>
           <select
             value={agentId}
             onChange={(e) => setAgentId(e.target.value)}
-            style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+            style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
           >
             <option value="">Select agent...</option>
             {agents.map((a) => (
@@ -456,13 +464,13 @@ export default function BookingPage() {
           </div>
         </div>
 
-        <div style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14 }}>
+        <div style={{ border: "1px solid #d7e2e8", borderRadius: 12, padding: 14, background: "#ffffff" }}>
           <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Customer ID (optional override)</label>
           <input
             value={customerIdOverride}
             onChange={(e) => setCustomerIdOverride(e.target.value)}
             placeholder="Paste customer UUID (or leave blank to use auth.uid())"
-            style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+            style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
           />
           <div style={{ fontSize: 12, opacity: 0.75, marginTop: 8 }}>
             If blank, the form uses the logged-in Supabase user id.
@@ -470,14 +478,14 @@ export default function BookingPage() {
         </div>
       </div>
 
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14, marginBottom: 18 }}>
+      <div style={{ border: "1px solid #d7e2e8", borderRadius: 12, padding: 14, marginBottom: 18, background: "#ffffff" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
           <div>
             <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Cruise Line</label>
             <select
               value={cruiseLineId}
               onChange={(e) => setCruiseLineId(e.target.value)}
-              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
             >
               <option value="">Select...</option>
               {cruiseLines.map((c) => (
@@ -494,7 +502,7 @@ export default function BookingPage() {
               value={shipId}
               onChange={(e) => setShipId(e.target.value)}
               disabled={!ships.length}
-              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
             >
               <option value="">{ships.length ? "Select..." : "Select cruise line first"}</option>
               {ships.map((s) => (
@@ -511,7 +519,7 @@ export default function BookingPage() {
               value={sailingId}
               onChange={(e) => setSailingId(e.target.value)}
               disabled={!sailings.length}
-              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
             >
               <option value="">{sailings.length ? "Select..." : "Select ship first"}</option>
               {sailings.map((sa) => (
@@ -525,15 +533,16 @@ export default function BookingPage() {
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 800 }}>Rooms</h2>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#1d4f68" }}>Rooms</h2>
         <button
           type="button"
           onClick={addRoom}
           style={{
             padding: "10px 14px",
             borderRadius: 10,
-            border: "1px solid #d1d5db",
-            background: "white",
+            border: "1px solid #8eaab9",
+            background: "#ffffff",
+            color: "#1d4f68",
             fontWeight: 700,
             cursor: "pointer",
           }}
@@ -547,11 +556,11 @@ export default function BookingPage() {
           <div
             key={idx}
             style={{
-              border: "2px solid #cbd5f5",
+              border: "1px solid #cfdfe8",
               borderRadius: 16,
               padding: 16,
-              background: "#f8fafc",
-              boxShadow: "0 10px 24px rgba(15, 23, 42, 0.08)",
+              background: "#f9fcfd",
+              boxShadow: "0 8px 20px rgba(23, 59, 79, 0.08)",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
@@ -560,8 +569,8 @@ export default function BookingPage() {
                   style={{
                     padding: "4px 10px",
                     borderRadius: 999,
-                    background: idx % 2 === 0 ? "#dbeafe" : "#fef3c7",
-                    color: "#0f172a",
+                    background: idx % 2 === 0 ? "#e4f0f6" : "#f2ebe0",
+                    color: "#1d4f68",
                     fontWeight: 800,
                     fontSize: 12,
                     letterSpacing: "0.12em",
@@ -570,7 +579,7 @@ export default function BookingPage() {
                 >
                   Room {idx + 1}
                 </span>
-                <div style={{ fontWeight: 800, fontSize: 18 }}>Guest details</div>
+                <div style={{ fontWeight: 800, fontSize: 18, color: "#1d4f68" }}>Guest details</div>
               </div>
               {rooms.length > 1 && (
                 <button
@@ -596,8 +605,8 @@ export default function BookingPage() {
                 marginBottom: 12,
                 padding: "10px 12px",
                 borderRadius: 10,
-                background: "rgba(148, 163, 184, 0.12)",
-                color: "#334155",
+                background: "#edf4f7",
+                color: "#3e5766",
                 fontSize: 12,
               }}
             >
@@ -622,7 +631,7 @@ export default function BookingPage() {
                       guests: normalizeGuests(nextCount, room.guests),
                     });
                   }}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                 >
                   {cabinTypes.map((ct) => (
                     <option key={ct.code} value={ct.code}>
@@ -643,7 +652,7 @@ export default function BookingPage() {
                       guests: normalizeGuests(nextCount, room.guests),
                     });
                   }}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                 >
                   {Array.from({ length: maxGuestsForCabin(room.cabin_type) }, (_, i) => i + 1).map((n) => (
                     <option key={n} value={n}>
@@ -663,7 +672,7 @@ export default function BookingPage() {
                 <select
                   value={room.dining_time}
                   onChange={(e) => updateRoom(idx, { dining_time: e.target.value as Room["dining_time"] })}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                 >
                   <option value="any">Any</option>
                   <option value="5:30pm">5:30pm</option>
@@ -677,7 +686,7 @@ export default function BookingPage() {
                 <select
                   value={room.insurance ? "yes" : "no"}
                   onChange={(e) => updateRoom(idx, { insurance: e.target.value === "yes" })}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                 >
                   <option value="no">No</option>
                   <option value="yes">Yes</option>
@@ -689,7 +698,7 @@ export default function BookingPage() {
                 <select
                   value={room.gratuities ? "yes" : "no"}
                   onChange={(e) => updateRoom(idx, { gratuities: e.target.value === "yes" })}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                 >
                   <option value="no">No</option>
                   <option value="yes">Yes</option>
@@ -703,7 +712,7 @@ export default function BookingPage() {
                   value={room.price}
                   onChange={(e) => updateRoom(idx, { price: Number(e.target.value) })}
                   placeholder="0.00"
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                 />
               </div>
             </div>
@@ -718,7 +727,7 @@ export default function BookingPage() {
                     value={room.contact_email}
                     onChange={(e) => updateRoom(idx, { contact_email: e.target.value })}
                     placeholder="guest@email.com"
-                    style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                    style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                   />
                 </div>
                 <div>
@@ -728,7 +737,7 @@ export default function BookingPage() {
                     value={room.contact_phone}
                     onChange={(e) => updateRoom(idx, { contact_phone: e.target.value })}
                     placeholder="(###) ###-####"
-                    style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                    style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                   />
                 </div>
               </div>
@@ -740,7 +749,7 @@ export default function BookingPage() {
                 {room.guests.map((guest, guestIdx) => (
                   <div
                     key={guestIdx}
-                    style={{ border: "1px solid #e5e7eb", borderRadius: 10, padding: 12 }}
+                    style={{ border: "1px solid #d7e2e8", borderRadius: 10, padding: 12, background: "#ffffff" }}
                   >
                     <div style={{ fontWeight: 700, marginBottom: 8 }}>Guest {guestIdx + 1}</div>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 10 }}>
@@ -754,7 +763,7 @@ export default function BookingPage() {
                             updateRoom(idx, { guests: next });
                           }}
                           placeholder="Legal first name"
-                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                         />
                       </div>
                       <div>
@@ -767,7 +776,7 @@ export default function BookingPage() {
                             updateRoom(idx, { guests: next });
                           }}
                           placeholder="Legal last name"
-                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                         />
                       </div>
                       <div>
@@ -780,7 +789,7 @@ export default function BookingPage() {
                             next[guestIdx] = { ...guest, date_of_birth: e.target.value };
                             updateRoom(idx, { guests: next });
                           }}
-                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                         />
                       </div>
                       <div>
@@ -795,7 +804,7 @@ export default function BookingPage() {
                             updateRoom(idx, { guests: next });
                           }}
                           placeholder="Optional"
-                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #d1d5db" }}
+                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
                         />
                       </div>
                     </div>
@@ -817,8 +826,8 @@ export default function BookingPage() {
           style={{
             padding: "12px 16px",
             borderRadius: 12,
-            border: "1px solid #111827",
-            background: submitting ? "#9ca3af" : "#111827",
+            border: "1px solid #1f556f",
+            background: submitting ? "#85a7b9" : "#1f556f",
             color: "white",
             fontWeight: 900,
             cursor: submitting ? "not-allowed" : "pointer",

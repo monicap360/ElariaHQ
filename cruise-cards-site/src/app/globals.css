@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #0e2a3a;
-  --ocean: #2f6f8f;
-  --teal: #3fa9a3;
-  --sand: #f4efea;
+  --navy: #173f55;
+  --ocean: #3d7d9d;
+  --teal: #4a9a98;
+  --sand: #f7f1e8;
   --cloud: #ffffff;
-  --slate: #6e7c87;
-  --border: #e3ded8;
+  --slate: #5f7380;
+  --border: #e2d9ce;
   --success: #2e8b57;
   --warning: #c98a2c;
   --background: var(--sand);
