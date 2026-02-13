@@ -4,6 +4,7 @@ const { spawn } = require("node:child_process");
 
 const host = "0.0.0.0";
 const port = process.env.PORT || "10000";
+const containerMemoryMb = detectContainerMemoryMb();
 
 function detectContainerMemoryMb() {
   const candidates = [
@@ -38,15 +39,17 @@ function resolveHeapMb() {
     return Math.floor(override);
   }
 
-  const containerMemoryMb = detectContainerMemoryMb();
   if (containerMemoryMb && containerMemoryMb > 0) {
-    // Use ~60% of container memory for V8 old-space,
-    // clamped to practical bounds for Next runtime.
-    const adaptive = Math.floor(containerMemoryMb * 0.6);
-    return Math.max(192, Math.min(1024, adaptive));
+    // Conservative tiers to avoid OOM on small containers.
+    if (containerMemoryMb <= 640) return 160;
+    if (containerMemoryMb <= 1024) return 192;
+    if (containerMemoryMb <= 1536) return 256;
+    if (containerMemoryMb <= 3072) return 384;
+    return 512;
   }
 
-  return 384;
+  // Fallback when memory limit cannot be detected.
+  return 256;
 }
 
 const heapMb = String(resolveHeapMb());
@@ -67,7 +70,9 @@ const args =
     ? [`--max-old-space-size=${heapMb}`, standaloneServerPath]
     : [`--max-old-space-size=${heapMb}`, nextCliPath, "start", "-H", host, "-p", port];
 
-console.log(`[startup] mode=${mode} host=${host} port=${port} heapMb=${heapMb}`);
+console.log(
+  `[startup] mode=${mode} host=${host} port=${port} heapMb=${heapMb} containerMemoryMb=${containerMemoryMb ?? "unknown"}`
+);
 
 const child = spawn(process.execPath, args, {
   stdio: "inherit",
