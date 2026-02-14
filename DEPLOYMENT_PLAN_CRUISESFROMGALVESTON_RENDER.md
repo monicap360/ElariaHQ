@@ -83,7 +83,7 @@ The existing runner already:
 - Build command:
 
 ```bash
-npm ci --prefer-offline --no-audit --no-fund && NODE_OPTIONS="--max-old-space-size=384" NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true npm run build
+corepack yarn install --frozen-lockfile --ignore-engines --non-interactive && NEXT_TELEMETRY_DISABLED=1 NEXT_DISABLE_ESLINT=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true node --max-old-space-size=320 ./node_modules/next/dist/bin/next build --webpack
 ```
 
 - Start command:
@@ -96,8 +96,9 @@ npm start
 
 - `next.config.ts` sets:
   - `experimental.cpus = 1`
+  - `experimental.webpackMemoryOptimizations = true`
 
-This keeps build worker memory low for 512 MB plans.
+This keeps build memory lower for 512 MB plans by avoiding Turbopack and limiting worker parallelism.
 
 ---
 

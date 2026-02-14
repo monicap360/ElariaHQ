@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // Keep build worker parallelism low for 512 MB build environments.
     cpus: 1,
+    // Prefer lower memory usage over build speed.
+    webpackMemoryOptimizations: true,
   },
   async redirects() {
     return [

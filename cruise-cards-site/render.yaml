@@ -4,7 +4,7 @@ services:
     env: node
     plan: standard
     healthCheckPath: /api/health
-    buildCommand: npm ci --prefer-offline --no-audit --no-fund && NODE_OPTIONS="--max-old-space-size=320" NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true npm run build
+    buildCommand: corepack yarn install --frozen-lockfile --ignore-engines --non-interactive && NEXT_TELEMETRY_DISABLED=1 NEXT_DISABLE_ESLINT=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true node --max-old-space-size=320 ./node_modules/next/dist/bin/next build --webpack
     startCommand: NEXT_TELEMETRY_DISABLED=1 npm start
     envVars:
       - key: NODE_ENV
