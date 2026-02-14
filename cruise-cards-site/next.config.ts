@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   experimental: {
     // Keep build worker parallelism low for 512 MB build environments.
     cpus: 1,
+    // Disable dedicated webpack build worker to avoid an extra Node process.
+    webpackBuildWorker: false,
+    // Prefer lower memory usage over build speed.
+    webpackMemoryOptimizations: true,
   },
   async redirects() {
     return [
@@ -40,6 +44,10 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors:
       process.env.SKIP_TYPECHECK === 'true' || process.env.CI === 'true',
+  },
+  // Linting is handled outside deploy builds to keep memory usage low.
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 
