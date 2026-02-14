@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "SKIP_TYPECHECK=true NEXT_DISABLE_ESLINT=1 node --max-old-space-size=290 ./node_modules/next/dist/bin/next build --webpack",
+    "build": "SKIP_TYPECHECK=true NEXT_DISABLE_ESLINT=1 node --max-old-space-size=320 ./node_modules/next/dist/bin/next build --webpack",
     "start": "node ./start-render.js",
     "lint": "eslint"
   },
