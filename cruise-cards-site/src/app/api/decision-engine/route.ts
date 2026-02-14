@@ -109,14 +109,24 @@ export async function POST(req: Request) {
   const weights = await loadWeights(supabase);
   const overrides = await loadOverrides(supabase);
 
-  const { data: sailingsData } = await supabase
+  let sailingsQuery = supabase
     .from("sailings")
     .select(
       "id,sail_date,return_date,ports,itinerary,itinerary_label,ports_summary,departure_port,sea_pay_eligible,price_from,base_price,starting_price,min_price,ship:ships(id,name,ship_class,cruise_line:cruise_lines(name))"
     )
-    .eq("is_active", true)
-    .order("sail_date", { ascending: true })
-    .limit(500);
+    .eq("is_active", true);
+
+  if (input.departurePort) {
+    sailingsQuery = sailingsQuery.eq("departure_port", input.departurePort);
+  }
+  if (input.dateRange?.start) {
+    sailingsQuery = sailingsQuery.gte("sail_date", input.dateRange.start);
+  }
+  if (input.dateRange?.end) {
+    sailingsQuery = sailingsQuery.lte("sail_date", input.dateRange.end);
+  }
+
+  const { data: sailingsData } = await sailingsQuery.order("sail_date", { ascending: true }).limit(500);
 
   const sailings =
     (sailingsData as RawSailingRow[] | null | undefined)?.map((row) => {
@@ -138,11 +148,12 @@ export async function POST(req: Request) {
     }) ?? [];
   const sailingContext = mapSailings(sailings);
   const ships = mapShips(sailings);
+  const sailingIds = sailings.map((sailing) => sailing.id);
 
   const [pricing, availability, risks] = await Promise.all([
-    loadPricing(supabase),
-    loadAvailability(supabase),
-    loadRisk(supabase),
+    loadPricing(supabase, sailingIds),
+    loadAvailability(supabase, sailingIds),
+    loadRisk(supabase, sailingIds),
   ]);
 
   const results = rankCruiseSailings(
@@ -162,9 +173,10 @@ export async function POST(req: Request) {
     const override = overrideMap.get(result.sailingId);
     return !override?.disabled;
   });
+  const sailingsById = new Map(sailings.map((row) => [row.id, row]));
 
   const resultsWithSailings: DecisionResultWithSailing[] = filtered.map((result) => {
-    const sailing = sailings.find((row) => row.id === result.sailingId);
+    const sailing = sailingsById.get(result.sailingId);
     const lineName = sailing?.ship?.cruise_line?.name ?? null;
     return {
       ...result,
@@ -210,20 +222,17 @@ async function loadOverrides(supabase: ReturnType<typeof createAdminClient>) {
   return data as DecisionOverride[];
 }
 
-async function loadPricing(supabase: ReturnType<typeof createAdminClient>): Promise<PricingSnapshot[]> {
+async function loadPricing(
+  supabase: ReturnType<typeof createAdminClient>,
+  sailingIds: string[]
+): Promise<PricingSnapshot[]> {
+  if (!sailingIds.length) return [];
   const { data, error } = await supabase
-    .from("pricing_snapshots")
+    .from("pricing_latest")
     .select("sailing_id,as_of,currency,min_per_person,market_median_per_person")
-    .order("as_of", { ascending: false });
+    .in("sailing_id", sailingIds);
   if (error || !data) return [];
-  const seen = new Set<string>();
-  return (data as PricingSnapshotRow[])
-    .filter((row) => {
-      if (seen.has(row.sailing_id)) return false;
-      seen.add(row.sailing_id);
-      return true;
-    })
-    .map((row) => ({
+  return (data as PricingSnapshotRow[]).map((row) => ({
       sailingId: row.sailing_id,
       asOf: row.as_of,
       currency: "USD",
@@ -232,20 +241,17 @@ async function loadPricing(supabase: ReturnType<typeof createAdminClient>): Prom
     }));
 }
 
-async function loadAvailability(supabase: ReturnType<typeof createAdminClient>): Promise<AvailabilitySnapshot[]> {
+async function loadAvailability(
+  supabase: ReturnType<typeof createAdminClient>,
+  sailingIds: string[]
+): Promise<AvailabilitySnapshot[]> {
+  if (!sailingIds.length) return [];
   const { data, error } = await supabase
-    .from("availability_cache")
+    .from("availability_latest")
     .select("sailing_id,as_of,demand_pressure,available_cabin_types")
-    .order("as_of", { ascending: false });
+    .in("sailing_id", sailingIds);
   if (error || !data) return [];
-  const seen = new Set<string>();
-  return (data as AvailabilitySnapshotRow[])
-    .filter((row) => {
-      if (seen.has(row.sailing_id)) return false;
-      seen.add(row.sailing_id);
-      return true;
-    })
-    .map((row) => ({
+  return (data as AvailabilitySnapshotRow[]).map((row) => ({
       sailingId: row.sailing_id,
       asOf: row.as_of,
       demandPressure: row.demand_pressure ?? undefined,
@@ -253,20 +259,17 @@ async function loadAvailability(supabase: ReturnType<typeof createAdminClient>):
     }));
 }
 
-async function loadRisk(supabase: ReturnType<typeof createAdminClient>): Promise<RiskSnapshot[]> {
+async function loadRisk(
+  supabase: ReturnType<typeof createAdminClient>,
+  sailingIds: string[]
+): Promise<RiskSnapshot[]> {
+  if (!sailingIds.length) return [];
   const { data, error } = await supabase
-    .from("risk_snapshots")
+    .from("risk_latest")
     .select("sailing_id,as_of,risk_score")
-    .order("as_of", { ascending: false });
+    .in("sailing_id", sailingIds);
   if (error || !data) return [];
-  const seen = new Set<string>();
-  return (data as RiskSnapshotRow[])
-    .filter((row) => {
-      if (seen.has(row.sailing_id)) return false;
-      seen.add(row.sailing_id);
-      return true;
-    })
-    .map((row) => ({
+  return (data as RiskSnapshotRow[]).map((row) => ({
       sailingId: row.sailing_id,
       asOf: row.as_of,
       riskScore: row.risk_score ?? undefined,
