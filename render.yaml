@@ -5,7 +5,7 @@ services:
     plan: standard
     rootDir: cruise-cards-site
     healthCheckPath: /api/health
-    buildCommand: npm ci --prefer-offline --no-audit --no-fund && NEXT_TELEMETRY_DISABLED=1 NEXT_DISABLE_ESLINT=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true npm run build
+    buildCommand: npm ci --prefer-offline --no-audit --no-fund && NEXT_TELEMETRY_DISABLED=1 NEXT_DISABLE_ESLINT=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true node --max-old-space-size=300 ./node_modules/next/dist/bin/next build --webpack
     startCommand: NEXT_TELEMETRY_DISABLED=1 npm start
     envVars:
       - key: NODE_ENV
