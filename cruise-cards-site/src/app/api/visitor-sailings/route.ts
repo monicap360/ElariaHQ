@@ -70,12 +70,14 @@ export async function GET(request: NextRequest) {
   const supabase = server.client;
 
   const destination = filters.destination?.trim();
+  const maxResults = 500;
   let viewQuery = supabase
     .from("future_sailings_list")
     .select(
       "sailing_id, sail_date, return_date, duration, itinerary_code, ship_id, ship_name, cruise_line, home_port",
     )
-    .order("sail_date", { ascending: true });
+    .order("sail_date", { ascending: true })
+    .limit(maxResults);
 
   viewQuery = viewQuery.gte("sail_date", startDate);
   if (filters.endDate) viewQuery = viewQuery.lte("sail_date", filters.endDate);
@@ -109,7 +111,7 @@ export async function GET(request: NextRequest) {
 
   let searchQuery = supabase.from("searchable_cruises").select(selectColumns).order("departure_date", {
     ascending: true,
-  });
+  }).limit(maxResults);
 
   if (destination) {
     searchQuery = searchQuery.ilike("destination", `%${destination}%`);

@@ -40,25 +40,41 @@ function resolveHeapMb() {
   }
 
   if (containerMemoryMb && containerMemoryMb > 0) {
-    // Conservative tiers to avoid OOM on small containers.
-    if (containerMemoryMb <= 640) return 160;
-    if (containerMemoryMb <= 1024) return 192;
-    if (containerMemoryMb <= 1536) return 256;
-    if (containerMemoryMb <= 3072) return 384;
-    return 512;
+    // Conservative tiers aimed at keeping total RSS under 512 MB plans.
+    if (containerMemoryMb <= 512) return 112;
+    if (containerMemoryMb <= 640) return 128;
+    if (containerMemoryMb <= 768) return 144;
+    if (containerMemoryMb <= 1024) return 160;
+    if (containerMemoryMb <= 1536) return 176;
+    if (containerMemoryMb <= 2048) return 192;
+    if (containerMemoryMb <= 3072) return 224;
+    return 256;
   }
 
   // Fallback when memory limit cannot be detected.
-  return 256;
+  return 160;
+}
+
+function resolveNodeOptions(heapMb) {
+  const heapPrefix = "--max-old-space-size=";
+  const existingTokens = String(process.env.NODE_OPTIONS || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((token) => !token.startsWith(heapPrefix));
+
+  return [`${heapPrefix}${heapMb}`, ...existingTokens].join(" ");
 }
 
 const heapMb = String(resolveHeapMb());
+const nodeOptions = resolveNodeOptions(heapMb);
 
 const env = {
   ...process.env,
   NEXT_TELEMETRY_DISABLED: "1",
   HOSTNAME: host,
   PORT: port,
+  NODE_OPTIONS: nodeOptions,
 };
 
 const standaloneServerPath = path.join(process.cwd(), ".next", "standalone", "server.js");
@@ -67,11 +83,11 @@ const nextCliPath = path.join(process.cwd(), "node_modules", "next", "dist", "bi
 const mode = existsSync(standaloneServerPath) ? "standalone" : "next-start";
 const args =
   mode === "standalone"
-    ? [`--max-old-space-size=${heapMb}`, standaloneServerPath]
-    : [`--max-old-space-size=${heapMb}`, nextCliPath, "start", "-H", host, "-p", port];
+    ? [standaloneServerPath]
+    : [nextCliPath, "start", "-H", host, "-p", port];
 
 console.log(
-  `[startup] mode=${mode} host=${host} port=${port} heapMb=${heapMb} containerMemoryMb=${containerMemoryMb ?? "unknown"}`
+  `[startup] mode=${mode} host=${host} port=${port} heapMb=${heapMb} containerMemoryMb=${containerMemoryMb ?? "unknown"} nodeOptions="${nodeOptions}"`
 );
 
 const child = spawn(process.execPath, args, {

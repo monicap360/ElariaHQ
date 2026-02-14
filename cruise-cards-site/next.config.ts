@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Disable in-memory runtime cache to keep RSS low on 512 MB plans.
+  cacheMaxMemorySize: 0,
   experimental: {
     // Keep build worker parallelism low for 512 MB build environments.
     cpus: 1,

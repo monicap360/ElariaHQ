@@ -16,9 +16,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from("sailings")
-    .select(
-      "id, depart_date, nights, itinerary_label, ports_summary, ship:ships(name), pricing:pricing_snapshots(min_per_person, as_of)"
-    )
+    .select("id, depart_date, nights, itinerary_label, ports_summary, ship:ships(name)")
     .eq("departure_port", "Galveston")
     .eq("is_active", true)
     .order("depart_date", { ascending: true });
@@ -35,16 +33,28 @@ export async function GET() {
     itinerary_label: string | null;
     ports_summary: string | null;
     ship: { name: string | null } | null;
-    pricing: { min_per_person: number | null; as_of: string | null }[] | null;
   };
 
   const rows = (data ?? []) as BoardSailingRow[];
+  const sailingIds = rows.map((row) => row.id);
+
+  let latestPriceBySailingId = new Map<string, number | null>();
+  if (sailingIds.length) {
+    const { data: pricingData, error: pricingError } = await supabase
+      .from("pricing_latest")
+      .select("sailing_id,min_per_person")
+      .in("sailing_id", sailingIds);
+
+    if (pricingError) {
+      console.error("board-sailings pricing_latest", pricingError);
+    } else {
+      latestPriceBySailingId = new Map(
+        (pricingData ?? []).map((row) => [row.sailing_id as string, (row.min_per_person as number | null) ?? null]),
+      );
+    }
+  }
+
   const sailings = rows.map((row) => {
-    const pricing = Array.isArray(row.pricing) ? row.pricing : [];
-    const latest = pricing
-      .slice()
-      .sort((a, b) => (a.as_of || "").localeCompare(b.as_of || ""))
-      .pop();
     return {
       id: row.id,
       depart_date: row.depart_date,
@@ -52,7 +62,7 @@ export async function GET() {
       itinerary_label: row.itinerary_label,
       ports_summary: row.ports_summary,
       ship: row.ship?.name ?? null,
-      min_price: latest?.min_per_person ?? null,
+      min_price: latestPriceBySailingId.get(row.id) ?? null,
     };
   });
 
