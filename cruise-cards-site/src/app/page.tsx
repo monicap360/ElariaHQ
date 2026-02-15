@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { formatDurationLabel } from "@/lib/formatDuration";
 import { useEffect, useMemo, useState } from "react";
 import { NextSailingBadge } from "@/components/NextSailingBadge";
@@ -542,12 +541,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background-base text-text-secondary">
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-3xl border border-border bg-background-panel px-10 py-12 shadow-sm"
-        >
+        <section className="relative overflow-hidden rounded-3xl border border-border bg-background-panel px-10 py-12 shadow-sm">
           <Image
             src="/assets/symphony-of-the-seas.webp"
             alt="Cruise ship departing Galveston"
@@ -601,7 +595,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </motion.section>
+        </section>
 
         <section
           id="booking-panel"
