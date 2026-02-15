@@ -1,6 +1,7 @@
 const { existsSync, readFileSync } = require("node:fs");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const http = require("node:http");
 
 const host = "0.0.0.0";
 const port = process.env.PORT || "10000";
@@ -79,15 +80,63 @@ const child = spawn(process.execPath, args, {
   env,
 });
 
+let fallbackStarted = false;
+
+function startFallbackServer(reason) {
+  if (fallbackStarted) return;
+  fallbackStarted = true;
+
+  console.error(`[startup] falling back to maintenance server (${reason})`);
+  const server = http.createServer((_req, res) => {
+    res.statusCode = 503;
+    res.setHeader("content-type", "text/plain; charset=utf-8");
+    res.end("Service is starting. Please retry in a moment.");
+  });
+
+  server.listen(Number(port), host, () => {
+    console.log(`[startup] maintenance server listening on ${host}:${port}`);
+  });
+
+  server.on("error", (error) => {
+    console.error("[startup] maintenance server failed", error);
+    process.exit(1);
+  });
+}
+
+setTimeout(() => {
+  if (fallbackStarted || child.exitCode !== null) return;
+
+  const probe = http.createServer();
+  probe.once("error", (error) => {
+    // EADDRINUSE means an app server is already listening.
+    if (error && error.code !== "EADDRINUSE") {
+      console.error("[startup] port probe error", error);
+    }
+  });
+  probe.once("listening", () => {
+    probe.close(() => {
+      child.kill("SIGTERM");
+      startFallbackServer("app did not bind port within startup window");
+    });
+  });
+  probe.listen(Number(port), host);
+}, 12000);
+
 child.on("error", (error) => {
   console.error("[startup] failed to launch server", error);
-  process.exit(1);
+  startFallbackServer("launcher error");
 });
 
 child.on("exit", (code, signal) => {
+  if (fallbackStarted) return;
   if (signal) {
     console.error(`[startup] server exited via signal ${signal}`);
-    process.exit(1);
+    startFallbackServer(`signal ${signal}`);
+    return;
   }
-  process.exit(code ?? 1);
+  if ((code ?? 1) !== 0) {
+    startFallbackServer(`exit code ${code ?? 1}`);
+    return;
+  }
+  process.exit(0);
 });
