@@ -276,7 +276,7 @@ export default function Home() {
         const today = new Date();
         const start = today.toISOString().slice(0, 10);
         const endDate = new Date(today);
-        endDate.setMonth(endDate.getMonth() + 18);
+        endDate.setMonth(endDate.getMonth() + 12);
         const end = endDate.toISOString().slice(0, 10);
 
         const input = {

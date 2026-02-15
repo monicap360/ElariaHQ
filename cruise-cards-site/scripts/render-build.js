@@ -32,7 +32,7 @@ async function main() {
     SKIP_TYPECHECK: process.env.SKIP_TYPECHECK || "true",
   };
   const nextCli = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");
-  const code = await runNode(["--max-old-space-size=320", nextCli, "build"], env);
+  const code = await runNode(["--max-old-space-size=256", nextCli, "build"], env);
   process.exit(code);
 }
 

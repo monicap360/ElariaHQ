@@ -2,9 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Disable in-memory fetch/ISR cache to keep runtime RSS predictable on 512 MB plans.
+  cacheMaxMemorySize: 0,
   experimental: {
     // Keep build worker parallelism low for 512 MB build environments.
     cpus: 1,
+  },
+  // Avoid server-side image optimization memory spikes under constrained RAM.
+  images: {
+    unoptimized: true,
   },
   async redirects() {
     return [
