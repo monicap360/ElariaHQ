@@ -15,3 +15,6 @@ services:
         value: production
       - key: NODE_VERSION
         value: "20"
+      # Hard cap runtime heap to survive 512MB instances.
+      - key: RENDER_START_HEAP_MB
+        value: "128"
