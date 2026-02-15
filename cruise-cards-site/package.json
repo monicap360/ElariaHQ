@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "node ./scripts/render-build.js",
+    "build": "node ./render-build.js",
     "start": "node ./start-render.js",
     "lint": "eslint"
   },
