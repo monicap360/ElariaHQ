@@ -97,7 +97,7 @@ npm start
 - `next.config.ts` sets:
   - `experimental.cpus = 1`
 
-This keeps build worker memory low for 512 MB plans.
+This keeps build worker memory low for sub-512 MB plans.
 
 ---
 

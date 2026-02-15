@@ -45,7 +45,7 @@ function resolveHeapMb() {
     if (containerMemoryMb <= 1024) return 192;
     if (containerMemoryMb <= 1536) return 256;
     if (containerMemoryMb <= 3072) return 384;
-    return 512;
+    return 448;
   }
 
   // Fallback when memory limit cannot be detected.
