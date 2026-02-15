@@ -49,7 +49,6 @@ const CITY_SEGMENTS: Record<string, BreadcrumbMeta> = {
   "oklahoma-city": { label: "Oklahoma City", category: "driving" },
   tulsa: { label: "Tulsa", category: "driving" },
   missouri: { label: "Missouri", category: "driving" },
-  colorado: { label: "Colorado", category: "driving" },
   louisiana: { label: "Louisiana", category: "driving" },
 };
 

@@ -61,7 +61,7 @@ export default function DrivingToGalvestonPage() {
                 acceptedAnswer: {
                   "@type": "Answer",
                   text:
-                    "Yes. Many travelers from Louisiana, Oklahoma, Missouri, Colorado, and the Midwest choose Galveston for its consistent cruise schedule and drive-to accessibility.",
+                    "Yes. Many travelers from Louisiana, Oklahoma, Missouri, and the Midwest choose Galveston for its consistent cruise schedule and drive-to accessibility.",
                 },
               },
             ],
@@ -311,9 +311,6 @@ export default function DrivingToGalvestonPage() {
             </li>
             <li>
               <Link href="/plan-your-cruise/driving-to-galveston/from-missouri">Driving from Missouri</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-colorado">Driving from Colorado</Link>
             </li>
           </ul>
         </div>
