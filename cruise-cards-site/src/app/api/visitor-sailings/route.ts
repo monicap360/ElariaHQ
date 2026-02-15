@@ -33,6 +33,7 @@ type SearchParams = {
   minDuration?: number;
   maxDuration?: number;
 };
+const MAX_VISITOR_SAILINGS = 120;
 
 function todayUtcDate() {
   return new Date(new Date().toISOString().slice(0, 10));
@@ -75,7 +76,8 @@ export async function GET(request: NextRequest) {
     .select(
       "sailing_id, sail_date, return_date, duration, itinerary_code, ship_id, ship_name, cruise_line, home_port",
     )
-    .order("sail_date", { ascending: true });
+    .order("sail_date", { ascending: true })
+    .limit(MAX_VISITOR_SAILINGS);
 
   viewQuery = viewQuery.gte("sail_date", startDate);
   if (filters.endDate) viewQuery = viewQuery.lte("sail_date", filters.endDate);
@@ -107,9 +109,13 @@ export async function GET(request: NextRequest) {
   const selectColumns =
     "id, sailing_id, ship_name, destination, itinerary_label, ports_summary, departure_date, duration_days, price_pp, price_from";
 
-  let searchQuery = supabase.from("searchable_cruises").select(selectColumns).order("departure_date", {
-    ascending: true,
-  });
+  let searchQuery = supabase
+    .from("searchable_cruises")
+    .select(selectColumns)
+    .order("departure_date", {
+      ascending: true,
+    })
+    .limit(MAX_VISITOR_SAILINGS);
 
   if (destination) {
     searchQuery = searchQuery.ilike("destination", `%${destination}%`);

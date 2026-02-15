@@ -41,15 +41,15 @@ function resolveHeapMb() {
 
   if (containerMemoryMb && containerMemoryMb > 0) {
     // Conservative tiers to avoid OOM on small containers.
-    if (containerMemoryMb <= 640) return 128;
-    if (containerMemoryMb <= 1024) return 160;
-    if (containerMemoryMb <= 1536) return 224;
+    if (containerMemoryMb <= 640) return 96;
+    if (containerMemoryMb <= 1024) return 128;
+    if (containerMemoryMb <= 1536) return 192;
     if (containerMemoryMb <= 3072) return 320;
     return 448;
   }
 
   // Fallback when memory limit cannot be detected.
-  return 160;
+  return 96;
 }
 
 const heapMb = String(resolveHeapMb());

@@ -68,7 +68,7 @@ export async function GET() {
     .select("ports,itinerary")
     .eq("is_active", true)
     .order("sail_date", { ascending: true })
-    .limit(200);
+    .limit(80);
 
   if (sailingsRes.data) {
     sailingsRes.data.forEach((row) => {

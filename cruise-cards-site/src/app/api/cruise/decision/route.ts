@@ -3,6 +3,15 @@ import { runCruiseDecisionEngine } from "@/lib/cruiseDecisionEngine/engine";
 import { CruiseDecisionInput } from "@/lib/cruiseDecisionEngine/types";
 import { providerFromSupabase } from "@/lib/cruiseDecisionEngine/provider.supabase";
 
+const DEFAULT_RESULT_LIMIT = 8;
+const MAX_RESULT_LIMIT = 12;
+
+function resolveResultLimit() {
+  const raw = Number(process.env.DECISION_ENGINE_RESULT_LIMIT || "");
+  if (!Number.isFinite(raw) || raw <= 0) return DEFAULT_RESULT_LIMIT;
+  return Math.min(Math.floor(raw), MAX_RESULT_LIMIT);
+}
+
 function errorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   return "Unknown error";
@@ -23,7 +32,7 @@ export async function POST(req: NextRequest) {
     }
 
     const provider = providerFromSupabase();
-    const response = await runCruiseDecisionEngine({ input, provider, limit: 12 });
+    const response = await runCruiseDecisionEngine({ input, provider, limit: resolveResultLimit() });
 
     return NextResponse.json(response);
   } catch (error: unknown) {

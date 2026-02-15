@@ -2,7 +2,7 @@ import { AvailabilitySnapshot, PricingSnapshot, RiskSnapshot, Sailing, Ship } fr
 import { CruiseDataProvider } from "./engine";
 import { createServerClient } from "@/lib/supabase/server";
 
-const DEFAULT_MAX_DECISION_SAILINGS = 240;
+const DEFAULT_MAX_DECISION_SAILINGS = 80;
 const SAILINGS_SELECT =
   "id,depart_date,return_date,nights,cruise_line,ship_id,itinerary_tags,itinerary_label,ports_summary,seapay_eligible";
 const SHIPS_SELECT = "id,name,cruise_line,ship_class";

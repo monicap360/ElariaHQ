@@ -201,7 +201,8 @@ function formatYear(value: string) {
 }
 
 export default function Home() {
-  const [matrixLoading, setMatrixLoading] = useState(true);
+  const [matrixEnabled, setMatrixEnabled] = useState(false);
+  const [matrixLoading, setMatrixLoading] = useState(false);
   const [matrixError, setMatrixError] = useState<string | null>(null);
   const [cruiseMatrix, setCruiseMatrix] = useState<CruiseMatrixRow[]>([]);
   const [filterLine, setFilterLine] = useState("all");
@@ -250,7 +251,7 @@ export default function Home() {
     return () => {
       isActive = false;
     };
-  }, [bookingForm.travelers]);
+  }, []);
 
   useEffect(() => {
     setRoomGuests((prev) => {
@@ -266,6 +267,13 @@ export default function Home() {
 
   useEffect(() => {
     let isActive = true;
+
+    if (!matrixEnabled) {
+      setMatrixLoading(false);
+      return () => {
+        isActive = false;
+      };
+    }
 
     async function loadMatrix() {
       setMatrixLoading(true);
@@ -349,7 +357,7 @@ export default function Home() {
     return () => {
       isActive = false;
     };
-  }, [bookingForm.travelers]);
+  }, [bookingForm.travelers, matrixEnabled]);
 
   const filteredCruises = useMemo(() => {
     const byLine = filterLine === "all" ? cruiseMatrix : cruiseMatrix.filter((cruise) => cruise.lineKey === filterLine);
@@ -389,8 +397,18 @@ export default function Home() {
     cruiseMatrix.forEach((row) => {
       unique.set(row.ship, row.ship);
     });
-    return Array.from(unique.values()).sort();
-  }, [cruiseMatrix]);
+    const fromMatrix = Array.from(unique.values()).sort();
+    if (fromMatrix.length) return fromMatrix;
+
+    const fromShips = Array.from(
+      new Set(
+        ships
+          .map((ship) => ship.ship_name)
+          .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+      )
+    );
+    return fromShips.sort();
+  }, [cruiseMatrix, ships]);
 
   const selectedShipLine = useMemo(() => {
     if (!bookingForm.ship) return null;
@@ -617,7 +635,7 @@ export default function Home() {
               </a>
               <a
                 href="#sailings"
-                onClick={() => openBookingPanel()}
+                onClick={() => setMatrixEnabled(true)}
                 className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/60"
               >
                 Review sailings
@@ -919,55 +937,67 @@ export default function Home() {
                 Live sailings snapshot with taxes and port fees included. Prices shown are per person.
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {availableYears.map((year) => (
+            {matrixEnabled ? (
+              <div className="flex flex-wrap items-center gap-2">
+                {availableYears.map((year) => (
+                  <button
+                    key={year}
+                    type="button"
+                    onClick={() => setFilterYear(year)}
+                    className={`rounded-full border px-4 py-2 text-xs font-semibold transition ${
+                      filterYear === year
+                        ? "border-primary-blue/60 bg-primary-blue/20 text-text-primary"
+                        : "border-slate-200 bg-background-card text-text-secondary hover:border-primary-blue/40"
+                    }`}
+                  >
+                    {year === "all" ? "All Years" : year}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setMatrixEnabled(true)}
+                className="rounded-full bg-accent-teal px-5 py-2 text-xs font-semibold text-white hover:bg-accent-teal/90"
+              >
+                Load live sailings
+              </button>
+            )}
+          </div>
+          {matrixEnabled && (
+            <div className="mt-4 flex flex-wrap gap-3">
+              <select
+                value={filterLine}
+                onChange={(event) => setFilterLine(event.target.value)}
+                className="rounded-full border border-slate-200 bg-background-card px-4 py-2 text-xs text-text-primary"
+                aria-label="Cruise line filter"
+              >
+                <option value="all">All Cruise Lines</option>
+                {availableLines.map((line) => (
+                  <option key={line.key} value={line.key}>
+                    {line.label}
+                  </option>
+                ))}
+              </select>
+              {["score", "price", "duration", "date"].map((key) => (
                 <button
-                  key={year}
+                  key={key}
                   type="button"
-                  onClick={() => setFilterYear(year)}
-                  className={`rounded-full border px-4 py-2 text-xs font-semibold transition ${
-                    filterYear === year
-                      ? "border-primary-blue/60 bg-primary-blue/20 text-text-primary"
-                      : "border-slate-200 bg-background-card text-text-secondary hover:border-primary-blue/40"
-                  }`}
+                  onClick={() => setSortKey(key as "price" | "duration" | "date" | "score")}
+                  className="rounded-full border border-slate-200 bg-background-card px-4 py-2 text-xs font-semibold text-text-primary hover:border-primary-blue/50"
                 >
-                  {year === "all" ? "All Years" : year}
+                  Sort by {key.charAt(0).toUpperCase() + key.slice(1)}
                 </button>
               ))}
             </div>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <select
-              value={filterLine}
-              onChange={(event) => setFilterLine(event.target.value)}
-              className="rounded-full border border-slate-200 bg-background-card px-4 py-2 text-xs text-text-primary"
-              aria-label="Cruise line filter"
-            >
-              <option value="all">All Cruise Lines</option>
-              {availableLines.map((line) => (
-                <option key={line.key} value={line.key}>
-                  {line.label}
-                </option>
-              ))}
-            </select>
-            {["score", "price", "duration", "date"].map((key) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setSortKey(key as "price" | "duration" | "date" | "score")}
-                className="rounded-full border border-slate-200 bg-background-card px-4 py-2 text-xs font-semibold text-text-primary hover:border-primary-blue/50"
-              >
-                Sort by {key.charAt(0).toUpperCase() + key.slice(1)}
-              </button>
-            ))}
-          </div>
+          )}
           <div className="mt-4">
-            {matrixLoading && <p className="text-text-secondary">Loading sailings...</p>}
-            {!matrixLoading && matrixError && <p className="text-red-500">{matrixError}</p>}
-            {!matrixLoading && !matrixError && filteredCruises.length === 0 && (
+            {matrixEnabled && matrixLoading && <p className="text-text-secondary">Loading sailings...</p>}
+            {matrixEnabled && !matrixLoading && matrixError && <p className="text-red-500">{matrixError}</p>}
+            {matrixEnabled && !matrixLoading && !matrixError && filteredCruises.length === 0 && (
               <p className="text-text-secondary">No sailings available yet.</p>
             )}
-            {!matrixLoading && !matrixError && filteredCruises.length > 0 && (
+            {matrixEnabled && !matrixLoading && !matrixError && filteredCruises.length > 0 && (
               <section className="results">
                 {filteredCruises.map((cruise) => (
                   <article key={cruise.id} className="cruise-card">
