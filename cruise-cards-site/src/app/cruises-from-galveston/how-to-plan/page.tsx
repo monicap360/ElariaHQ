@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const metadata = {
   title: "How to Plan a Cruise from Galveston",
   description:
@@ -46,18 +48,18 @@ export default function HowToPlanPage() {
               occupancy, including port expenses and government fees.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <a
+              <Link
                 href="/cruises-from-galveston/board"
                 className="rounded-full bg-accent-teal px-5 py-2 text-xs font-semibold text-white hover:bg-accent-teal/90"
               >
                 Explore sailings
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/plan-your-cruise/driving-to-galveston"
                 className="rounded-full border border-border px-5 py-2 text-xs font-semibold text-text-primary hover:border-primary-blue/50"
               >
                 Driving guidance
-              </a>
+              </Link>
             </div>
           </aside>
         </div>
@@ -156,24 +158,24 @@ export default function HowToPlanPage() {
           your cabin and dining preferences.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <a
+          <Link
             href="/cruises-from-galveston/search"
             className="rounded-full bg-accent-teal px-6 py-3 text-sm font-semibold text-white hover:bg-accent-teal/90"
           >
             Search sailings
-          </a>
-          <a
+          </Link>
+          <Link
             href="/cruises-from-galveston/parking-and-transportation"
             className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/50"
           >
             Parking & transportation
-          </a>
-          <a
+          </Link>
+          <Link
             href="/cruises-from-galveston/embarkation-day"
             className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-text-primary hover:border-primary-blue/50"
           >
             Embarkation day checklist
-          </a>
+          </Link>
         </div>
       </section>
     </main>

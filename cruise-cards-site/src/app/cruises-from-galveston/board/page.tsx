@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 type Sailing = {
   id: string;
   ship: string | null;
@@ -72,18 +73,18 @@ export default function CruiseBoardPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <a
+              <Link
                 href="/cruises-from-galveston/trip-assistant"
                 className="rounded-full border border-[#88a9bb] px-5 py-2 text-sm font-semibold text-[#0f2f45] hover:bg-white"
               >
                 Ask trip assistant
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/booking?source=board"
                 className="rounded-full bg-[#0f2f45] px-5 py-2 text-sm font-semibold text-white hover:bg-[#123a53]"
               >
                 Reserve cabin
-              </a>
+              </Link>
             </div>
           </div>
         </section>
@@ -138,18 +139,18 @@ export default function CruiseBoardPage() {
                       <td className="px-5 py-4 font-semibold text-[#0f4460]">{formatPrice(sailing.min_price)}</td>
                       <td className="px-5 py-4">
                         <div className="flex flex-wrap gap-2">
-                          <a
+                          <Link
                             href={`/cruise/${sailing.id}`}
                             className="rounded-full border border-[#88a9bb] px-3 py-1.5 text-xs font-semibold text-[#0f2f45] hover:bg-[#eef5f9]"
                           >
                             View details
-                          </a>
-                          <a
+                          </Link>
+                          <Link
                             href={`/booking?sailingId=${sailing.id}&source=board`}
                             className="rounded-full bg-[#0f2f45] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#123a53]"
                           >
                             Reserve
-                          </a>
+                          </Link>
                         </div>
                       </td>
                     </tr>
