@@ -5,6 +5,7 @@ const { spawn } = require("node:child_process");
 const host = "0.0.0.0";
 const port = process.env.PORT || "10000";
 const containerMemoryMb = detectContainerMemoryMb();
+const buildSkippedMarkerPath = path.join(process.cwd(), ".render-build-skipped");
 
 function detectContainerMemoryMb() {
   const candidates = [
@@ -64,6 +65,43 @@ const env = {
   HOSTNAME: host,
   PORT: port,
 };
+
+function shouldEnterMaintenanceMode() {
+  if (process.env.RENDER_MAINTENANCE_MODE === "1") return true;
+  if (existsSync(buildSkippedMarkerPath)) return true;
+  // If we can detect a very small container, prefer a tiny server so the
+  // service boots (user can upgrade and redeploy to enable full Next).
+  if (containerMemoryMb && containerMemoryMb > 0 && containerMemoryMb <= 640) return true;
+  return false;
+}
+
+if (shouldEnterMaintenanceMode()) {
+  const maintenancePath = path.join(process.cwd(), "maintenance-server.js");
+  console.log(
+    `[startup] maintenance mode enabled host=${host} port=${port} heapMb=${heapMb} containerMemoryMb=${containerMemoryMb ?? "unknown"}`
+  );
+
+  const child = spawn(process.execPath, [maintenancePath], {
+    stdio: "inherit",
+    env,
+  });
+
+  child.on("error", (error) => {
+    console.error("[startup] failed to launch maintenance server", error);
+    process.exit(1);
+  });
+
+  child.on("exit", (code, signal) => {
+    if (signal) {
+      console.error(`[startup] maintenance server exited via signal ${signal}`);
+      process.exit(1);
+    }
+    process.exit(code ?? 1);
+  });
+
+  // Don't fall through to Next.
+  return;
+}
 
 const standaloneServerPath = path.join(process.cwd(), ".next", "standalone", "server.js");
 const nextCliPath = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");

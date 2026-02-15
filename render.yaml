@@ -5,8 +5,9 @@ services:
     plan: standard
     rootDir: cruise-cards-site
     healthCheckPath: /api/health
-    # Keep build heap conservative for 512MB environments.
-    buildCommand: npm ci --prefer-offline --no-audit --no-fund && NODE_OPTIONS="--max-old-space-size=256" NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true npm run build
+    # On 512MB instances, we skip `next build` and serve a tiny maintenance
+    # server until upgraded; on larger instances we build normally.
+    buildCommand: npm ci --prefer-offline --no-audit --no-fund && NODE_OPTIONS="--max-old-space-size=256" NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true node ./build-render.js
     startCommand: NEXT_TELEMETRY_DISABLED=1 npm start
     envVars:
       - key: NODE_ENV
