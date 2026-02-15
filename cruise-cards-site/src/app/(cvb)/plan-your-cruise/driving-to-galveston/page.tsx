@@ -297,21 +297,6 @@ export default function DrivingToGalvestonPage() {
             <li>
               <Link href="/plan-your-cruise/driving-to-galveston/from-baton-rouge">Driving from Baton Rouge</Link>
             </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-lafayette">Driving from Lafayette</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-lake-charles">Driving from Lake Charles</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-shreveport">Driving from Shreveport</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-little-rock">Driving from Little Rock</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-missouri">Driving from Missouri</Link>
-            </li>
           </ul>
         </div>
       </section>

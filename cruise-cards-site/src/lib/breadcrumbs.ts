@@ -41,14 +41,9 @@ const CITY_SEGMENTS: Record<string, BreadcrumbMeta> = {
   mission: { label: "Mission", category: "driving" },
   palmview: { label: "Palmview", category: "driving" },
   kingsville: { label: "Kingsville", category: "driving" },
-  "lake-charles": { label: "Lake Charles", category: "driving" },
   "baton-rouge": { label: "Baton Rouge", category: "driving" },
-  lafayette: { label: "Lafayette", category: "driving" },
-  shreveport: { label: "Shreveport", category: "driving" },
-  "little-rock": { label: "Little Rock", category: "driving" },
   "oklahoma-city": { label: "Oklahoma City", category: "driving" },
   tulsa: { label: "Tulsa", category: "driving" },
-  missouri: { label: "Missouri", category: "driving" },
   louisiana: { label: "Louisiana", category: "driving" },
 };
 
