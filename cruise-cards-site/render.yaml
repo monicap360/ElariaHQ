@@ -3,6 +3,9 @@ services:
     name: cruise-cards-site
     env: node
     plan: standard
+    # Ensure commands run from the Next.js app directory even if this blueprint
+    # file (cruise-cards-site/render.yaml) is selected in Render.
+    rootDir: cruise-cards-site
     healthCheckPath: /api/health
     buildCommand: npm ci --prefer-offline --no-audit --no-fund && NODE_OPTIONS="--max-old-space-size=320" NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true npm run build
     startCommand: NEXT_TELEMETRY_DISABLED=1 npm start
