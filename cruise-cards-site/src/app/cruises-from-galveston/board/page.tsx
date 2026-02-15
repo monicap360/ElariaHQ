@@ -73,12 +73,6 @@ export default function CruiseBoardPage() {
             </div>
             <div className="flex flex-wrap gap-3">
               <a
-                href="/cruises-from-galveston/trip-assistant"
-                className="rounded-full border border-[#88a9bb] px-5 py-2 text-sm font-semibold text-[#0f2f45] hover:bg-white"
-              >
-                Ask trip assistant
-              </a>
-              <a
                 href="/booking?source=board"
                 className="rounded-full bg-[#0f2f45] px-5 py-2 text-sm font-semibold text-white hover:bg-[#123a53]"
               >

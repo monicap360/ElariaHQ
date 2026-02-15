@@ -591,12 +591,6 @@ export default function Home() {
               >
                 Planning guide
               </Link>
-              <Link
-                href="/cruises-from-galveston/trip-assistant"
-                className="rounded-full border border-border px-6 py-3 text-center text-sm font-semibold text-text-primary hover:border-primary-blue/60"
-              >
-                Localized AI trip assistant
-              </Link>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <span className="rounded-full border border-border px-4 py-2 text-xs text-text-secondary">
