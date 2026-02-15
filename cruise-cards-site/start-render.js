@@ -41,7 +41,9 @@ function resolveHeapMb() {
 
   if (containerMemoryMb && containerMemoryMb > 0) {
     // Conservative tiers to avoid OOM on small containers.
-    if (containerMemoryMb <= 640) return 160;
+    // Render free/starter tiers are commonly 512 MB. Keep heap low to leave
+    // room for native/Next overhead.
+    if (containerMemoryMb <= 640) return 144;
     if (containerMemoryMb <= 1024) return 192;
     if (containerMemoryMb <= 1536) return 256;
     if (containerMemoryMb <= 3072) return 384;
@@ -49,7 +51,9 @@ function resolveHeapMb() {
   }
 
   // Fallback when memory limit cannot be detected.
-  return 256;
+  // Prefer a low default since some environments report "max" even when the
+  // platform enforces a hard memory cap (which would otherwise OOM).
+  return 160;
 }
 
 const heapMb = String(resolveHeapMb());
