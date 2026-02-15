@@ -2,6 +2,22 @@ import { AvailabilitySnapshot, PricingSnapshot, RiskSnapshot, Sailing, Ship } fr
 import { CruiseDataProvider } from "./engine";
 import { createServerClient } from "@/lib/supabase/server";
 
+const DEFAULT_MAX_DECISION_SAILINGS = 80;
+const SAILINGS_SELECT =
+  "id,depart_date,return_date,nights,cruise_line,ship_id,itinerary_tags,itinerary_label,ports_summary,seapay_eligible";
+const SHIPS_SELECT = "id,name,cruise_line,ship_class";
+const PRICING_SELECT = "sailing_id,as_of,min_per_person,market_median_per_person";
+const AVAILABILITY_SELECT = "sailing_id,as_of,demand_pressure,available_cabin_types";
+const RISK_SELECT = "sailing_id,as_of,risk_score";
+
+function resolveMaxDecisionSailings() {
+  const raw = Number(process.env.DECISION_ENGINE_MAX_SAILINGS || "");
+  if (Number.isFinite(raw) && raw > 0) {
+    return Math.floor(raw);
+  }
+  return DEFAULT_MAX_DECISION_SAILINGS;
+}
+
 type SailingRow = {
   id: string;
   depart_date: string;
@@ -48,10 +64,11 @@ export function providerFromSupabase(): CruiseDataProvider {
     throw new Error("Missing Supabase environment variables.");
   }
   const sb = server.client;
+  const maxDecisionSailings = resolveMaxDecisionSailings();
 
   return {
     async getSailingById(sailingId: string) {
-      const { data, error } = await sb.from("sailings").select("*").eq("id", sailingId).single();
+      const { data, error } = await sb.from("sailings").select(SAILINGS_SELECT).eq("id", sailingId).single();
       if (error) throw error;
 
       const row = data as SailingRow;
@@ -72,10 +89,12 @@ export function providerFromSupabase(): CruiseDataProvider {
     async getSailings({ departurePort, start, end, shipId }) {
       let query = sb
         .from("sailings")
-        .select("*")
+        .select(SAILINGS_SELECT)
         .eq("departure_port", departurePort)
         .gte("depart_date", start)
-        .lte("depart_date", end);
+        .lte("depart_date", end)
+        .order("depart_date", { ascending: true })
+        .limit(maxDecisionSailings);
       if (shipId) {
         query = query.eq("ship_id", shipId);
       }
@@ -101,7 +120,7 @@ export function providerFromSupabase(): CruiseDataProvider {
 
     async getShipsByIds(shipIds) {
       if (!shipIds.length) return {};
-      const { data, error } = await sb.from("ships").select("*").in("id", shipIds);
+      const { data, error } = await sb.from("ships").select(SHIPS_SELECT).in("id", shipIds);
       if (error) throw error;
 
       const rows = (data ?? []) as ShipRow[];
@@ -117,7 +136,7 @@ export function providerFromSupabase(): CruiseDataProvider {
       return out;
     },
     async getAllShips() {
-      const { data, error } = await sb.from("ships").select("*");
+      const { data, error } = await sb.from("ships").select(SHIPS_SELECT);
       if (error) throw error;
       const rows = (data ?? []) as ShipRow[];
       return rows.map((row) => ({
@@ -130,7 +149,7 @@ export function providerFromSupabase(): CruiseDataProvider {
 
     async getLatestPricingBySailingIds(sailingIds) {
       if (!sailingIds.length) return {};
-      const { data, error } = await sb.from("pricing_latest").select("*").in("sailing_id", sailingIds);
+      const { data, error } = await sb.from("pricing_latest").select(PRICING_SELECT).in("sailing_id", sailingIds);
       if (error) throw error;
 
       const rows = (data ?? []) as PricingLatestRow[];
@@ -150,7 +169,10 @@ export function providerFromSupabase(): CruiseDataProvider {
 
     async getLatestAvailabilityBySailingIds(sailingIds) {
       if (!sailingIds.length) return {};
-      const { data, error } = await sb.from("availability_latest").select("*").in("sailing_id", sailingIds);
+      const { data, error } = await sb
+        .from("availability_latest")
+        .select(AVAILABILITY_SELECT)
+        .in("sailing_id", sailingIds);
       if (error) throw error;
 
       const rows = (data ?? []) as AvailabilityLatestRow[];
@@ -168,7 +190,7 @@ export function providerFromSupabase(): CruiseDataProvider {
 
     async getLatestRiskBySailingIds(sailingIds) {
       if (!sailingIds.length) return {};
-      const { data, error } = await sb.from("risk_latest").select("*").in("sailing_id", sailingIds);
+      const { data, error } = await sb.from("risk_latest").select(RISK_SELECT).in("sailing_id", sailingIds);
       if (error) throw error;
 
       const rows = (data ?? []) as RiskLatestRow[];

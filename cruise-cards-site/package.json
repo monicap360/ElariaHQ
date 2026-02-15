@@ -8,13 +8,12 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "SKIP_TYPECHECK=true node --max-old-space-size=320 ./node_modules/next/dist/bin/next build",
+    "build": "node ./render-build.js",
     "start": "node ./start-render.js",
     "lint": "eslint"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.56.1",
-    "framer-motion": "^12.23.0",
     "next": "16.1.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"

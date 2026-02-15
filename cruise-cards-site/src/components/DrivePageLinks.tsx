@@ -32,68 +32,13 @@ const SIBLINGS: Record<string, LinkItem[]> = {
   ],
   houston: [
     { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-austin", label: "Austin" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-san-antonio", label: "San Antonio" },
+    { href: "/plan-your-cruise/driving-to-galveston/from-corpus-christi", label: "Corpus Christi" },
+    { href: "/plan-your-cruise/driving-to-galveston/from-mission", label: "Mission (RGV)" },
   ],
   "dallas-fort-worth": [
     { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-oklahoma-city", label: "Oklahoma City" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-tulsa", label: "Tulsa" },
-  ],
-  austin: [
-    { href: "/plan-your-cruise/driving-to-galveston/from-san-antonio", label: "San Antonio" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-  ],
-  "san-antonio": [
-    { href: "/plan-your-cruise/driving-to-galveston/from-austin", label: "Austin" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-  ],
-  "oklahoma-city": [
-    { href: "/plan-your-cruise/driving-to-galveston/from-tulsa", label: "Tulsa" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-little-rock", label: "Little Rock" },
-  ],
-  tulsa: [
-    { href: "/plan-your-cruise/driving-to-galveston/from-oklahoma-city", label: "Oklahoma City" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-little-rock", label: "Little Rock" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-  ],
-  "baton-rouge": [
-    { href: "/plan-your-cruise/driving-to-galveston/from-lafayette", label: "Lafayette" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-lake-charles", label: "Lake Charles" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
-  ],
-  lafayette: [
-    { href: "/plan-your-cruise/driving-to-galveston/from-baton-rouge", label: "Baton Rouge" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-lake-charles", label: "Lake Charles" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
-  ],
-  "lake-charles": [
-    { href: "/plan-your-cruise/driving-to-galveston/from-lafayette", label: "Lafayette" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-baton-rouge", label: "Baton Rouge" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
-  ],
-  shreveport: [
-    { href: "/plan-your-cruise/driving-to-galveston/from-little-rock", label: "Little Rock" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
-  ],
-  "little-rock": [
-    { href: "/plan-your-cruise/driving-to-galveston/from-shreveport", label: "Shreveport" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
-  ],
-  missouri: [
-    { href: "/plan-your-cruise/driving-to-galveston/from-little-rock", label: "Little Rock" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-oklahoma-city", label: "Oklahoma City" },
-  ],
-  colorado: [
-    { href: "/plan-your-cruise/driving-to-galveston/from-oklahoma-city", label: "Oklahoma City" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth", label: "Dallas-Fort Worth" },
-    { href: "/plan-your-cruise/driving-to-galveston/from-houston", label: "Houston" },
+    { href: "/plan-your-cruise/driving-to-galveston/from-corpus-christi", label: "Corpus Christi" },
+    { href: "/plan-your-cruise/driving-to-galveston/from-kingsville", label: "Kingsville" },
   ],
 };
 

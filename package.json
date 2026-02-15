@@ -1,0 +1,8 @@
+{
+  "name": "elariahq-root-wrapper",
+  "private": true,
+  "scripts": {
+    "build": "node ./render-build.js",
+    "start": "node ./start-render.js"
+  }
+}

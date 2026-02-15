@@ -61,7 +61,7 @@ export default function DrivingToGalvestonPage() {
                 acceptedAnswer: {
                   "@type": "Answer",
                   text:
-                    "Yes. Many travelers from Louisiana, Oklahoma, Missouri, Colorado, and the Midwest choose Galveston for its consistent cruise schedule and drive-to accessibility.",
+                    "Yes. Many travelers from Louisiana, Oklahoma, Missouri, and the Midwest choose Galveston for its consistent cruise schedule and drive-to accessibility.",
                 },
               },
             ],
@@ -281,39 +281,6 @@ export default function DrivingToGalvestonPage() {
               <Link href="/plan-your-cruise/driving-to-galveston/from-dallas-fort-worth">
                 Driving from Dallas-Fort Worth
               </Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-austin">Driving from Austin</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-san-antonio">Driving from San Antonio</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-oklahoma-city">Driving from Oklahoma City</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-tulsa">Driving from Tulsa</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-baton-rouge">Driving from Baton Rouge</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-lafayette">Driving from Lafayette</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-lake-charles">Driving from Lake Charles</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-shreveport">Driving from Shreveport</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-little-rock">Driving from Little Rock</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-missouri">Driving from Missouri</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-colorado">Driving from Colorado</Link>
             </li>
           </ul>
         </div>

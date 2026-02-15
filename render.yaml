@@ -5,10 +5,16 @@ services:
     plan: standard
     rootDir: cruise-cards-site
     healthCheckPath: /api/health
-    buildCommand: npm ci --prefer-offline --no-audit --no-fund && NODE_OPTIONS="--max-old-space-size=320" NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true npm run build
-    startCommand: NEXT_TELEMETRY_DISABLED=1 npm start
+    buildCommand: NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true node ./render-build.js
+    startCommand: NEXT_TELEMETRY_DISABLED=1 node ./start-render.js
     envVars:
       - key: NODE_ENV
         value: production
       - key: NODE_VERSION
         value: "20"
+      - key: RENDER_START_HEAP_MB
+        value: "96"
+      - key: DECISION_ENGINE_MAX_SAILINGS
+        value: "80"
+      - key: DECISION_ENGINE_RESULT_LIMIT
+        value: "8"
