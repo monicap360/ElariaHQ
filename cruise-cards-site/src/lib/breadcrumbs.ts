@@ -36,14 +36,9 @@ const CITY_SEGMENTS: Record<string, BreadcrumbMeta> = {
   "corpus-christi": { label: "Corpus Christi", category: "driving" },
   "dallas-fort-worth": { label: "Dallas-Fort Worth", category: "driving" },
   houston: { label: "Houston", category: "driving" },
-  "san-antonio": { label: "San Antonio", category: "driving" },
-  austin: { label: "Austin", category: "driving" },
   mission: { label: "Mission", category: "driving" },
   palmview: { label: "Palmview", category: "driving" },
   kingsville: { label: "Kingsville", category: "driving" },
-  "baton-rouge": { label: "Baton Rouge", category: "driving" },
-  "oklahoma-city": { label: "Oklahoma City", category: "driving" },
-  tulsa: { label: "Tulsa", category: "driving" },
   louisiana: { label: "Louisiana", category: "driving" },
 };
 

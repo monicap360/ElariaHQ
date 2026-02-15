@@ -282,21 +282,6 @@ export default function DrivingToGalvestonPage() {
                 Driving from Dallas-Fort Worth
               </Link>
             </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-austin">Driving from Austin</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-san-antonio">Driving from San Antonio</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-oklahoma-city">Driving from Oklahoma City</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-tulsa">Driving from Tulsa</Link>
-            </li>
-            <li>
-              <Link href="/plan-your-cruise/driving-to-galveston/from-baton-rouge">Driving from Baton Rouge</Link>
-            </li>
           </ul>
         </div>
       </section>
