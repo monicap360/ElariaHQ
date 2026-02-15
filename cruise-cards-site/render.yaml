@@ -11,3 +11,7 @@ services:
         value: production
       - key: NODE_VERSION
         value: "20"
+      - key: RENDER_START_HEAP_MB
+        value: "128"
+      - key: DECISION_ENGINE_MAX_SAILINGS
+        value: "120"
