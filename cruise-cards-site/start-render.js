@@ -67,11 +67,18 @@ const env = {
 };
 
 function shouldEnterMaintenanceMode() {
+  if (process.env.RENDER_FORCE_NEXT_START === "1") return false;
   if (process.env.RENDER_MAINTENANCE_MODE === "1") return true;
   if (existsSync(buildSkippedMarkerPath)) return true;
   // If we can detect a very small container, prefer a tiny server so the
   // service boots (user can upgrade and redeploy to enable full Next).
   if (containerMemoryMb && containerMemoryMb > 0 && containerMemoryMb <= 640) return true;
+  // Some platforms expose "unlimited" cgroup values even when there's a hard cap.
+  // On Render, treat unknown memory as low-memory to avoid repeated OOM loops.
+  const isRender = Boolean(
+    process.env.RENDER_SERVICE_ID || process.env.RENDER_GIT_COMMIT || process.env.RENDER_EXTERNAL_URL
+  );
+  if (isRender && containerMemoryMb == null) return true;
   return false;
 }
 

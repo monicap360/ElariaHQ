@@ -30,7 +30,12 @@ const memoryMb = detectContainerMemoryMb();
 const forceSkip = process.env.RENDER_SKIP_NEXT_BUILD === "1";
 const forceBuild = process.env.RENDER_FORCE_NEXT_BUILD === "1";
 
-const lowMemory = memoryMb != null ? memoryMb <= 640 : false;
+// If the platform doesn't report a cgroup limit reliably, assume low-memory on
+// Render so deploys don't repeatedly OOM on 512MB instances.
+const isRender = Boolean(
+  process.env.RENDER_SERVICE_ID || process.env.RENDER_GIT_COMMIT || process.env.RENDER_EXTERNAL_URL
+);
+const lowMemory = memoryMb != null ? memoryMb <= 640 : isRender;
 const shouldSkip = !forceBuild && (forceSkip || lowMemory);
 
 if (shouldSkip) {
