@@ -68,18 +68,28 @@ if (existsSync(markerPath)) {
   }
 }
 
-console.log(`[build] running next build (memoryMb=${memoryMb ?? "unknown"})`);
-const result = spawnSync(
-  process.platform === "win32" ? "npx.cmd" : "npx",
-  ["next", "build"],
-  {
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      NEXT_TELEMETRY_DISABLED: "1",
-      // Respect Render-provided heap caps like NODE_OPTIONS="--max-old-space-size=256"
-    },
-  }
-);
+console.log(`[build] installing dependencies (memoryMb=${memoryMb ?? "unknown"})`);
+const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+const install = spawnSync(npmCmd, ["ci", "--prefer-offline", "--no-audit", "--no-fund"], {
+  stdio: "inherit",
+  env: {
+    ...process.env,
+    NEXT_TELEMETRY_DISABLED: "1",
+  },
+});
 
-process.exit(result.status ?? 1);
+if ((install.status ?? 1) !== 0) {
+  process.exit(install.status ?? 1);
+}
+
+console.log(`[build] running next build (memoryMb=${memoryMb ?? "unknown"})`);
+const build = spawnSync(npmCmd, ["run", "build"], {
+  stdio: "inherit",
+  env: {
+    ...process.env,
+    NEXT_TELEMETRY_DISABLED: "1",
+    // Respect Render-provided heap caps like NODE_OPTIONS="--max-old-space-size=256"
+  },
+});
+
+process.exit(build.status ?? 1);
