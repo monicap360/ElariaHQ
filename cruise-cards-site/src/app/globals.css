@@ -512,3 +512,53 @@ h3 {
     justify-content: space-between;
   }
 }
+
+@layer components {
+  .cfg-container {
+    @apply mx-auto max-w-6xl px-6;
+  }
+
+  .cfg-card {
+    @apply rounded-2xl border border-border bg-background-panel shadow-sm;
+  }
+
+  .cfg-card-soft {
+    @apply rounded-2xl border border-border bg-background-panel/70;
+  }
+
+  .cfg-badge {
+    @apply inline-flex items-center rounded-full border border-border bg-background-card px-3 py-1 text-xs font-semibold text-text-secondary;
+  }
+
+  .cfg-label {
+    @apply text-sm font-semibold text-text-secondary;
+  }
+
+  .cfg-helper {
+    @apply mt-2 text-xs text-text-muted;
+  }
+
+  .cfg-input {
+    @apply mt-2 w-full rounded-xl border border-border bg-background-card px-4 py-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary-blue/20 focus:border-primary-blue/50;
+  }
+
+  .cfg-button {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-primary-blue/25 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .cfg-button-primary {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-primary-blue/25 disabled:cursor-not-allowed disabled:opacity-60 bg-accent-teal text-white hover:bg-accent-teal/90;
+  }
+
+  .cfg-button-secondary {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-primary-blue/25 disabled:cursor-not-allowed disabled:opacity-60 border border-border bg-background-panel text-text-primary hover:border-primary-blue/60;
+  }
+
+  .cfg-button-danger {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-primary-blue/25 disabled:cursor-not-allowed disabled:opacity-60 border border-red-200 bg-background-panel text-red-700 hover:border-red-300;
+  }
+
+  .cfg-note {
+    @apply rounded-xl border border-border bg-background-card px-4 py-3 text-xs text-text-secondary;
+  }
+}

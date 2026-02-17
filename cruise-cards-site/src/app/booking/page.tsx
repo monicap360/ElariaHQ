@@ -386,461 +386,366 @@ export default function BookingPage() {
 
   if (loading) {
     return (
-      <div style={{ padding: 24, fontFamily: "system-ui" }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700 }}>Multi-Room Booking</h1>
-        <p>Loading...</p>
-      </div>
+      <main className="min-h-screen bg-background-base text-text-secondary">
+        <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
+          <section className="cfg-card px-8 py-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+              Galveston booking tools
+            </p>
+            <h1 className="mt-4 text-3xl font-semibold font-accent text-text-primary">Multi-room booking</h1>
+            <p className="mt-2 text-sm text-text-secondary">Loading live data…</p>
+          </section>
+        </div>
+      </main>
     );
   }
 
   return (
-    <div
-      style={{
-        maxWidth: 980,
-        margin: "0 auto",
-        padding: 24,
-        fontFamily: "system-ui",
-        background: "#f7f1e8",
-      }}
-    >
-      <div
-        style={{
-          marginBottom: 18,
-          borderRadius: 16,
-          border: "1px solid #d6e2e9",
-          background: "linear-gradient(140deg, #fbf7f1, #eef5f8)",
-          padding: 16,
-        }}
-      >
-        <div style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5f7a88", fontWeight: 800 }}>
-          Galveston booking tools
-        </div>
-        <div style={{ marginTop: 6, fontSize: 20, fontWeight: 800, color: "#1d4f68" }}>
-          Multi-room booking console
-        </div>
-        <div style={{ marginTop: 6, fontSize: 13, color: "#4e6572" }}>
-          Select your sailing, enter room details, and submit your request in one step-by-step flow.
-        </div>
-        {prefillNotice ? (
-          <div
-            style={{
-              marginTop: 10,
-              display: "inline-flex",
-              borderRadius: 999,
-              padding: "6px 12px",
-              fontSize: 12,
-              fontWeight: 700,
-              background: "#e8f2f7",
-              color: "#1d4f68",
-            }}
-          >
-            {prefillNotice}
+    <main className="min-h-screen bg-background-base text-text-secondary">
+      <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
+        <section className="relative overflow-hidden rounded-3xl border border-border bg-background-panel px-8 py-10 shadow-sm">
+          <div className="absolute inset-0 bg-[linear-gradient(140deg,rgba(251,247,241,0.95),rgba(238,245,248,0.9))]" />
+          <div className="relative z-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-text-muted">
+              Galveston booking tools
+            </p>
+            <h1 className="mt-4 text-3xl font-semibold font-accent text-text-primary md:text-4xl">
+              Multi-room booking console
+            </h1>
+            <p className="mt-2 max-w-3xl text-sm text-text-secondary">
+              Select your sailing, enter room details, and submit your request in a clear, step-by-step flow.
+            </p>
+            {prefillNotice ? <div className="mt-4 cfg-badge">{prefillNotice}</div> : null}
           </div>
-        ) : null}
-      </div>
+        </section>
 
-      <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6, color: "#1d4f68" }}>Galveston Multi-Room Booking</h1>
-      <p style={{ color: "#5f707b", marginBottom: 18 }}>
-        Live Galveston data: Cruise line {"->"} Ship {"->"} Sailing {"->"} Rooms
-      </p>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
-        <div style={{ border: "1px solid #d7e2e8", borderRadius: 12, padding: 14, background: "#ffffff" }}>
-          <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Agent (approved)</label>
-          <select
-            value={agentId}
-            onChange={(e) => setAgentId(e.target.value)}
-            style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-          >
-            <option value="">Select agent...</option>
-            {agents.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name} {a.tier ? `(${a.tier})` : ""}
-              </option>
-            ))}
-          </select>
-          <div style={{ fontSize: 12, opacity: 0.75, marginTop: 8 }}>
-            Only agents with status = <b>approved</b> are shown.
-          </div>
+        <div className="mt-10">
+          <h2 className="text-2xl font-semibold font-accent text-text-primary">Galveston Multi-Room Booking</h2>
+          <p className="mt-2 text-sm text-text-secondary">
+            Live Galveston data: Cruise line {"→"} Ship {"→"} Sailing {"→"} Rooms
+          </p>
         </div>
 
-        <div style={{ border: "1px solid #d7e2e8", borderRadius: 12, padding: 14, background: "#ffffff" }}>
-          <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Customer ID (optional override)</label>
-          <input
-            value={customerIdOverride}
-            onChange={(e) => setCustomerIdOverride(e.target.value)}
-            placeholder="Paste customer UUID (or leave blank to use auth.uid())"
-            style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-          />
-          <div style={{ fontSize: 12, opacity: 0.75, marginTop: 8 }}>
-            If blank, the form uses the logged-in Supabase user id.
+        <section className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="cfg-card px-6 py-6">
+            <label className="cfg-label">
+              Agent (approved)
+              <select value={agentId} onChange={(e) => setAgentId(e.target.value)} className="cfg-input">
+                <option value="">Select agent...</option>
+                {agents.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name} {a.tier ? `(${a.tier})` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="cfg-helper">
+              Only agents with status = <b>approved</b> are shown.
+            </p>
           </div>
+
+          <div className="cfg-card px-6 py-6">
+            <label className="cfg-label">
+              Customer ID (optional override)
+              <input
+                value={customerIdOverride}
+                onChange={(e) => setCustomerIdOverride(e.target.value)}
+                placeholder="Paste customer UUID (or leave blank to use auth.uid())"
+                className="cfg-input"
+              />
+            </label>
+            <p className="cfg-helper">If blank, the form uses the logged-in Supabase user id.</p>
+          </div>
+        </section>
+
+        <section className="mt-6 cfg-card px-6 py-6">
+          <div className="grid gap-4 md:grid-cols-4">
+            <label className="cfg-label">
+              Cruise line
+              <select value={cruiseLineId} onChange={(e) => setCruiseLineId(e.target.value)} className="cfg-input">
+                <option value="">Select...</option>
+                {cruiseLines.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="cfg-label">
+              Ship (Galveston)
+              <select
+                value={shipId}
+                onChange={(e) => setShipId(e.target.value)}
+                disabled={!ships.length}
+                className="cfg-input"
+              >
+                <option value="">{ships.length ? "Select..." : "Select cruise line first"}</option>
+                {ships.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="cfg-label md:col-span-2">
+              Sailing date
+              <select
+                value={sailingId}
+                onChange={(e) => setSailingId(e.target.value)}
+                disabled={!sailings.length}
+                className="cfg-input"
+              >
+                <option value="">{sailings.length ? "Select..." : "Select ship first"}</option>
+                {sailings.map((sa) => (
+                  <option key={sa.id} value={sa.id}>
+                    {sa.sail_date} {"→"} {sa.return_date}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
+          <h3 className="text-xl font-semibold font-accent text-text-primary">Rooms</h3>
+          <button type="button" onClick={addRoom} className="cfg-button-secondary">
+            + Add room
+          </button>
         </div>
-      </div>
 
-      <div style={{ border: "1px solid #d7e2e8", borderRadius: 12, padding: 14, marginBottom: 18, background: "#ffffff" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
-          <div>
-            <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Cruise Line</label>
-            <select
-              value={cruiseLineId}
-              onChange={(e) => setCruiseLineId(e.target.value)}
-              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-            >
-              <option value="">Select...</option>
-              {cruiseLines.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Ship (Galveston)</label>
-            <select
-              value={shipId}
-              onChange={(e) => setShipId(e.target.value)}
-              disabled={!ships.length}
-              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-            >
-              <option value="">{ships.length ? "Select..." : "Select cruise line first"}</option>
-              {ships.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div style={{ gridColumn: "span 2" }}>
-            <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Sailing Date</label>
-            <select
-              value={sailingId}
-              onChange={(e) => setSailingId(e.target.value)}
-              disabled={!sailings.length}
-              style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-            >
-              <option value="">{sailings.length ? "Select..." : "Select ship first"}</option>
-              {sailings.map((sa) => (
-                <option key={sa.id} value={sa.id}>
-                  {sa.sail_date} {"->"} {sa.return_date}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#1d4f68" }}>Rooms</h2>
-        <button
-          type="button"
-          onClick={addRoom}
-          style={{
-            padding: "10px 14px",
-            borderRadius: 10,
-            border: "1px solid #8eaab9",
-            background: "#ffffff",
-            color: "#1d4f68",
-            fontWeight: 700,
-            cursor: "pointer",
-          }}
-        >
-          + Add Room
-        </button>
-      </div>
-
-      <div style={{ display: "grid", gap: 12, marginBottom: 16 }}>
-        {rooms.map((room, idx) => (
-          <div
-            key={idx}
-            style={{
-              border: "1px solid #cfdfe8",
-              borderRadius: 16,
-              padding: 16,
-              background: "#f9fcfd",
-              boxShadow: "0 8px 20px rgba(23, 59, 79, 0.08)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span
-                  style={{
-                    padding: "4px 10px",
-                    borderRadius: 999,
-                    background: idx % 2 === 0 ? "#e4f0f6" : "#f2ebe0",
-                    color: "#1d4f68",
-                    fontWeight: 800,
-                    fontSize: 12,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Room {idx + 1}
-                </span>
-                <div style={{ fontWeight: 800, fontSize: 18, color: "#1d4f68" }}>Guest details</div>
-              </div>
-              {rooms.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeRoom(idx)}
-                  style={{
-                    padding: "8px 10px",
-                    borderRadius: 10,
-                    border: "1px solid #ef4444",
-                    background: "white",
-                    color: "#b91c1c",
-                    fontWeight: 800,
-                    cursor: "pointer",
-                  }}
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-
-            <div
-              style={{
-                marginBottom: 12,
-                padding: "10px 12px",
-                borderRadius: 10,
-                background: "#edf4f7",
-                color: "#3e5766",
-                fontSize: 12,
-              }}
-            >
-              Legal names are required. Names must appear exactly as shown on non-expired legal travel documents (a
-              non-expired ID and a birth certificate or a non-expired passport). If names do not match, name change
-              fees may apply.
-            </div>
-
-            <div style={{ fontWeight: 800, marginBottom: 8 }}>Cabin & Pricing</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr 1fr 1fr 1fr 1fr", gap: 10 }}>
-              <div>
-                <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Cabin Type</label>
-                <select
-                  value={room.cabin_type}
-                  onChange={(e) => {
-                    const nextType = e.target.value;
-                    const maxGuests = maxGuestsForCabin(nextType);
-                    const nextCount = Math.min(room.guest_count, maxGuests);
-                    updateRoom(idx, {
-                      cabin_type: nextType,
-                      guest_count: nextCount,
-                      guests: normalizeGuests(nextCount, room.guests),
-                    });
-                  }}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                >
-                  {cabinTypes.map((ct) => (
-                    <option key={ct.code} value={ct.code}>
-                      {ct.display_name}
-                    </option>
-                  ))}
-                </select>
+        <section className="mt-4 grid gap-4">
+          {rooms.map((room, idx) => (
+            <div key={idx} className="rounded-3xl border border-border bg-background-panel px-6 py-6 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="cfg-badge">Room {idx + 1}</span>
+                  <div className="text-lg font-semibold text-text-primary">Guest details</div>
+                </div>
+                {rooms.length > 1 ? (
+                  <button type="button" onClick={() => removeRoom(idx)} className="cfg-button-danger">
+                    Remove
+                  </button>
+                ) : null}
               </div>
 
-              <div>
-                <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Guests</label>
-                <select
-                  value={room.guest_count}
-                  onChange={(e) => {
-                    const nextCount = Number(e.target.value);
-                    updateRoom(idx, {
-                      guest_count: nextCount,
-                      guests: normalizeGuests(nextCount, room.guests),
-                    });
-                  }}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                >
-                  {Array.from({ length: maxGuestsForCabin(room.cabin_type) }, (_, i) => i + 1).map((n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ))}
-                </select>
-                <div style={{ fontSize: 11, opacity: 0.7, marginTop: 6 }}>
-                  {maxGuestsForCabin(room.cabin_type) === 5
-                    ? "Oceanview rooms allow up to 5 guests."
-                    : "All other cabin types allow up to 4 guests."}
+              <div className="mt-4 cfg-note">
+                Legal names are required. Names must appear exactly as shown on non-expired legal travel documents (a
+                non-expired ID and a birth certificate or a non-expired passport). If names do not match, name change
+                fees may apply.
+              </div>
+
+              <div className="mt-6">
+                <div className="text-sm font-semibold text-text-primary">Cabin & pricing</div>
+                <div className="mt-3 grid gap-4 md:grid-cols-6">
+                  <label className="cfg-label md:col-span-2">
+                    Cabin type
+                    <select
+                      value={room.cabin_type}
+                      onChange={(e) => {
+                        const nextType = e.target.value;
+                        const maxGuests = maxGuestsForCabin(nextType);
+                        const nextCount = Math.min(room.guest_count, maxGuests);
+                        updateRoom(idx, {
+                          cabin_type: nextType,
+                          guest_count: nextCount,
+                          guests: normalizeGuests(nextCount, room.guests),
+                        });
+                      }}
+                      className="cfg-input"
+                    >
+                      {cabinTypes.map((ct) => (
+                        <option key={ct.code} value={ct.code}>
+                          {ct.display_name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="cfg-label">
+                    Guests
+                    <select
+                      value={room.guest_count}
+                      onChange={(e) => {
+                        const nextCount = Number(e.target.value);
+                        updateRoom(idx, {
+                          guest_count: nextCount,
+                          guests: normalizeGuests(nextCount, room.guests),
+                        });
+                      }}
+                      className="cfg-input"
+                    >
+                      {Array.from({ length: maxGuestsForCabin(room.cabin_type) }, (_, i) => i + 1).map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="cfg-helper">
+                      {maxGuestsForCabin(room.cabin_type) === 5
+                        ? "Oceanview rooms allow up to 5 guests."
+                        : "All other cabin types allow up to 4 guests."}
+                    </p>
+                  </label>
+
+                  <label className="cfg-label">
+                    Dining
+                    <select
+                      value={room.dining_time}
+                      onChange={(e) => updateRoom(idx, { dining_time: e.target.value as Room["dining_time"] })}
+                      className="cfg-input"
+                    >
+                      <option value="any">Any</option>
+                      <option value="5:30pm">5:30pm</option>
+                      <option value="7:00pm">7:00pm</option>
+                      <option value="8:30pm">8:30pm</option>
+                    </select>
+                  </label>
+
+                  <label className="cfg-label">
+                    Insurance
+                    <select
+                      value={room.insurance ? "yes" : "no"}
+                      onChange={(e) => updateRoom(idx, { insurance: e.target.value === "yes" })}
+                      className="cfg-input"
+                    >
+                      <option value="no">No</option>
+                      <option value="yes">Yes</option>
+                    </select>
+                  </label>
+
+                  <label className="cfg-label">
+                    Gratuities
+                    <select
+                      value={room.gratuities ? "yes" : "no"}
+                      onChange={(e) => updateRoom(idx, { gratuities: e.target.value === "yes" })}
+                      className="cfg-input"
+                    >
+                      <option value="no">No</option>
+                      <option value="yes">Yes</option>
+                    </select>
+                  </label>
+
+                  <label className="cfg-label">
+                    Price
+                    <input
+                      inputMode="decimal"
+                      value={room.price}
+                      onChange={(e) => updateRoom(idx, { price: Number(e.target.value) })}
+                      placeholder="0.00"
+                      className="cfg-input"
+                    />
+                  </label>
                 </div>
               </div>
 
-              <div>
-                <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Dining</label>
-                <select
-                  value={room.dining_time}
-                  onChange={(e) => updateRoom(idx, { dining_time: e.target.value as Room["dining_time"] })}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                >
-                  <option value="any">Any</option>
-                  <option value="5:30pm">5:30pm</option>
-                  <option value="7:00pm">7:00pm</option>
-                  <option value="8:30pm">8:30pm</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Insurance</label>
-                <select
-                  value={room.insurance ? "yes" : "no"}
-                  onChange={(e) => updateRoom(idx, { insurance: e.target.value === "yes" })}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                >
-                  <option value="no">No</option>
-                  <option value="yes">Yes</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Gratuities</label>
-                <select
-                  value={room.gratuities ? "yes" : "no"}
-                  onChange={(e) => updateRoom(idx, { gratuities: e.target.value === "yes" })}
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                >
-                  <option value="no">No</option>
-                  <option value="yes">Yes</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Price</label>
-                <input
-                  inputMode="decimal"
-                  value={room.price}
-                  onChange={(e) => updateRoom(idx, { price: Number(e.target.value) })}
-                  placeholder="0.00"
-                  style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                />
-              </div>
-            </div>
-
-            <div style={{ marginTop: 16 }}>
-              <div style={{ fontWeight: 800, marginBottom: 8 }}>Room Contact</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                <div>
-                  <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Email</label>
-                  <input
-                    type="email"
-                    value={room.contact_email}
-                    onChange={(e) => updateRoom(idx, { contact_email: e.target.value })}
-                    placeholder="guest@email.com"
-                    style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Phone</label>
-                  <input
-                    type="tel"
-                    value={room.contact_phone}
-                    onChange={(e) => updateRoom(idx, { contact_phone: e.target.value })}
-                    placeholder="(###) ###-####"
-                    style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                  />
+              <div className="mt-6">
+                <div className="text-sm font-semibold text-text-primary">Room contact</div>
+                <div className="mt-3 grid gap-4 md:grid-cols-2">
+                  <label className="cfg-label">
+                    Email
+                    <input
+                      type="email"
+                      value={room.contact_email}
+                      onChange={(e) => updateRoom(idx, { contact_email: e.target.value })}
+                      placeholder="guest@email.com"
+                      className="cfg-input"
+                    />
+                  </label>
+                  <label className="cfg-label">
+                    Phone
+                    <input
+                      type="tel"
+                      value={room.contact_phone}
+                      onChange={(e) => updateRoom(idx, { contact_phone: e.target.value })}
+                      placeholder="(###) ###-####"
+                      className="cfg-input"
+                    />
+                  </label>
                 </div>
               </div>
-            </div>
 
-            <div style={{ marginTop: 16 }}>
-              <div style={{ fontWeight: 800, marginBottom: 8 }}>Guest Details (Legal Name + DOB)</div>
-              <div style={{ display: "grid", gap: 10 }}>
-                {room.guests.map((guest, guestIdx) => (
-                  <div
-                    key={guestIdx}
-                    style={{ border: "1px solid #d7e2e8", borderRadius: 10, padding: 12, background: "#ffffff" }}
-                  >
-                    <div style={{ fontWeight: 700, marginBottom: 8 }}>Guest {guestIdx + 1}</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 10 }}>
-                      <div>
-                        <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>First Name</label>
-                        <input
-                          value={guest.first_name}
-                          onChange={(e) => {
-                            const next = room.guests.slice();
-                            next[guestIdx] = { ...guest, first_name: e.target.value };
-                            updateRoom(idx, { guests: next });
-                          }}
-                          placeholder="Legal first name"
-                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Last Name</label>
-                        <input
-                          value={guest.last_name}
-                          onChange={(e) => {
-                            const next = room.guests.slice();
-                            next[guestIdx] = { ...guest, last_name: e.target.value };
-                            updateRoom(idx, { guests: next });
-                          }}
-                          placeholder="Legal last name"
-                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>Date of Birth</label>
-                        <input
-                          type="date"
-                          value={guest.date_of_birth}
-                          onChange={(e) => {
-                            const next = room.guests.slice();
-                            next[guestIdx] = { ...guest, date_of_birth: e.target.value };
-                            updateRoom(idx, { guests: next });
-                          }}
-                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: "block", fontWeight: 700, marginBottom: 6 }}>
-                          VIFP / Membership #
+              <div className="mt-6">
+                <div className="text-sm font-semibold text-text-primary">Guest details (legal name + DOB)</div>
+                <div className="mt-3 grid gap-3">
+                  {room.guests.map((guest, guestIdx) => (
+                    <div key={guestIdx} className="cfg-card-soft px-5 py-5">
+                      <div className="text-sm font-semibold text-text-primary">Guest {guestIdx + 1}</div>
+                      <div className="mt-3 grid gap-4 md:grid-cols-4">
+                        <label className="cfg-label">
+                          First name
+                          <input
+                            value={guest.first_name}
+                            onChange={(e) => {
+                              const next = room.guests.slice();
+                              next[guestIdx] = { ...guest, first_name: e.target.value };
+                              updateRoom(idx, { guests: next });
+                            }}
+                            placeholder="Legal first name"
+                            className="cfg-input"
+                          />
                         </label>
-                        <input
-                          value={guest.membership_number}
-                          onChange={(e) => {
-                            const next = room.guests.slice();
-                            next[guestIdx] = { ...guest, membership_number: e.target.value };
-                            updateRoom(idx, { guests: next });
-                          }}
-                          placeholder="Optional"
-                          style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #c8d7e0", background: "#fcfefe" }}
-                        />
+                        <label className="cfg-label">
+                          Last name
+                          <input
+                            value={guest.last_name}
+                            onChange={(e) => {
+                              const next = room.guests.slice();
+                              next[guestIdx] = { ...guest, last_name: e.target.value };
+                              updateRoom(idx, { guests: next });
+                            }}
+                            placeholder="Legal last name"
+                            className="cfg-input"
+                          />
+                        </label>
+                        <label className="cfg-label">
+                          Date of birth
+                          <input
+                            type="date"
+                            value={guest.date_of_birth}
+                            onChange={(e) => {
+                              const next = room.guests.slice();
+                              next[guestIdx] = { ...guest, date_of_birth: e.target.value };
+                              updateRoom(idx, { guests: next });
+                            }}
+                            className="cfg-input"
+                          />
+                        </label>
+                        <label className="cfg-label">
+                          VIFP / Membership #
+                          <input
+                            value={guest.membership_number}
+                            onChange={(e) => {
+                              const next = room.guests.slice();
+                              next[guestIdx] = { ...guest, membership_number: e.target.value };
+                              updateRoom(idx, { guests: next });
+                            }}
+                            placeholder="Optional"
+                            className="cfg-input"
+                          />
+                        </label>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </section>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div style={{ fontSize: 16, fontWeight: 900 }}>Total: {money(total)}</div>
+        <section className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-background-panel px-6 py-5">
+          <div className="text-base font-semibold text-text-primary">Total: {money(total)}</div>
+          <button type="button" onClick={submit} disabled={submitting} className="cfg-button-primary">
+            {submitting ? "Creating booking..." : "Create booking"}
+          </button>
+        </section>
 
-        <button
-          type="button"
-          onClick={submit}
-          disabled={submitting}
-          style={{
-            padding: "12px 16px",
-            borderRadius: 12,
-            border: "1px solid #1f556f",
-            background: submitting ? "#85a7b9" : "#1f556f",
-            color: "white",
-            fontWeight: 900,
-            cursor: submitting ? "not-allowed" : "pointer",
-          }}
-        >
-          {submitting ? "Creating booking..." : "Create Booking"}
-        </button>
+        <p className="mt-4 text-xs text-text-muted">
+          If Cruise Lines / Ships don&apos;t load, it&apos;s usually RLS on cruise_lines/ships/sailings. If you want,
+          I&apos;ll give you the exact RLS policies for &quot;public read of Galveston fleet only&quot;.
+        </p>
       </div>
-
-      <div style={{ marginTop: 14, fontSize: 12, opacity: 0.8 }}>
-        If Cruise Lines / Ships don&apos;t load, it&apos;s usually **RLS on cruise_lines/ships/sailings**. If you
-        want, I&apos;ll give you the exact RLS policies for &quot;public read of Galveston fleet only&quot;.
-      </div>
-    </div>
+    </main>
   );
 }
