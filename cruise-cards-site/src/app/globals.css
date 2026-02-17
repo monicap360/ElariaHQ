@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #173f55;
-  --ocean: #3d7d9d;
-  --teal: #4a9a98;
-  --sand: #f7f1e8;
+  /* Cruises From Galveston brand palette (CVB-aligned) */
+  --navy: #0e2a3a;
+  --ocean: #2f6f8f;
+  --harbor: #2f6f8f;
+  --teal: #3fa9a3;
+  --seaglass: #3fa9a3;
+  --sand: #f4efea;
   --cloud: #ffffff;
-  --slate: #5f7380;
-  --border: #e2d9ce;
+  --slate: #6e7c87;
+  --driftwood: #6e7c87;
+  --border: rgba(14, 42, 58, 0.14);
   --success: #2e8b57;
   --warning: #c98a2c;
   --background: var(--sand);
