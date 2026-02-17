@@ -11,7 +11,16 @@ type Ship = {
   home_port: string | null;
   is_active: boolean | null;
 };
-type Sailing = { id: string; ship_id: string; depart_date: string; return_date: string; is_active: boolean | null };
+type Sailing = {
+  id: string;
+  ship_id: string;
+  depart_date?: string | null;
+  sail_date?: string | null;
+  return_date: string;
+  is_active: boolean | null;
+  duration?: number | null;
+  nights?: number | null;
+};
 type CabinType = { code: string; display_name: string };
 
 type Agent = { id: string; name: string; status: string; tier: string | null };
@@ -250,15 +259,37 @@ export default function BookingPage() {
         return;
       }
 
-      const res = await supabase
+      const primary = await supabase
         .from("sailings")
-        .select("id,ship_id,depart_date,return_date,is_active")
+        .select("id,ship_id,depart_date,return_date,is_active,nights,ports_summary,itinerary_label")
         .eq("ship_id", shipId)
         .eq("is_active", true)
         .order("depart_date", { ascending: true });
 
-      if (res.error) console.error("sailings error", res.error);
-      setSailings(res.data || []);
+      if (!primary.error) {
+        setSailings(primary.data || []);
+        setSailingId("");
+        return;
+      }
+
+      // Fallback for schemas using sail_date/duration.
+      const msg = (primary.error as { message?: string }).message || "";
+      if (!msg.toLowerCase().includes("depart_date")) {
+        console.error("sailings error", primary.error);
+        setSailings([]);
+        setSailingId("");
+        return;
+      }
+
+      const legacy = await supabase
+        .from("sailings")
+        .select("id,ship_id,sail_date,return_date,is_active,duration,itinerary_label,ports_summary")
+        .eq("ship_id", shipId)
+        .eq("is_active", true)
+        .order("sail_date", { ascending: true });
+
+      if (legacy.error) console.error("sailings legacy error", legacy.error);
+      setSailings(legacy.data || []);
       setSailingId("");
     })();
   }, [shipId]);
@@ -500,7 +531,7 @@ export default function BookingPage() {
                 <option value="">{sailings.length ? "Select..." : "Select ship first"}</option>
                 {sailings.map((sa) => (
                   <option key={sa.id} value={sa.id}>
-                    {sa.depart_date} {"→"} {sa.return_date}
+                    {(sa.depart_date || sa.sail_date || "TBD")} {"→"} {sa.return_date}
                   </option>
                 ))}
               </select>

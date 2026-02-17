@@ -4,11 +4,14 @@ import { createServerClient } from "@/lib/supabase/server";
 
 type SailingRow = {
   id: string;
-  depart_date: string;
-  return_date: string;
-  nights: number;
-  cruise_line: string;
-  ship_id: string;
+  depart_date?: string | null;
+  sail_date?: string | null;
+  return_date?: string | null;
+  nights?: number | null;
+  duration?: number | null;
+  cruise_line?: string | null;
+  ship_id?: string | null;
+  departure_port?: string | null;
   itinerary_tags?: string[] | null;
   itinerary_label?: string | null;
   ports_summary?: string | null;
@@ -49,6 +52,37 @@ export function providerFromSupabase(): CruiseDataProvider {
   }
   const sb = server.client;
 
+  function normalizeDepartDate(row: SailingRow): string {
+    const value = row.depart_date ?? row.sail_date;
+    if (!value) throw new Error("Sailing row is missing depart_date/sail_date.");
+    return value;
+  }
+
+  function normalizeReturnDate(row: SailingRow): string {
+    const value = row.return_date;
+    if (!value) {
+      // Some datasets may omit return date; keep it as the depart date as a safe fallback.
+      return normalizeDepartDate(row);
+    }
+    return value;
+  }
+
+  function normalizeNights(row: SailingRow): number {
+    const value = row.nights ?? row.duration;
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    // last resort: compute from dates if possible
+    const start = new Date(normalizeDepartDate(row)).getTime();
+    const end = new Date(normalizeReturnDate(row)).getTime();
+    const diff = Math.round((end - start) / (1000 * 60 * 60 * 24));
+    return Number.isFinite(diff) ? Math.max(0, diff) : 0;
+  }
+
+  async function querySailingsByDateRange(column: "depart_date" | "sail_date", departurePort: string, start: string, end: string, shipId?: string) {
+    let query = sb.from("sailings").select("*").eq("departure_port", departurePort).gte(column, start).lte(column, end);
+    if (shipId) query = query.eq("ship_id", shipId);
+    return await query;
+  }
+
   return {
     async getSailingById(sailingId: string) {
       const { data, error } = await sb.from("sailings").select("*").eq("id", sailingId).single();
@@ -57,12 +91,12 @@ export function providerFromSupabase(): CruiseDataProvider {
       const row = data as SailingRow;
       return {
         id: row.id,
-        departurePort: "Galveston",
-        departDate: row.depart_date,
-        returnDate: row.return_date,
-        nights: row.nights,
-        cruiseLine: row.cruise_line,
-        shipId: row.ship_id,
+        departurePort: row.departure_port || "Galveston",
+        departDate: normalizeDepartDate(row),
+        returnDate: normalizeReturnDate(row),
+        nights: normalizeNights(row),
+        cruiseLine: row.cruise_line || "Cruise line",
+        shipId: row.ship_id || "",
         itineraryTags: row.itinerary_tags ?? [],
         itineraryLabel: row.itinerary_label ?? null,
         portsSummary: row.ports_summary ?? null,
@@ -70,28 +104,31 @@ export function providerFromSupabase(): CruiseDataProvider {
       };
     },
     async getSailings({ departurePort, start, end, shipId }) {
-      let query = sb
-        .from("sailings")
-        .select("*")
-        .eq("departure_port", departurePort)
-        .gte("depart_date", start)
-        .lte("depart_date", end);
-      if (shipId) {
-        query = query.eq("ship_id", shipId);
+      const primary = await querySailingsByDateRange("depart_date", departurePort, start, end, shipId);
+
+      let data = primary.data;
+      let error = primary.error;
+
+      if (error) {
+        const msg = (error as { message?: string }).message || "";
+        if (msg.toLowerCase().includes("depart_date")) {
+          const legacy = await querySailingsByDateRange("sail_date", departurePort, start, end, shipId);
+          data = legacy.data;
+          error = legacy.error;
+        }
       }
-      const { data, error } = await query;
 
       if (error) throw error;
 
       const rows = (data ?? []) as SailingRow[];
       return rows.map((row) => ({
         id: row.id,
-        departurePort: "Galveston",
-        departDate: row.depart_date,
-        returnDate: row.return_date,
-        nights: row.nights,
-        cruiseLine: row.cruise_line,
-        shipId: row.ship_id,
+        departurePort: departurePort,
+        departDate: normalizeDepartDate(row),
+        returnDate: normalizeReturnDate(row),
+        nights: normalizeNights(row),
+        cruiseLine: row.cruise_line || "Cruise line",
+        shipId: row.ship_id || "",
         itineraryTags: row.itinerary_tags ?? [],
         itineraryLabel: row.itinerary_label ?? null,
         portsSummary: row.ports_summary ?? null,
