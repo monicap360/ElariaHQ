@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Render runtime fix: disable server-side image optimization so Next doesn't
+  // require the native `sharp` module (which can fail to load on some builds).
+  images: {
+    unoptimized: true,
+  },
   experimental: {
     // Keep build worker parallelism low for 512 MB build environments.
     cpus: 1,
