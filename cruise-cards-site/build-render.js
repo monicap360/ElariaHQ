@@ -31,12 +31,10 @@ const memoryMb = detectContainerMemoryMb();
 const forceSkip = process.env.RENDER_SKIP_NEXT_BUILD === "1";
 const forceBuild = process.env.RENDER_FORCE_NEXT_BUILD === "1";
 
-// If the platform doesn't report a cgroup limit reliably, assume low-memory on
-// Render so deploys don't repeatedly OOM on 512MB instances.
 const isRender = Boolean(
   process.env.RENDER_SERVICE_ID || process.env.RENDER_GIT_COMMIT || process.env.RENDER_EXTERNAL_URL
 );
-const lowMemory = memoryMb != null ? memoryMb <= 640 : isRender;
+const lowMemory = memoryMb != null ? memoryMb <= 640 : false;
 const shouldSkip = !forceBuild && (forceSkip || lowMemory);
 
 if (shouldSkip) {
@@ -92,5 +90,30 @@ const build = spawnSync(npmCmd, ["run", "build"], {
     // Respect Render-provided heap caps like NODE_OPTIONS="--max-old-space-size=256"
   },
 });
+
+if ((build.status ?? 1) === 0) {
+  process.exit(0);
+}
+
+// On Render, if the build fails (often memory-related on tiny instances),
+// fall back to maintenance mode so the deploy can still succeed.
+if (isRender && !forceBuild) {
+  writeFileSync(
+    markerPath,
+    JSON.stringify(
+      {
+        skipped: true,
+        reason: "build-failed",
+        memoryMb: memoryMb ?? "unknown",
+        buildStatus: build.status ?? null,
+        timestamp: new Date().toISOString(),
+      },
+      null,
+      2
+    )
+  );
+  console.log("[build] next build failed; deploying maintenance mode instead");
+  process.exit(0);
+}
 
 process.exit(build.status ?? 1);
