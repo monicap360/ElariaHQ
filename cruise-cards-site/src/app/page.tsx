@@ -286,14 +286,18 @@ export default function Home() {
           passengers: { adults: Number(bookingForm.travelers || 2) },
         };
 
-        const res = await fetch("/api/cruise/decision", {
+        // Use the server decision engine endpoint that returns sailing details.
+        const res = await fetch("/api/decision-engine", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(input),
         });
         if (!res.ok) throw new Error("Failed to load cruise matrix");
-        const payload = (await res.json()) as { results: DecisionResult[] };
+        const payload = (await res.json()) as { results?: DecisionResult[] };
         results = payload.results || [];
+        if (results.length && !(results[0] as { sailing?: unknown }).sailing) {
+          throw new Error("Decision engine response missing sailing details");
+        }
       } catch (error) {
         console.error("Matrix load error", error);
         if (!isActive) return;
@@ -367,7 +371,7 @@ export default function Home() {
       if (sortKey === "duration") {
         return a.duration - b.duration;
       }
-      return a.sailDate.localeCompare(b.sailDate);
+      return (a.sailDate || "").localeCompare(b.sailDate || "");
     });
     return sorted;
   }, [cruiseMatrix, filterLine, filterYear, sortKey]);
