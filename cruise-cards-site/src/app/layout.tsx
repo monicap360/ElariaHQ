@@ -24,7 +24,7 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.cruisesfromgalveston.net"),
+  metadataBase: new URL("https://cruisesfromgalveston.net"),
   title: "Cruising From Galveston, Clearly Explained",
   description:
     "Independent guidance on ships, itineraries, and planning from people who actually work the port.",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     title: "Cruising From Galveston, Clearly Explained",
     description:
       "Independent guidance on ships, itineraries, and planning from people who actually work the port.",
-    url: "https://www.cruisesfromgalveston.net/",
+    url: "https://cruisesfromgalveston.net/",
     images: [
       {
         url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80",

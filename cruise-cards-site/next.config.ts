@@ -18,10 +18,10 @@ const nextConfig: NextConfig = {
         has: [
           {
             type: 'host',
-            value: 'cruisesfromgalveston.net',
+            value: 'www.cruisesfromgalveston.net',
           },
         ],
-        destination: 'https://www.cruisesfromgalveston.net/:path*',
+        destination: 'https://cruisesfromgalveston.net/:path*',
         permanent: true,
       },
     ];
