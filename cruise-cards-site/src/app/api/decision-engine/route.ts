@@ -43,14 +43,14 @@ type SailingRow = {
 
 type RawSailingRow = {
   id: string;
-  sail_date: string;
+  depart_date: string;
   return_date: string;
   ports?: string[] | string | null;
   itinerary?: string | null;
   itinerary_label?: string | null;
   ports_summary?: string | null;
   departure_port?: string | null;
-  sea_pay_eligible?: boolean | null;
+  seapay_eligible?: boolean | null;
   price_from?: number | string | null;
   base_price?: number | string | null;
   starting_price?: number | string | null;
@@ -112,10 +112,10 @@ export async function POST(req: Request) {
   const { data: sailingsData } = await supabase
     .from("sailings")
     .select(
-      "id,sail_date,return_date,ports,itinerary,itinerary_label,ports_summary,departure_port,sea_pay_eligible,price_from,base_price,starting_price,min_price,ship:ships(id,name,ship_class,cruise_line:cruise_lines(name))"
+      "id,depart_date,return_date,ports,itinerary,itinerary_label,ports_summary,departure_port,seapay_eligible,price_from,base_price,starting_price,min_price,ship:ships(id,name,ship_class,cruise_line:cruise_lines(name))"
     )
     .eq("is_active", true)
-    .order("sail_date", { ascending: true })
+    .order("depart_date", { ascending: true })
     .limit(500);
 
   const sailings =
@@ -126,6 +126,8 @@ export async function POST(req: Request) {
         : shipRow?.cruise_line;
       return {
         ...row,
+        sail_date: row.depart_date,
+        sea_pay_eligible: row.seapay_eligible ?? null,
         ship: shipRow
           ? {
               id: shipRow.id,

@@ -1,5 +1,5 @@
 import CruiseSearchTable from "./CruiseSearchTable";
-import { createClient } from "@/lib/supabase/server";
+import { createServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -12,8 +12,8 @@ export const metadata = {
 };
 
 export default async function CruiseSearchPage() {
-  const supabase = createClient();
-  if (!supabase) {
+  const server = createServerClient();
+  if (!server) {
     return (
       <main className="mx-auto max-w-6xl px-6 py-10">
         <h1 className="mb-6 text-3xl font-semibold">Search Cruises from Galveston</h1>
@@ -23,17 +23,20 @@ export default async function CruiseSearchPage() {
     );
   }
 
-  const { data } = await supabase
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const { data, error } = await server.client
     .from("sailings")
     .select(
-      "id,sail_date,return_date,ports,itinerary,itinerary_label,ports_summary,price_from,base_price,starting_price,min_price,ship:ships(name,cruise_line:cruise_lines(name))"
+      "id,depart_date,return_date,nights,itinerary_label,ports_summary,price_from,base_price,starting_price,min_price,departure_port,ship:ships(name,cruise_line:cruise_lines(name))"
     )
     .eq("is_active", true)
-    .order("sail_date", { ascending: true });
+    .gte("depart_date", todayIso)
+    .ilike("departure_port", "%Galveston%")
+    .order("depart_date", { ascending: true });
 
   const sailings =
     data?.map((row) => {
-      const sailDate = row.sail_date;
+      const sailDate = (row as { depart_date?: string | null }).depart_date ?? null;
       const returnDate = row.return_date;
       const nights =
         sailDate && returnDate
@@ -43,9 +46,7 @@ export default async function CruiseSearchPage() {
             )
           : null;
       const fallbackPorts =
-        (Array.isArray(row.ports) ? row.ports.filter(Boolean).join(", ") : row.ports?.toString()) ||
-        row.itinerary ||
-        null;
+        row.ports_summary || row.itinerary_label || null;
       const priceCandidates = [row.price_from, row.base_price, row.starting_price, row.min_price];
       const numeric = priceCandidates.find((value) => {
         if (value === null || value === undefined) return false;
@@ -66,13 +67,17 @@ export default async function CruiseSearchPage() {
         ship: shipRow?.name ?? null,
         line: cruiseLineRow?.name ?? null,
         departure_date: sailDate ?? null,
-        nights,
+        nights: nights ?? (row as { nights?: number | null }).nights ?? null,
         itinerary_label: row.itinerary_label ?? null,
         ports_summary: row.ports_summary ?? fallbackPorts,
         itinerary: fallbackPorts,
         starting_price: numeric ?? null,
       };
     }) || [];
+
+  if (error) {
+    console.error("search page sailings query error", error);
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">

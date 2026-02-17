@@ -127,10 +127,57 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  // Final fallback: query sailings directly (works even if views aren't deployed).
+  type SailingJoinRow = {
+    id: string;
+    depart_date: string | null;
+    return_date: string | null;
+    nights?: number | null;
+    itinerary_label?: string | null;
+    ports_summary?: string | null;
+    departure_port?: string | null;
+    ship:
+      | { id: string; name: string; cruise_line?: string | null }
+      | { id: string; name: string; cruise_line?: string | null }[]
+      | null;
+  };
+
+  const directRes = await supabase
+    .from("sailings")
+    .select("id,depart_date,return_date,nights,itinerary_label,ports_summary,departure_port,ship:ships(id,name,cruise_line)")
+    .eq("is_active", true)
+    .gte("depart_date", startDate)
+    .ilike("departure_port", "%Galveston%")
+    .order("depart_date", { ascending: true })
+    .limit(400);
+
+  if (!directRes.error) {
+    const rows = (directRes.data ?? []) as SailingJoinRow[];
+    const mapped: SearchRow[] = rows.map((row) => {
+      const shipRow = Array.isArray(row.ship) ? row.ship[0] : row.ship;
+      const dest = row.itinerary_label || row.ports_summary || null;
+      return {
+        sailing_id: row.id,
+        ship_name: shipRow?.name ?? null,
+        destination: dest,
+        itinerary_label: row.itinerary_label ?? null,
+        ports_summary: row.ports_summary ?? null,
+        departure_date: row.depart_date ?? null,
+        duration_days: (row.nights ?? null) as number | null,
+        price_from: null,
+      };
+    });
+    return NextResponse.json({ sailings: mapped, source: "sailings" });
+  }
+
   return NextResponse.json(
     {
       sailings: [],
-      error: viewResult.error?.message || searchResult.error?.message || "Unable to load sailings.",
+      error:
+        viewResult.error?.message ||
+        searchResult.error?.message ||
+        directRes.error?.message ||
+        "Unable to load sailings.",
     },
     { status: 500 },
   );
