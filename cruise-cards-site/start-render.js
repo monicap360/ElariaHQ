@@ -5,6 +5,7 @@ const { spawn } = require("node:child_process");
 const host = "0.0.0.0";
 const port = process.env.PORT || "10000";
 const containerMemoryMb = detectContainerMemoryMb();
+const buildSkippedMarkerPath = path.join(process.cwd(), ".render-build-skipped");
 
 function detectContainerMemoryMb() {
   const candidates = [
@@ -41,7 +42,9 @@ function resolveHeapMb() {
 
   if (containerMemoryMb && containerMemoryMb > 0) {
     // Conservative tiers to avoid OOM on small containers.
-    if (containerMemoryMb <= 640) return 160;
+    // Render free/starter tiers are commonly 512 MB. Keep heap low to leave
+    // room for native/Next overhead.
+    if (containerMemoryMb <= 640) return 144;
     if (containerMemoryMb <= 1024) return 192;
     if (containerMemoryMb <= 1536) return 256;
     if (containerMemoryMb <= 3072) return 384;
@@ -49,7 +52,9 @@ function resolveHeapMb() {
   }
 
   // Fallback when memory limit cannot be detected.
-  return 256;
+  // Prefer a low default since some environments report "max" even when the
+  // platform enforces a hard memory cap (which would otherwise OOM).
+  return 160;
 }
 
 const heapMb = String(resolveHeapMb());
@@ -60,6 +65,50 @@ const env = {
   HOSTNAME: host,
   PORT: port,
 };
+
+function shouldEnterMaintenanceMode() {
+  if (process.env.RENDER_FORCE_NEXT_START === "1") return false;
+  if (process.env.RENDER_MAINTENANCE_MODE === "1") return true;
+  if (existsSync(buildSkippedMarkerPath)) return true;
+  // If we can detect a very small container, prefer a tiny server so the
+  // service boots (user can upgrade and redeploy to enable full Next).
+  if (containerMemoryMb && containerMemoryMb > 0 && containerMemoryMb <= 640) return true;
+  // Some platforms expose "unlimited" cgroup values even when there's a hard cap.
+  // On Render, treat unknown memory as low-memory to avoid repeated OOM loops.
+  const isRender = Boolean(
+    process.env.RENDER_SERVICE_ID || process.env.RENDER_GIT_COMMIT || process.env.RENDER_EXTERNAL_URL
+  );
+  if (isRender && containerMemoryMb == null) return true;
+  return false;
+}
+
+if (shouldEnterMaintenanceMode()) {
+  const maintenancePath = path.join(process.cwd(), "maintenance-server.js");
+  console.log(
+    `[startup] maintenance mode enabled host=${host} port=${port} heapMb=${heapMb} containerMemoryMb=${containerMemoryMb ?? "unknown"}`
+  );
+
+  const child = spawn(process.execPath, [maintenancePath], {
+    stdio: "inherit",
+    env,
+  });
+
+  child.on("error", (error) => {
+    console.error("[startup] failed to launch maintenance server", error);
+    process.exit(1);
+  });
+
+  child.on("exit", (code, signal) => {
+    if (signal) {
+      console.error(`[startup] maintenance server exited via signal ${signal}`);
+      process.exit(1);
+    }
+    process.exit(code ?? 1);
+  });
+
+  // Don't fall through to Next.
+  return;
+}
 
 const standaloneServerPath = path.join(process.cwd(), ".next", "standalone", "server.js");
 const nextCliPath = path.join(process.cwd(), "node_modules", "next", "dist", "bin", "next");

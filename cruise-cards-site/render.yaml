@@ -3,11 +3,20 @@ services:
     name: cruise-cards-site
     env: node
     plan: standard
+    # Ensure commands run from the Next.js app directory even if this blueprint
+    # file (cruise-cards-site/render.yaml) is selected in Render.
+    rootDir: cruise-cards-site
     healthCheckPath: /api/health
-    buildCommand: npm ci --prefer-offline --no-audit --no-fund && NODE_OPTIONS="--max-old-space-size=320" NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true npm run build
-    startCommand: NEXT_TELEMETRY_DISABLED=1 npm start
+    # Build Command should install deps + build. On 512MB instances we skip all
+    # heavy work and run a tiny maintenance server until upgraded.
+    buildCommand: NODE_OPTIONS="--max-old-space-size=256" NEXT_TELEMETRY_DISABLED=1 SKIP_ENV_VALIDATION=true SKIP_TYPECHECK=true node ./build-render.js
+    # Start Command should only start the HTTP server.
+    startCommand: NEXT_TELEMETRY_DISABLED=1 node ./start-render.js
     envVars:
       - key: NODE_ENV
         value: production
       - key: NODE_VERSION
         value: "20"
+      # Hard cap runtime heap to survive 512MB instances.
+      - key: RENDER_START_HEAP_MB
+        value: "128"
