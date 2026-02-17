@@ -5,6 +5,11 @@ import { Inter, Cormorant_Garamond } from "next/font/google";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import "./globals.css";
 
+// Avoid serving long-lived cached HTML that can reference old JS chunk hashes
+// after deploys (causing "client-side exception" screens).
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
