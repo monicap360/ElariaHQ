@@ -10,6 +10,8 @@ type HealthCheckData = {
   healthy: boolean;
 };
 
+const INITIAL_RENDER_REFERENCE_TIME = Date.now();
+
 function formatDate(dateString: string | null): string {
   if (!dateString) return "TBD";
   try {
@@ -66,7 +68,7 @@ export function NextSailingBadge() {
   // Don't show if next sailing is more than 90 days away (not very relevant)
   if (health.next_sailing) {
     const nextDate = new Date(health.next_sailing);
-    const daysUntil = Math.ceil((nextDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    const daysUntil = Math.ceil((nextDate.getTime() - INITIAL_RENDER_REFERENCE_TIME) / (1000 * 60 * 60 * 24));
     if (daysUntil > 90) {
       return null;
     }
