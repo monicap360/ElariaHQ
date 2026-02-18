@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   experimental: {
-    // Keep build worker parallelism low for 512 MB build environments.
+    // Keep build worker parallelism low for sub-512 MB build environments.
     cpus: 1,
   },
   async redirects() {
